@@ -1,11 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import SERVER_CONFIG from '../config/server'
-import {
-  ApiError,
-  ErrorType,
-  getErrorMessage,
-  getErrorType,
-} from '../types/errors'
+import { ApiError, getErrorMessage } from '../types/errors'
 
 // Create axios instance with base configuration
 const api = axios.create({
@@ -28,14 +23,13 @@ export interface ChatRequest {
 
 // Enhanced error handling
 const handleApiError = (error: AxiosError): ApiError => {
-  const errorType = getErrorType(error)
   const message = getErrorMessage(error)
 
   return {
     message,
     status: error.response?.status,
     code: error.code,
-    details: error.response?.data?.message || error.message,
+    details: (error.response?.data as any)?.message || error.message,
   }
 }
 

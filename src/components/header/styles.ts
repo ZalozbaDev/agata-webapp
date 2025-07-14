@@ -28,15 +28,94 @@ export const headerRightStyle: React.CSSProperties = {
 }
 
 export const profileCircleStyle: React.CSSProperties = {
-  width: '32px',
-  height: '32px',
-  background: '#6e6e80',
-  color: '#fff',
-  borderRadius: '50%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontWeight: 600,
-  fontSize: '1rem',
   marginLeft: '1rem',
+}
+
+export const urlsButtonStyle: React.CSSProperties = {
+  backgroundColor: '#10a37f',
+  color: 'white',
+  border: 'none',
+  padding: '8px 16px',
+  borderRadius: '6px',
+  cursor: 'pointer',
+  fontSize: '14px',
+  fontWeight: '500',
+  textDecoration: 'none',
+  transition: 'background-color 0.2s',
+  marginRight: '1rem',
+}
+
+export const popupStyle: React.CSSProperties = {
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  backgroundColor: '#2a2d36',
+  color: '#a9a8a8ff',
+  padding: '20px',
+  zIndex: 1000,
+  borderRadius: '8px',
+  fontSize: '30px',
+  textAlign: 'center',
+}
+export const closeButtonStyle: React.CSSProperties = {
+  position: 'absolute',
+  fontSize: '50px',
+  top: '-6px',
+  right: '5px',
+  padding: '0px',
+  background: 'transparent',
+  border: 'none',
+  color: '#ececf1',
+  cursor: 'pointer',
+  lineHeight: '1',
+}
+
+export const textInputStyle: React.CSSProperties = {
+  width: '50%',
+  padding: '10px',
+  marginTop: '0px',
+  marginLeft: '1%',
+  marginBottom: '2%',
+  fontSize: '16px',
+  borderRadius: '4px',
+  border: 'none',
+  outline: 'none',
+  backgroundColor: '#e3efffff',
+  color: '#000000ff',
+  borderWidth: '0%',
+}
+
+export const textbottomInputStyle: React.CSSProperties = {
+  width: '50%',
+  padding: '10px',
+  marginTop: '0px',
+  marginLeft: '1%',
+  marginBottom: '10%',
+  fontSize: '16px',
+  borderRadius: '4px',
+  border: 'none',
+  outline: 'none',
+  backgroundColor: '#e3efffff',
+  color: '#000000ff',
+  borderWidth: '0%',
+}
+
+export const sendButtonStyle: React.CSSProperties = {
+  position: 'fixed',
+  bottom: '3%',
+  left: '50%',
+  transform: 'translateX(-50%)',
+  top: '83%',
+  backgroundColor: '#3d3d3dff',
+  color: '#d5d5d5ff',
+  padding: '20px',
+  paddingTop: '0px',
+  zIndex: 1000,
+  borderRadius: '8px',
+  fontSize: '40px',
+  textAlign: 'center',
 }

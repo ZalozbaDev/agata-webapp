@@ -1,13 +1,14 @@
 import { useState, useCallback } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Header from './components/header'
 import StartScreen from './pages/start'
 import ChatScreen from './pages/chat'
+import UrlsPage from './pages/urls'
 import { MessageType } from './components/Message.tsx'
 import { chatService } from './services/api'
 import { getErrorType, getErrorMessage } from './types/errors'
-import ErrorMessage from './components/ErrorMessage'
 
-const AppContent: React.FC = () => {
+const ChatApp: React.FC = () => {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [input, setInput] = useState('')
   const [started, setStarted] = useState(false)
@@ -103,27 +104,8 @@ const AppContent: React.FC = () => {
     if (e.key === 'Enter' && !isLoading) handleSend()
   }
 
-  const appStyle: React.CSSProperties = {
-    minHeight: '100vh',
-    margin: 0,
-    padding: 0,
-    background: '#212121',
-    color: '#ececf1',
-    fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: started ? 'flex-start' : 'center',
-  }
-
-  const spacerStyle: React.CSSProperties = {
-    height: '48px',
-  }
-
   return (
-    <div style={appStyle}>
-      <Header />
-      <div style={spacerStyle} /> {/* Spacer for fixed header */}
+    <div style={chatAppStyle}>
       {!started ? (
         <StartScreen
           input={input}
@@ -150,6 +132,44 @@ const AppContent: React.FC = () => {
       )}
     </div>
   )
+}
+
+const AppContent: React.FC = () => {
+  const appStyle: React.CSSProperties = {
+    minHeight: '100vh',
+    margin: 0,
+    padding: 0,
+    background: '#212121',
+    color: '#ececf1',
+    fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
+    display: 'flex',
+    flexDirection: 'column',
+  }
+
+  const spacerStyle: React.CSSProperties = {
+    height: '48px',
+  }
+
+  return (
+    <Router>
+      <div style={appStyle}>
+        <Header />
+        <div style={spacerStyle} /> {/* Spacer for fixed header */}
+        <Routes>
+          <Route path='/' element={<ChatApp />} />
+          <Route path='/urls' element={<UrlsPage />} />
+        </Routes>
+      </div>
+    </Router>
+  )
+}
+
+const chatAppStyle: React.CSSProperties = {
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
 }
 
 const App: React.FC = () => {
