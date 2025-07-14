@@ -5,6 +5,34 @@ export interface MessageType {
   content: string
 }
 
+// Function to parse Sorbian text formatting and convert to HTML
+const parseSorbianText = (text: string): string => {
+  return (
+    text
+      // Convert paragraph breaks (¶) to proper HTML paragraphs
+      .split('¶')
+      .map(paragraph => paragraph.trim())
+      .filter(paragraph => paragraph.length > 0)
+      .map(paragraph => `<p>${paragraph}</p>`)
+      .join('')
+      // Convert bold formatting (* * text * *)
+      .replace(/\* \* ([^*]+) \* \*/g, '<strong>$1</strong>')
+      // Convert italic formatting (_ text _)
+      .replace(/_ ([^_]+) _/g, '<em>$1</em>')
+      // Convert links [ text ] (url)
+      .replace(
+        /\[ ([^\]]+) \] \(([^)]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #4a9eff; text-decoration: none;">$1</a>'
+      )
+      // Convert list items (1. text)
+      .replace(/(\d+\.\s+)(.+)/g, '<li>$1$2</li>')
+      // Wrap consecutive list items in <ul> tags
+      .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+      // Convert emoji at the end
+      .replace(/┊\s*([^\s]+)$/, '<span style="font-size: 1.2em;">$1</span>')
+  )
+}
+
 const Message: React.FC<{
   role: 'user' | 'assistant'
   content: string
@@ -31,9 +59,15 @@ const Message: React.FC<{
       : {}),
   }
 
+  // Parse the content to convert Sorbian formatting to HTML
+  const formattedContent = parseSorbianText(content)
+
   return (
     <div style={messageStyle}>
-      <div style={bubbleStyle}>{content}</div>
+      <div
+        style={bubbleStyle}
+        dangerouslySetInnerHTML={{ __html: formattedContent }}
+      />
     </div>
   )
 }
