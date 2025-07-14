@@ -178,8 +178,6 @@ const UrlsPage: React.FC = () => {
             <thead>
               <tr>
                 <th style={thStyle}>URL</th>
-                <th style={thStyle}>Username</th>
-                <th style={thStyle}>Password</th>
                 <th style={thStyle}>Description</th>
                 <th style={thStyle}>Created</th>
                 <th style={thStyle}>Actions</th>
@@ -197,38 +195,6 @@ const UrlsPage: React.FC = () => {
                     >
                       {url.url}
                     </a>
-                  </td>
-                  <td style={tdStyle}>
-                    {url.username ? (
-                      <span style={credentialStyle}>
-                        {url.username}
-                        <button
-                          onClick={() => copyToClipboard(url.username!)}
-                          style={copyButtonStyle}
-                          title='Copy username'
-                        >
-                          📋
-                        </button>
-                      </span>
-                    ) : (
-                      <span style={emptyFieldStyle}>-</span>
-                    )}
-                  </td>
-                  <td style={tdStyle}>
-                    {url.password ? (
-                      <span style={credentialStyle}>
-                        {'•'.repeat(8)}
-                        <button
-                          onClick={() => copyToClipboard(url.password!)}
-                          style={copyButtonStyle}
-                          title='Copy password'
-                        >
-                          📋
-                        </button>
-                      </span>
-                    ) : (
-                      <span style={emptyFieldStyle}>-</span>
-                    )}
                   </td>
                   <td style={tdStyle}>
                     {url.description ? (
