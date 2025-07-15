@@ -60,12 +60,20 @@ const Header: React.FC = () => {
             Data
           </Link>
           <div style={profileCircleStyle}>
-            <img
-              src='/src/assets/plus.svg'
-              alt='Plus'
-              onClick={() => setIsOpen(true)}
-              style={{ width: '32px', height: '32px', cursor: 'pointer' }}
-            />
+            <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 20 20"
+  style={{ cursor: 'pointer' }}
+  onClick={() => setIsOpen(true)}
+>
+  <path
+    fill="#fff"
+    d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2zm-1 11a10 10 0 1 1 0-20a10 10 0 0 1 0 20m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16"
+  />
+</svg>
+
           </div>
         </div>
       </header>
