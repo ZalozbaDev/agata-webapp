@@ -6,7 +6,7 @@ export const Footer: React.FC = () => {
   return (
     <footer style={{ ...container, zIndex: 9999}}>
       <Link to='/impresum' style={{ ...impresumstyle, textDecoration: 'underline' }}>
-        impresum
+        Impresum
       </Link>
     </footer>
   );
