@@ -1,5 +1,6 @@
 export const wabjenjeStyle: React.CSSProperties = {
-    width: '14%',
+    maxWidth: '250px',
+    width: '20%',
     height: '100vh',
     backgroundColor: '#363636ff',
     position: 'fixed',
