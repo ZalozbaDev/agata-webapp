@@ -13,13 +13,17 @@ export const chatScreenStyle: React.CSSProperties = {
 
 export const messagesWrapperStyle: React.CSSProperties = {
   flex: 1,
+  minHeight: 0,
   overflowY: 'auto',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'flex-end', // Push messages to the bottom
+  justifyContent: 'flex-start',
   padding: '0 0 0 0',
   width: '100%',
   maxWidth: '800px',
+  scrollbarWidth: 'none', // Hide scrollbar in Firefox
+  // To hide scrollbar in WebKit browsers, add this to your CSS:
+  // .messagesWrapper::-webkit-scrollbar { display: none; }
   // Remove alignItems: 'center' to make messages align left/right
 }
 
