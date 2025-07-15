@@ -2,7 +2,7 @@ export const chatScreenStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   height: '100vh',
-  width: '100vw',
+  width: '80vw',
   maxWidth: '100vw',
   background: '#212121',
   borderRadius: 0,
