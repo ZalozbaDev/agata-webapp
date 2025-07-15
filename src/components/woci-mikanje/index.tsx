@@ -47,7 +47,7 @@ export const WociMikanje = () => {
   return (
     <div
       style={{
-        position: 'absolute',
+        position: 'fixed',
         bottom: 0,
         right: 0,
         zIndex: 1000,
