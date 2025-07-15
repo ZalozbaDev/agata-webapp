@@ -165,10 +165,10 @@ const AppContent: React.FC = () => {
 const AppContentInner: React.FC<{ appStyle: React.CSSProperties; spacerStyle: React.CSSProperties }> = ({ appStyle, spacerStyle }) => {
   const location = useLocation();
   const isMain = location.pathname === '/';
-  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1500);
+  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1350);
 
   useEffect(() => {
-    const handleResize = () => setIsWide(window.innerWidth > 1500);
+    const handleResize = () => setIsWide(window.innerWidth > 1350);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
