@@ -1,16 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import { container, link } from './styles'
-import { CreateUrlRequest, urlService } from '../../services/urlService'
+import { container, impresumstyle } from './styles'
 
-const Footer: React.FC = () => {
+export const Footer: React.FC = () => {
   return (
-    <footer style={container}>
-      <Link style={link} to='http://b3nnox.de'>
-        Twarjene z ❤️ wot b3nnox
+    <footer style={{ ...container, zIndex: 9999}}>
+      <Link to='/impresum' style={{ ...impresumstyle, textDecoration: 'underline' }}>
+        impresum
       </Link>
     </footer>
-  )
+  );
 }
-
-export default Footer

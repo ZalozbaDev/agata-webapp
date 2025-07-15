@@ -11,11 +11,12 @@ import {
   useLocation,
 } from 'react-router-dom'
 import Header from './components/header'
-import Footer from './components/footer'
+import { Footer } from './components/footer/index.tsx'
 import StartScreen from './pages/start'
 import ChatScreen from './pages/chat'
 import UrlsPage from './pages/urls'
 import DataPage from './pages/data'
+import ImpresumPage from './pages/impresum'
 import { MessageType } from './components/Message.tsx'
 import { chatService } from './services/api'
 import { getErrorType, getErrorMessage } from './types/errors'
@@ -191,13 +192,14 @@ const AppContentInner: React.FC<{
       <Header />
       {isMain && isWide && <WociMikanje />}
       {isMain && isWide && <Wabjenje />}
+      {isMain && <Footer />}
       <div style={spacerStyle} /> {/* Spacer for fixed header */}
       <Routes>
         <Route path='/' element={<ChatApp />} />
         <Route path='/urls' element={<UrlsPage />} />
         <Route path='/data' element={<DataPage />} />
+        <Route path='/impresum' element={<ImpresumPage />} />
       </Routes>
-      <Footer />
     </div>
   )
 }

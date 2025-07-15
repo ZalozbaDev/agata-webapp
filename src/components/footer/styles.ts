@@ -12,13 +12,13 @@ export const container: React.CSSProperties = {
   position: 'fixed',
   bottom: 0,
   left: 0,
-  zIndex: 2000,
+  zIndex: 0,
 }
 
-export const link: React.CSSProperties = {
-  color: 'pink',
+export const impresumstyle: React.CSSProperties = {
+  color: 'goldenrod',
   textDecoration: 'none',
-  fontSize: '0.875rem',
+  fontSize: '1rem',
   fontWeight: 500,
-  transition: 'color 0.3s ease',
+  transition: 'color 0.3s ease'
 }
