@@ -1,6 +1,17 @@
-import { useState, useCallback, useEffect, useState as useReactState } from 'react'
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useState as useReactState,
+} from 'react'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from 'react-router-dom'
 import Header from './components/header'
+import Footer from './components/footer'
 import StartScreen from './pages/start'
 import ChatScreen from './pages/chat'
 import UrlsPage from './pages/urls'
@@ -137,7 +148,6 @@ const ChatApp: React.FC = () => {
   )
 }
 
-
 const AppContent: React.FC = () => {
   const appStyle: React.CSSProperties = {
     minHeight: 'calc(100vh - 50px)',
@@ -149,29 +159,32 @@ const AppContent: React.FC = () => {
     fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
     display: 'flex',
     flexDirection: 'column',
-  };
+  }
 
   const spacerStyle: React.CSSProperties = {
     height: '48px',
-  };
+  }
 
   return (
     <Router>
       <AppContentInner appStyle={appStyle} spacerStyle={spacerStyle} />
     </Router>
-  );
-};
+  )
+}
 
-const AppContentInner: React.FC<{ appStyle: React.CSSProperties; spacerStyle: React.CSSProperties }> = ({ appStyle, spacerStyle }) => {
-  const location = useLocation();
-  const isMain = location.pathname === '/';
-  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1350);
+const AppContentInner: React.FC<{
+  appStyle: React.CSSProperties
+  spacerStyle: React.CSSProperties
+}> = ({ appStyle, spacerStyle }) => {
+  const location = useLocation()
+  const isMain = location.pathname === '/'
+  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1350)
 
   useEffect(() => {
-    const handleResize = () => setIsWide(window.innerWidth > 1350);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    const handleResize = () => setIsWide(window.innerWidth > 1350)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   return (
     <div style={appStyle}>
@@ -184,9 +197,10 @@ const AppContentInner: React.FC<{ appStyle: React.CSSProperties; spacerStyle: Re
         <Route path='/urls' element={<UrlsPage />} />
         <Route path='/data' element={<DataPage />} />
       </Routes>
+      <Footer />
     </div>
-  );
-};
+  )
+}
 
 const chatAppStyle: React.CSSProperties = {
   flex: 1,
