@@ -61,9 +61,11 @@ const ChatApp: React.FC = () => {
       // Send message to server
       const response = await chatService.sendMessage(userMessage)
 
-      getAudioFromText(response.message, 'weronika').then(audioResponse => {
-        audioQueueService.addToQueue(audioResponse.data)
-      })
+      getAudioFromText(response.message, 'katka_2025_07').then(
+        audioResponse => {
+          audioQueueService.addToQueue(audioResponse.data)
+        }
+      )
       // Add assistant response to chat
       setMessages(msgs => [
         ...msgs,
