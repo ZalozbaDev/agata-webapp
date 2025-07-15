@@ -12,7 +12,7 @@ export const startScreenStyle: React.CSSProperties = {
 }
 
 export const welcomeTitleStyle: React.CSSProperties = {
-  fontSize: '2rem',
+  fontSize: '1.8rem',
   fontWeight: 600,
   color: '#ececf1',
   marginBottom: '2.5rem',
@@ -21,6 +21,7 @@ export const welcomeTitleStyle: React.CSSProperties = {
 
 export const inputBarWrapperStyle: React.CSSProperties = {
   width: '100%',
+  maxWidth: '90vw',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
