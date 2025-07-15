@@ -56,6 +56,9 @@ const Header: React.FC = () => {
           <Link to='/urls' style={urlsButtonStyle}>
             URLs
           </Link>
+          <Link to='/data' style={urlsButtonStyle}>
+            Data
+          </Link>
           <div style={profileCircleStyle}>
             <svg
   xmlns="http://www.w3.org/2000/svg"

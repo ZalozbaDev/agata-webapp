@@ -21,6 +21,28 @@ export interface ChatRequest {
   message: string
 }
 
+export interface FetchedDataItem {
+  _id: string
+  url: string
+  title: string
+  content: string
+  type: string
+  timestamp: string
+  metadata?: any
+}
+
+export interface DataResponse {
+  data: FetchedDataItem[]
+  count: number
+  total: number
+}
+
+export interface DataRequest {
+  type?: string
+  limit?: number
+  page?: number
+}
+
 // Enhanced error handling
 const handleApiError = (error: AxiosError): ApiError => {
   const message = getErrorMessage(error)
@@ -114,6 +136,31 @@ export const chatService = {
     } catch (error) {
       console.error('Server connection test failed:', error)
       return false
+    }
+  },
+
+  // Get fetched data from server
+  async getData(params?: DataRequest): Promise<DataResponse> {
+    try {
+      const queryParams = new URLSearchParams()
+      if (params?.type) {
+        queryParams.append('type', params.type)
+      }
+      if (params?.limit) {
+        queryParams.append('limit', params.limit.toString())
+      }
+      if (params?.page) {
+        queryParams.append('page', params.page.toString())
+      }
+
+      const url = `${SERVER_CONFIG.ENDPOINTS.DATA}${
+        queryParams.toString() ? `?${queryParams.toString()}` : ''
+      }`
+
+      return await retryRequest<DataResponse>(() => api.get<DataResponse>(url))
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      throw error
     }
   },
 }
