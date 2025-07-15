@@ -22,6 +22,9 @@ const Header: React.FC = () => {
     password: '',
     description: '',
   })
+  const [showLinks, setShowLinks] = useState(false)
+  const [agataShiftClicks, setAgataShiftClicks] = useState(0)
+  const hideTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
 
   const handleCreateUrl = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,38 +47,58 @@ const Header: React.FC = () => {
     } catch (err: any) {}
   }
 
+  // Handler for shift-clicking AGATA sign
+  const handleAgataClick = (e: React.MouseEvent) => {
+    if (e.shiftKey) {
+      e.preventDefault();
+      setAgataShiftClicks(prev => {
+        const next = prev + 1;
+        if (next === 2) {
+          setShowLinks(true);
+          if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+          hideTimeoutRef.current = setTimeout(() => {
+            setShowLinks(false);
+            setAgataShiftClicks(0);
+          }, 5000); // Hide after 5 seconds
+        }
+        return next === 2 ? 0 : next;
+      });
+    }
+  };
+
   return (
     <>
       <header style={headerStyle}>
         <div style={headerLeftStyle}>
-          <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleAgataClick}>
             AGATA
           </Link>
         </div>
-        <div style={headerRightStyle}>
-          <Link to='/urls' style={urlsButtonStyle}>
-            URLs
-          </Link>
-          <Link to='/data' style={urlsButtonStyle}>
-            Data
-          </Link>
-          <div style={profileCircleStyle}>
-            <svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="32"
-  height="32"
-  viewBox="0 0 20 20"
-  style={{ cursor: 'pointer' }}
-  onClick={() => setIsOpen(true)}
->
-  <path
-    fill="#fff"
-    d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2zm-1 11a10 10 0 1 1 0-20a10 10 0 0 1 0 20m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16"
-  />
-</svg>
-
+        {showLinks && (
+          <div style={headerRightStyle}>
+            <Link to='/urls' style={urlsButtonStyle}>
+              URLs
+            </Link>
+            <Link to='/data' style={urlsButtonStyle}>
+              Data
+            </Link>
+            <div style={profileCircleStyle}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 20 20"
+                style={{ cursor: 'pointer' }}
+                onClick={() => setIsOpen(true)}
+              >
+                <path
+                  fill="#fff"
+                  d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2zm-1 11a10 10 0 1 1 0-20a10 10 0 0 1 0 20m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16"
+                />
+              </svg>
+            </div>
           </div>
-        </div>
+        )}
       </header>
       {isOpen && (
         <div style={popupStyle}>
