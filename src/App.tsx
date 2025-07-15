@@ -9,6 +9,7 @@ import { MessageType } from './components/Message.tsx'
 import { chatService } from './services/api'
 import { getErrorType, getErrorMessage } from './types/errors'
 import { WociMikanje } from './components/woci-mikanje'
+import { Wabjenje } from './components/wabjenje/index.tsx'
 
 const ChatApp: React.FC = () => {
   const [messages, setMessages] = useState<MessageType[]>([])
@@ -138,8 +139,9 @@ const ChatApp: React.FC = () => {
 
 const AppContent: React.FC = () => {
   const appStyle: React.CSSProperties = {
-    minHeight: '100vh',
+    minHeight: 'calc(100vh - 50px)',
     margin: 0,
+    width:'calc(100vw - 90px)',
     padding: 0,
     background: '#212121',
     color: '#ececf1',
@@ -157,6 +159,7 @@ const AppContent: React.FC = () => {
       <div style={appStyle}>
         <Header />
         <WociMikanje />
+        <Wabjenje />
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
           <Route path='/' element={<ChatApp />} />

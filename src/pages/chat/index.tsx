@@ -36,7 +36,7 @@ const ChatScreen: React.FC<{
 
   return (
     <div style={chatScreenStyle}>
-      <div style={messagesWrapperStyle}>
+      <div style={messagesWrapperStyle} className="no-scrollbar messagesWrapper">
         {messages.map((msg, i) => (
           <Message key={i} role={msg.role} content={msg.content} />
         ))}

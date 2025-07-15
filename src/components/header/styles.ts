@@ -12,7 +12,7 @@ export const headerStyle: React.CSSProperties = {
   position: 'fixed',
   top: 0,
   left: 0,
-  zIndex: 10,
+  zIndex: 2000,
 }
 
 export const headerLeftStyle: React.CSSProperties = {
