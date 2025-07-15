@@ -8,6 +8,7 @@ import DataPage from './pages/data'
 import { MessageType } from './components/Message.tsx'
 import { chatService } from './services/api'
 import { getErrorType, getErrorMessage } from './types/errors'
+import { WociMikanje } from './components/woci-mikanje'
 
 const ChatApp: React.FC = () => {
   const [messages, setMessages] = useState<MessageType[]>([])
@@ -155,6 +156,7 @@ const AppContent: React.FC = () => {
     <Router>
       <div style={appStyle}>
         <Header />
+        <WociMikanje />
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
           <Route path='/' element={<ChatApp />} />
