@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import Header from './components/header'
 import StartScreen from './pages/start'
 import ChatScreen from './pages/chat'
@@ -137,39 +137,48 @@ const ChatApp: React.FC = () => {
   )
 }
 
+
 const AppContent: React.FC = () => {
   const appStyle: React.CSSProperties = {
     minHeight: 'calc(100vh - 50px)',
     margin: 0,
-    width:'calc(100vw - 90px)',
+    width: 'calc(100vw - 90px)',
     padding: 0,
     background: '#212121',
     color: '#ececf1',
     fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
     display: 'flex',
     flexDirection: 'column',
-  }
+  };
 
   const spacerStyle: React.CSSProperties = {
     height: '48px',
-  }
+  };
 
   return (
     <Router>
-      <div style={appStyle}>
-        <Header />
-        <WociMikanje />
-        <Wabjenje />
-        <div style={spacerStyle} /> {/* Spacer for fixed header */}
-        <Routes>
-          <Route path='/' element={<ChatApp />} />
-          <Route path='/urls' element={<UrlsPage />} />
-          <Route path='/data' element={<DataPage />} />
-        </Routes>
-      </div>
+      <AppContentInner appStyle={appStyle} spacerStyle={spacerStyle} />
     </Router>
-  )
-}
+  );
+};
+
+const AppContentInner: React.FC<{ appStyle: React.CSSProperties; spacerStyle: React.CSSProperties }> = ({ appStyle, spacerStyle }) => {
+  const location = useLocation();
+  const isMain = location.pathname === '/';
+  return (
+    <div style={appStyle}>
+      <Header />
+      {isMain && <WociMikanje />}
+      {isMain && <Wabjenje />}
+      <div style={spacerStyle} /> {/* Spacer for fixed header */}
+      <Routes>
+        <Route path='/' element={<ChatApp />} />
+        <Route path='/urls' element={<UrlsPage />} />
+        <Route path='/data' element={<DataPage />} />
+      </Routes>
+    </div>
+  );
+};
 
 const chatAppStyle: React.CSSProperties = {
   flex: 1,
