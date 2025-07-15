@@ -27,7 +27,7 @@ export const chatInputStyle: React.CSSProperties = {
   background: 'transparent',
   border: 'none',
   color: '#ececf1',
-  fontSize: '1.1rem',
+  fontSize: '0.95rem',
   padding: '1rem 0.75rem',
   outline: 'none',
   borderRadius: '1rem',
