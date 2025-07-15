@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useState as useReactState } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import Header from './components/header'
 import StartScreen from './pages/start'
@@ -165,11 +165,19 @@ const AppContent: React.FC = () => {
 const AppContentInner: React.FC<{ appStyle: React.CSSProperties; spacerStyle: React.CSSProperties }> = ({ appStyle, spacerStyle }) => {
   const location = useLocation();
   const isMain = location.pathname === '/';
+  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1500);
+
+  useEffect(() => {
+    const handleResize = () => setIsWide(window.innerWidth > 1500);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div style={appStyle}>
       <Header />
-      {isMain && <WociMikanje />}
-      {isMain && <Wabjenje />}
+      {isMain && isWide && <WociMikanje />}
+      {isMain && isWide && <Wabjenje />}
       <div style={spacerStyle} /> {/* Spacer for fixed header */}
       <Routes>
         <Route path='/' element={<ChatApp />} />
