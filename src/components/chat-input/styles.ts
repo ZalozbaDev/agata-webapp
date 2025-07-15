@@ -12,7 +12,7 @@ export const inputBarStyle: React.CSSProperties = {
 export const innerInputBarStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
-  background: 'rgba(255, 255, 255, 0.05)',
+  background: 'rgba(255, 255, 255, 0.94)',
   borderRadius: '1.2rem',
   padding: '0.25rem 0.5rem',
   width: '100%',
@@ -38,7 +38,7 @@ export const chatInputStyle: React.CSSProperties = {
 export const inputIconStyle: React.CSSProperties = {
   background: 'none',
   border: 'none',
-  color: '#b4bcd0',
+  color: '#000000ff',
   fontSize: '1.25rem',
   padding: '0.5rem',
   borderRadius: '50%',
@@ -54,9 +54,6 @@ export const inputIconStyle: React.CSSProperties = {
 
 export const sendIconStyle: React.CSSProperties = {
   ...inputIconStyle,
-  color: '#fff',
-  background: '#10a37f',
   marginLeft: '0.3rem',
-  fontSize: '1.3rem',
   flexShrink: 0,
 }

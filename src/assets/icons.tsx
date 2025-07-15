@@ -34,41 +34,13 @@ export const SettingsIcon: React.FC = () => (
 )
 
 export const MicIcon: React.FC = () => (
-  <svg
-    width='20'
-    height='20'
-    viewBox='0 0 20 20'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
-  >
-    <rect
-      x='7'
-      y='4'
-      width='6'
-      height='8'
-      rx='3'
-      stroke='currentColor'
-      strokeWidth='2'
-    />
-    <path
-      d='M10 16v2M7 18h6'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-    />
-  </svg>
-)
-
-export const SendIcon: React.FC = () => (
-  <svg
-    width='20'
-    height='20'
-    viewBox='0 0 20 20'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
-  >
-    <path d='M3 17l14-7L3 3v5l10 2-10 2v5z' fill='currentColor' />
-  </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" 
+  width="24" 
+  height="24" 
+  viewBox="0 0 24 24">
+    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" 
+    stroke-width="2" 
+    d="M17.5 10.5A5.5 5.5 0 0 1 12 16m0 0a5.5 5.5 0 0 1-5.5-5.5M12 16v4m-4 0h4m0 0h4m-4-7a2.5 2.5 0 0 1-2.5-2.5v-4a2.5 2.5 0 0 1 5 0v4A2.5 2.5 0 0 1 12 13"/></svg>
 )
 
 export const RetryIcon: React.FC = () => (

@@ -1,5 +1,6 @@
 import React from 'react'
-import { MicIcon, SendIcon } from '../../assets/icons'
+import { MicIcon } from '../../assets/icons'
+import SendIcon from '../../assets/SendIcon.png'
 import LoadingSpinner from '../LoadingSpinner'
 import {
   chatInputStyle,
@@ -34,7 +35,7 @@ const ChatInput: React.FC<{
     ...sendIconStyle,
     opacity: isLoading ? 0.5 : 1,
     cursor: isLoading ? 'not-allowed' : 'pointer',
-    backgroundColor: isLoading ? 'transparent' : '#10a37f',
+    backgroundColor: 'transparent',
   }
 
   return (
@@ -64,7 +65,11 @@ const ChatInput: React.FC<{
           onClick={onSend}
           disabled={isLoading || !value.trim()}
         >
-          {isLoading ? <LoadingSpinner size='small' /> : <SendIcon />}
+          {isLoading ? (
+            <LoadingSpinner size='small' />
+          ) : (
+            <img src={SendIcon} alt="Send" style={{ width: 56, height: 32 }} />
+          )}
         </button>
       </div>
     </div>
