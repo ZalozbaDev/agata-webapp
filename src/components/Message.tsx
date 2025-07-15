@@ -55,6 +55,7 @@ const Message: React.FC<{
           color: '#fff',
           borderBottomRightRadius: '0.3rem',
           boxShadow: '0 2px 8px 0 #00000020',
+          lineBreak: 'anywhere',
         }
       : {}),
   }
