@@ -51,7 +51,7 @@ export const Wabjenje: React.FC = () => {
   }
 `}
       </style>
-      <div style={{ ...wabjenjeStyle, position: 'relative', overflow: 'hidden', height: '100vh', minHeight: 300 }} className="wabjenje-stack">
+      <div style={{ ...wabjenjeStyle}} className="wabjenje-stack">
         <a
           key={currentIdx}
           href={arraywabjenje[currentIdx].link}
