@@ -4,6 +4,7 @@ import Header from './components/header'
 import StartScreen from './pages/start'
 import ChatScreen from './pages/chat'
 import UrlsPage from './pages/urls'
+import DataPage from './pages/data'
 import { MessageType } from './components/Message.tsx'
 import { chatService } from './services/api'
 import { getErrorType, getErrorMessage } from './types/errors'
@@ -158,6 +159,7 @@ const AppContent: React.FC = () => {
         <Routes>
           <Route path='/' element={<ChatApp />} />
           <Route path='/urls' element={<UrlsPage />} />
+          <Route path='/data' element={<DataPage />} />
         </Routes>
       </div>
     </Router>
