@@ -34,7 +34,7 @@ export const Wabjenje: React.FC = () => {
       <style>
         {`
   @keyframes teleportDown {
-    0% { transform: translateY(0vh); }
+    0% { transform: translateY(-20vh); }
     100% { transform: translateY(100vh); }
   }
   .animated-image {
