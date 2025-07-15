@@ -22,6 +22,9 @@ import { chatService } from './services/api'
 import { getErrorType, getErrorMessage } from './types/errors'
 import { WociMikanje } from './components/woci-mikanje'
 import { Wabjenje } from './components/wabjenje/index.tsx'
+import { getAudioFromText } from './services/bamborak.ts'
+import { audioQueueService } from './services/AudioQueueService.ts'
+import { useAudioContext } from './hooks/useAudioContext.ts'
 
 const ChatApp: React.FC = () => {
   const [messages, setMessages] = useState<MessageType[]>([])
@@ -33,6 +36,13 @@ const ChatApp: React.FC = () => {
     message: string
   } | null>(null)
 
+  const audioContext = useAudioContext()
+
+  useEffect(() => {
+    // Initialize audio context when the component mounts
+    audioContext.initializeAudioContext()
+    audioQueueService.initialize(audioContext)
+  }, [audioContext])
   const handleSend = useCallback(async () => {
     if (!input.trim() || isLoading) return
 
@@ -51,6 +61,9 @@ const ChatApp: React.FC = () => {
       // Send message to server
       const response = await chatService.sendMessage(userMessage)
 
+      getAudioFromText(response.message, 'weronika').then(audioResponse => {
+        audioQueueService.addToQueue(audioResponse.data)
+      })
       // Add assistant response to chat
       setMessages(msgs => [
         ...msgs,
@@ -120,7 +133,7 @@ const ChatApp: React.FC = () => {
   }
 
   return (
-    <div style={chatAppStyle}>
+    <div style={chatAppStyle} onClick={audioContext.initializeAudioContext}>
       {!started ? (
         <StartScreen
           input={input}
