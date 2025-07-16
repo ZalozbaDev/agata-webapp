@@ -1,7 +1,7 @@
 export const inputBarStyle: React.CSSProperties = {
   width: '100%',
   maxWidth: '100%',
-  background: '#212121',
+  // background: '#212121',
   padding: '1.5rem 1rem 1.5rem 1rem',
   display: 'flex',
   justifyContent: 'center',

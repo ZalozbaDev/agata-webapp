@@ -183,14 +183,13 @@ const ChatApp: React.FC<{
     </div>
   )
 }
-
 const AppContent: React.FC = () => {
   const appStyle: React.CSSProperties = {
     minHeight: 'calc(100vh - 50px)',
     margin: 0,
     width: 'calc(100vw - 90px)',
     padding: 0,
-    background: '#212121',
+    // background: '#212121',
     color: '#ececf1',
     fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
     display: 'flex',
