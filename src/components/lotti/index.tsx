@@ -390,6 +390,26 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
       />
       <img
         key={currentViseme} // Force re-render when viseme changes
+        src={brjowcki}
+        alt={`Mouth position: ${currentViseme}`}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}
+        onError={e => {
+          console.warn(`Failed to load image for viseme: ${currentViseme}`)
+          // Fallback to neutral or closed image if the current one fails to load
+          const target = e.target as HTMLImageElement
+          target.src = mouthFramesImage.neutral
+        }}
+      />
+      <img
+        key={currentViseme} // Force re-render when viseme changes
         src={woci}
         alt={`Mouth position: ${currentViseme}`}
         style={{
@@ -442,7 +462,6 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
           }
         }}
       /> */}
-
       <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
     </div>
   )
