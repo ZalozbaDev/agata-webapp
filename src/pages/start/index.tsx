@@ -5,6 +5,7 @@ import {
   inputBarWrapperStyle,
 } from './styles'
 import ChatInput from '../../components/chat-input'
+import { useWociCentered } from '../../components/woci-mikanje/WociCenteredContext';
 
 const starttilearray: { title: string}[] = [
   { title: 'Witaj, rjenje zo sy tu' },
@@ -37,6 +38,9 @@ const StartScreen: React.FC<{
     return () => clearInterval(interval);
   }, []);
 
+  const wociCtx = useWociCentered();
+  const isCentered = wociCtx?.isCentered ?? false;
+
   return (
     <div style={startScreenStyle}>
       <style>{`
@@ -48,21 +52,36 @@ const StartScreen: React.FC<{
           opacity: 0;
         }
       `}</style>
-      <div
-        style={welcomeTitleStyle}
-        className={`welcome-fade${fade ? '' : ' hide'}`}
-      >
-        {starttilearray[titleIdx].title}
-      </div>
-      <div style={inputBarWrapperStyle}>
-        <ChatInput
-          value={input}
-          onChange={onInputChange}
-          onSend={onSend}
-          onKeyDown={onInputKeyDown}
-          isLoading={isLoading}
-        />
-      </div>
+      {!isCentered && (
+        <div
+          style={welcomeTitleStyle}
+          className={`welcome-fade${fade ? '' : ' hide'}`}
+        >
+          {starttilearray[titleIdx].title}
+        </div>
+      )}
+      {!isCentered ? (
+        <div style={inputBarWrapperStyle}>
+          <ChatInput
+            value={input}
+            onChange={onInputChange}
+            onSend={onSend}
+            onKeyDown={onInputKeyDown}
+            isLoading={isLoading}
+          />
+        </div>
+      ) : null}
+      {isCentered ? (
+        <div style={{position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 3000, padding: 16}}>
+          <ChatInput
+            value={input}
+            onChange={onInputChange}
+            onSend={onSend}
+            onKeyDown={onInputKeyDown}
+            isLoading={isLoading}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
