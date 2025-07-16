@@ -3,7 +3,7 @@ import { Viseme } from '../../types/bamborak'
 
 // Import PNG images for different mouth positions
 import mjezwoce from './wobrazy/mjezwoco.png'
-import woci from './wobrazy/woci-wocinjene.png'
+import woci from './wobrazy/woci_wocinjene.png'
 import brjowcki from './wobrazy/brjowcki.png'
 import closedImg from './wobrazy/closed.png'
 import aImg from './wobrazy/a.png'
