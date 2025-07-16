@@ -5,33 +5,33 @@ import {
   imageStyle,
 } from './styles';
 
-import Lucija1 from '../../assets/lucija.png';
-import Lucija2 from '../../assets/lucija.png';
-import Lucija3 from '../../assets/lucija.png';
-import Lucija4 from '../../assets/lucija.png';
-import Lucija5 from '../../assets/lucija.png';
-import Digiserb1 from '../../assets/digiserb.png';
-import Digiserb2 from '../../assets/digiserb.png';
-import Digiserb3 from '../../assets/digiserb.png';
-import Digiserb4 from '../../assets/digiserb.png';
-import Digiserb5 from '../../assets/digiserb.png';
+import Lucija from '../../assets/01 Logo LUCIJA - 150px.png';
+import Digiserb from '../../assets/02 Logo DIGISERB - 150px.png';
+import Bamborak from '../../assets/03 Logo BAMBORAK - 150px.png';
+import SerbskiCaptioner from '../../assets/04 Logo WEBCAPTIONER - 150px.png';
+import Ocr from '../../assets/05 OCR - 150px.png';
+import Digiserb1 from'../../assets/02 Logo DIGISERB - 150px.png';
+import Digiserb2 from '../../assets/02 Logo DIGISERB - 150px.png';
+import Digiserb3 from '../../assets/02 Logo DIGISERB - 150px.png';
+import Digiserb4 from '../../assets/02 Logo DIGISERB - 150px.png';
+import Digiserb5 from '../../assets/02 Logo DIGISERB - 150px.png';
 
 // Arrays of 5 different images and links for each state
-const page1images = [Digiserb1, Digiserb2, Digiserb3, Digiserb4, Digiserb5];
-const page2images = [Lucija1, Lucija2, Lucija3, Lucija4, Lucija5];
-const page1links = [
+const page2images = [Digiserb1, Digiserb2, Digiserb3, Digiserb4, Digiserb5];
+const page1images = [Lucija, Digiserb, Bamborak, SerbskiCaptioner, Ocr];
+const page2links = [
   'https://digiserb.de/de/',
   'https://digiserb.de/de/',
   'https://digiserb.de/de/',
   'https://digiserb.de/de/',
   'https://digiserb.de/de/',
 ];
-const page2links = [
+const page1links = [
+  'https://www.lucija.de/',
+  'https://digiserb.de/de/',
   'https://www.lucija.de/',
   'https://www.lucija.de/',
-  'https://www.lucija.de/',
-  'https://www.lucija.de/',
-  'https://www.lucija.de/',
+  'https://2ocr.com/online-ocr-czech/',
 ];
 
 export const Wabjenje: React.FC = () => {
