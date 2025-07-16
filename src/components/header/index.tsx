@@ -18,7 +18,7 @@ import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
 
 
-const Header: React.FC<{agataOn:boolean, wabjenjeOn:boolean, onChangeagata:(isActive:boolean)=>void, onChangeWabjenje:(isActive:boolean)=>void}> = ({agataOn, onChangeagata, wabjenjeOn,onChangeWabjenje}) => {
+const Header: React.FC<{citanjeOn:boolean, agataOn:boolean, wabjenjeOn:boolean, onChangecitanje:(isActive:boolean)=>(void), onChangeagata:(isActive:boolean)=>void, onChangeWabjenje:(isActive:boolean)=>void}> = ({citanjeOn, onChangecitanje, agataOn, onChangeagata, wabjenjeOn,onChangeWabjenje}) => {
   const [isOpen, setIsOpen] = useState(false)
     const [issetOpen, setIssetOpen] = useState(false)
   const [newUrl, setNewUrl] = useState<CreateUrlRequest>({
@@ -123,7 +123,9 @@ const Header: React.FC<{agataOn:boolean, wabjenjeOn:boolean, onChangeagata:(isAc
           <p>Agata <input type='checkbox' name='Agata' id='agata' checked={agataOn} onChange={e => {
               onChangeagata(e.target.checked);
             }} style={checkboxstyle}/></p>
-          <p>Předčitanje<input type='checkbox' name='Předčitanje' id='citanje' style={checkboxstyle}/></p>
+          <p>Předčitanje<input type='checkbox' name='Předčitanje' id='citanje' checked={citanjeOn} onChange={e => {
+              onChangecitanje(e.target.checked);
+            }} style={checkboxstyle}/></p>
           </div>
           </div>
       )}
