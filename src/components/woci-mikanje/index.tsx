@@ -15,50 +15,71 @@ export const WociMikanje = () => {
   const [isPaused, setIsPaused] = useState(false)
 
   useEffect(() => {
-    if (isPaused) return
+    if (isPaused || isCentered) return;
 
     const interval = setInterval(() => {
       setCurrentIndex(prevIndex => {
         if (isForward) {
           if (prevIndex === wociImages.length - 1) {
-            // Reached the end, start going backwards
-            setIsForward(false)
-            return prevIndex - 1
+            setIsForward(false);
+            return prevIndex - 1;
           }
-          return prevIndex + 1
+          return prevIndex + 1;
         } else {
           if (prevIndex === 0) {
-            // Reached the beginning, pause before restarting
-            setIsPaused(true)
+            setIsPaused(true);
             setTimeout(() => {
-              setIsPaused(false)
-              setIsForward(true)
-            }, 2000) // 2 second pause
-            return 0
+              setIsPaused(false);
+              setIsForward(true);
+            }, 2000);
+            return 0;
           }
-          return prevIndex - 1
+          return prevIndex - 1;
         }
-      })
-    }, 80) // 80ms between frames for smooth animation
+      });
+    }, 80);
 
-    return () => clearInterval(interval)
-  }, [isForward, isPaused])
+    return () => clearInterval(interval);
+  }, [isForward, isPaused, isCentered]);
 
-  return (
-    <div
-      style={{
+  // Animation styles
+  const containerStyle = isCentered
+    ? {
+        position: 'fixed',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 2000,
+        height: 600,
+        transition: 'all 0.5s cubic-bezier(.4,2,.6,1)',
+        cursor: 'pointer',
+      }
+    : {
         position: 'fixed',
         bottom: 0,
         right: 0,
         zIndex: 1000,
         height: 300,
-      }}
-    >
+        transition: 'all 0.5s cubic-bezier(.4,2,.6,1)',
+        cursor: 'pointer',
+      };
+
+  const imgStyle = isCentered
+    ? { width: 450, height: 'auto', display: 'block', transition: 'all 0.5s cubic-bezier(.4,2,.6,1)' }
+    : { width: 300, height: 'auto', display: 'block', transition: 'all 0.5s cubic-bezier(.4,2,.6,1)' };
+
+  const handleClick = () => setIsCentered(c => !c);
+
+  return (
+    <div style={containerStyle} onClick={handleClick} title="Click to enlarge or shrink">
       <img
         src={wociImages[currentIndex]}
         alt={`Woci ${currentIndex}`}
-        style={{ width: 300, height: 'auto', display: 'block' }}
+        style={imgStyle}
       />
     </div>
-  )
+  );
 }
+
+export const [isCentered, setIsCentered] = useState(false)
+ 
