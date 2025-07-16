@@ -11,7 +11,7 @@ const starttilearray: { title: string}[] = [
   { title: 'Witaj, rjenje zo sy tu' },
   { title: 'Moin Mišter' },
   { title: 'Budź chwaleny Jězus Chrystus!' },
-  { title: 'Dobry dźen, što chceš wědźeć?' },
+  { title: 'Dobry dźeń, što chceš wědźeć?' },
   { title: 'Halo, što leži Tebi na wutrobje?' },
 ]
 
