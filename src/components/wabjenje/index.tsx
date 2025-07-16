@@ -10,27 +10,26 @@ import Digiserb from '../../assets/02 Logo DIGISERB - 150px.png';
 import Bamborak from '../../assets/03 Logo BAMBORAK - 150px.png';
 import SerbskiCaptioner from '../../assets/04 Logo WEBCAPTIONER - 150px.png';
 import Ocr from '../../assets/05 OCR - 150px.png';
-import Digiserb1 from'../../assets/02 Logo DIGISERB - 150px.png';
-import Digiserb2 from '../../assets/02 Logo DIGISERB - 150px.png';
-import Digiserb3 from '../../assets/02 Logo DIGISERB - 150px.png';
-import Digiserb4 from '../../assets/02 Logo DIGISERB - 150px.png';
-import Digiserb5 from '../../assets/02 Logo DIGISERB - 150px.png';
+import Eather from'../../assets/06 eatherpad.png';
+import ScanText from '../../assets/07 Beta scan Text.png';
+import pucnik from '../../assets/08 Pucnik digitalny swet.png';
+import workadventure from '../../assets/09 Workadventure.png';
+import slp from '../../assets/10 Gaussia.png';
 
-// Arrays of 5 different images and links for each state
-const page2images = [Digiserb1, Digiserb2, Digiserb3, Digiserb4, Digiserb5];
+const page2images = [Eather, ScanText, pucnik, workadventure, slp];
 const page1images = [Lucija, Digiserb, Bamborak, SerbskiCaptioner, Ocr];
 const page2links = [
-  'https://digiserb.de/de/',
-  'https://digiserb.de/de/',
-  'https://digiserb.de/de/',
-  'https://digiserb.de/de/',
-  'https://digiserb.de/de/',
+  'https://etherpad.serbski-inkubator.de/',
+  'https://spoznawanje.serbski-inkubator.de/',
+  'https://www.yumpu.com/xx/document/read/69582698/pucnik-po-digitalnym-swece',
+  'https://play.workadventu.re/@/zalozba/berow/prenipospyt',
+  'https://gaussia.de/slp/',
 ];
 const page1links = [
   'https://www.lucija.de/',
   'https://digiserb.de/de/',
-  'https://www.lucija.de/',
-  'https://www.lucija.de/',
+  'https://bamborak.mudrowak.de/',
+  'https://youtu.be/YdJh6-CdVNs',
   'https://2ocr.com/online-ocr-czech/',
 ];
 
@@ -43,17 +42,14 @@ export const Wabjenje: React.FC = () => {
     let swapTimeout: NodeJS.Timeout;
 
     const startCycle = () => {
-      // Start fade out
       setFade(true);
       fadeTimeout = setTimeout(() => {
         setShowLucija((prev) => !prev);
         setFade(false);
-        // After swap, wait 10s, then repeat
         swapTimeout = setTimeout(startCycle, 10000);
-      }, 500); // 0.5s fade duration
+      }, 500);
     };
 
-    // Initial cycle after 10s
     const initialTimeout = setTimeout(startCycle, 10000);
 
     return () => {
@@ -63,10 +59,8 @@ export const Wabjenje: React.FC = () => {
     };
   }, [showLucija]);
 
-  // Top offsets for stacking
   const tops = [50, 184, 318, 452, 586];
 
-  // Choose which set of images/links to use
   const images = showLucija ? page2images : page1images;
   const links = showLucija ? page2links : page1links;
   const alts = showLucija ? ['Lucija 1','Lucija 2','Lucija 3','Lucija 4','Lucija 5'] : ['Digiserb 1','Digiserb 2','Digiserb 3','Digiserb 4','Digiserb 5'];
