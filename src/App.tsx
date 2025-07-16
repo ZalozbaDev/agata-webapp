@@ -198,7 +198,8 @@ const AppContentInner: React.FC<{
   const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100);
   const [isExtraWide, setIsExtraWide] = useReactState(() => window.innerWidth > 1250);
   const [isCentered, setIsCentered] = useState(false);
-
+const [wabjenjeOn, setWabjenjeOn] = useState(true);
+const [agataOn, setagataOn] = useState(true);
   useEffect(() => {
     const handleResize = () => {
       setIsWide(window.innerWidth > 1100);
@@ -211,9 +212,9 @@ const AppContentInner: React.FC<{
   return (
     <WociCenteredContext.Provider value={{ isCentered, setIsCentered }}>
       <div style={appStyle}>
-        <Header />
-        {isMain && (isCentered || isExtraWide) && <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered} />}
-        {isMain && isWide && <Wabjenje />}
+        <Header agataOn={agataOn} wabjenjeOn={wabjenjeOn} onChangeagata={(isActive) => {setagataOn(isActive)} } onChangeWabjenje={(isActive) => {setWabjenjeOn(isActive)} }  />
+        {isMain && (isCentered || isExtraWide) && agataOn && <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered} />}
+        {isMain && isWide && wabjenjeOn && <Wabjenje />}
         {isMain && <Footer />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
