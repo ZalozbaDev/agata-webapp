@@ -11,11 +11,16 @@ import {
   sendButtonStyle,
   textbottomInputStyle,
   urlsButtonStyle,
+  Settingsiconstyle,
+  checkboxstyle,
 } from './styles'
 import { CreateUrlRequest, urlService } from '../../services/urlService'
+import { Settingsicon } from '../../assets/icons'
+
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
+    const [issetOpen, setIssetOpen] = useState(false)
   const [newUrl, setNewUrl] = useState<CreateUrlRequest>({
     url: '',
     username: '',
@@ -74,6 +79,11 @@ const Header: React.FC = () => {
             AGATA
           </Link>
         </div>
+        <div style={Settingsiconstyle}>
+          <button style={{background: 'none', padding: 0}} onClick={() => setIssetOpen(true)}>
+            <Settingsicon />
+          </button>
+        </div>
         {showLinks && (
           <div style={headerRightStyle}>
             <Link to='/urls' style={urlsButtonStyle}>
@@ -100,6 +110,19 @@ const Header: React.FC = () => {
           </div>
         )}
       </header>
+      {issetOpen && (
+        <div style={{...popupStyle, fontSize: '3.2rem'}}>
+          <button style={{...closeButtonStyle, fontSize:'5rem',}} onClick={() => setIssetOpen(false)}>
+            ×
+          </button>
+          <p>Zastajenja</p>
+          <div style={{fontSize: '2.8rem', marginLeft: '10rem', marginRight: '10rem'}}>
+          Wabjenje <input type='checkbox' name='Wabjenje' id='wabjenje' style={checkboxstyle}/>
+          <p>Agata <input type='checkbox' name='Agata' id='agata' style={checkboxstyle}/></p>
+          <p>Předčitanje<input type='checkbox' name='Předčitanje' id='citanje' style={checkboxstyle}/></p>
+          </div>
+          </div>
+      )}
       {isOpen && (
         <div style={popupStyle}>
           <button style={closeButtonStyle} onClick={() => setIsOpen(false)}>
