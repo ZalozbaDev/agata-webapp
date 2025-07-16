@@ -25,12 +25,17 @@ import { Wabjenje } from './components/wabjenje/index.tsx'
 import { getAudioFromText } from './services/bamborak.ts'
 import { audioQueueService } from './services/AudioQueueService.ts'
 import { useAudioContext } from './hooks/useAudioContext.ts'
+import TalkingPuppet from './components/lotti/index.tsx'
+import { BamborakAudioResponse } from './types/bamborak'
 
 const ChatApp: React.FC = () => {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [input, setInput] = useState('')
   const [started, setStarted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  const [bamborakResponse, setBamborakResponse] =
+    useState<BamborakAudioResponse | null>(null)
   const [lastError, setLastError] = useState<{
     type: string
     message: string
@@ -43,6 +48,15 @@ const ChatApp: React.FC = () => {
     audioContext.initializeAudioContext()
     audioQueueService.initialize(audioContext)
   }, [audioContext])
+
+  // Cleanup audio URL when component unmounts or audio changes
+  useEffect(() => {
+    return () => {
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl)
+      }
+    }
+  }, [audioUrl])
   const handleSend = useCallback(async () => {
     if (!input.trim() || isLoading) return
 
@@ -62,8 +76,22 @@ const ChatApp: React.FC = () => {
       const response = await chatService.sendMessage(userMessage)
 
       getAudioFromText(response.message, 'katka_2025_07').then(
-        audioResponse => {
-          audioQueueService.addToQueue(audioResponse.data)
+        bamborakResponse => {
+          setBamborakResponse(bamborakResponse)
+
+          // Convert base64 audio to ArrayBuffer
+          const audioData = atob(bamborakResponse.audio)
+          const audioArray = new Uint8Array(audioData.length)
+          for (let i = 0; i < audioData.length; i++) {
+            audioArray[i] = audioData.charCodeAt(i)
+          }
+          const audioBuffer = audioArray.buffer
+
+          // Create blob URL for the audio
+          const blob = new Blob([audioBuffer], { type: 'audio/wav' })
+          const url = URL.createObjectURL(blob)
+          setAudioUrl(url)
+          audioQueueService.addToQueue(audioBuffer)
         }
       )
       // Add assistant response to chat
@@ -136,6 +164,13 @@ const ChatApp: React.FC = () => {
 
   return (
     <div style={chatAppStyle} onClick={audioContext.initializeAudioContext}>
+      {audioUrl && bamborakResponse && (
+        <TalkingPuppet
+          audioFile={audioUrl}
+          visemes={bamborakResponse.visemes}
+          duration={bamborakResponse.duration}
+        />
+      )}
       {!started ? (
         <StartScreen
           input={input}
