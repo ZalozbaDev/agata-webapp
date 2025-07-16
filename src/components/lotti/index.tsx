@@ -20,6 +20,8 @@ import nImg from './wobrazy/n.png'
 import kImg from './wobrazy/k.png'
 import gImg from './wobrazy/g.png'
 import neutralImg from './wobrazy/neutral.png'
+import Lottie from 'lottie-react'
+import puppetAnimation from './puppet-mouth.json'
 
 const mouthFramesImage = {
   closed: closedImg,
@@ -71,7 +73,87 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   const animationFrameRef = useRef<number | undefined>(undefined)
   const isPlayingRef = useRef<boolean>(false)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
+  const lottieRef = useRef<any>(null)
 
+  // Map viseme types to animation frames
+  const visemeToFrame = (visemeType: string): number => {
+    switch (visemeType.toLowerCase()) {
+      case 'closed':
+      case 'sil':
+        return 0
+      case 'a':
+      case 'aa':
+      case 'ah':
+        return 1 // Wide open mouth for 'a' sound
+      case 'e':
+      case 'eh':
+      case 'ey':
+        return 1 // Semi-open mouth for 'e' sound
+      case 'i':
+      case 'iy':
+        return 2 // Slightly open for 'i' sound
+      case 'o':
+      case 'ow':
+        return 2 // Rounded lips for 'o' sound
+      case 'u':
+      case 'uw':
+        return 3 // Tight rounded lips for 'u' sound
+      case 'm':
+      case 'b':
+      case 'p':
+        return 3 // Closed lips for 'm', 'b', 'p' sounds
+      case 'f':
+      case 'v':
+        return 12 // Lower lip to upper teeth for 'f', 'v' sounds
+      case 's':
+      case 'z':
+      case 'sh':
+      case 'zh':
+        return 16 // Slightly open with teeth showing for 's' sounds
+      case 'th':
+        return 14 // Tongue between teeth for 'th' sound
+      case 'l':
+      case 'r':
+        return 18 // Tongue position for 'l', 'r' sounds
+      case 'n':
+      case 'd':
+      case 't':
+        return 10 // Tongue to alveolar ridge for 'n', 'd', 't' sounds
+      case 'k':
+      case 'g':
+        return 6 // Back of tongue to soft palate for 'k', 'g' sounds
+      default:
+        return 12 // Neutral mouth position
+    }
+  }
+
+  // Control mouth position based on current viseme
+  useEffect(() => {
+    if (lottieRef.current) {
+      const targetFrame = visemeToFrame(currentViseme)
+      console.log(lottieRef.current)
+      try {
+        if (lottieRef.current.goToAndStop) {
+          lottieRef.current.goToAndStop(targetFrame, true)
+        } else if (lottieRef.current.playSegments) {
+          lottieRef.current.playSegments([targetFrame, targetFrame], true)
+        }
+      } catch (error) {
+        console.error('Error controlling Lottie animation:', error)
+      }
+    }
+  }, [currentViseme])
+
+  // Initialize Lottie when component mounts
+  useEffect(() => {
+    if (lottieRef.current) {
+      try {
+        lottieRef.current.goToAndStop(0, true)
+      } catch (error) {
+        console.error('Error initializing Lottie:', error)
+      }
+    }
+  }, [])
   // Map viseme types to image paths
   const visemeToName = (visemeType: string) => {
     switch (visemeType.toLowerCase()) {
@@ -307,19 +389,6 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         }}
       />
       <img
-        src={brjowcki}
-        alt='Brjowcki'
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          display: 'block',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-        }}
-      />
-      <img
         key={currentViseme} // Force re-render when viseme changes
         src={woci}
         alt={`Mouth position: ${currentViseme}`}
@@ -359,30 +428,22 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
           target.src = mouthFramesImage.neutral
         }}
       />
-      <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
+      {/*       
+      <Lottie
+        lottieRef={lottieRef}
+        animationData={puppetAnimation}
+        loop={false}
+        autoplay={false}
+        style={{ width: '100%', height: '100%' }}
+        onDOMLoaded={() => {
+          console.log('Lottie DOM loaded, setting initial frame')
+          if (lottieRef.current) {
+            lottieRef.current.goToAndStop(0, true)
+          }
+        }}
+      /> */}
 
-      {/* Manual play button if autoplay is blocked */}
-      {showPlayButton && (
-        <button
-          onClick={handleManualPlay}
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 10,
-            padding: '10px 20px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '16px',
-          }}
-        >
-          ▶ Play Audio
-        </button>
-      )}
+      <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
     </div>
   )
 }

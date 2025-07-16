@@ -38,8 +38,6 @@ const ChatApp: React.FC<{
   const [started, setStarted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
-  const [bamborakResponse, setBamborakResponse] =
-    useState<BamborakAudioResponse | null>(null)
   const [lastError, setLastError] = useState<{
     type: string
     message: string
@@ -73,8 +71,6 @@ const ChatApp: React.FC<{
 
       getAudioFromText(response.message, 'katka_2025_07').then(
         bamborakResponse => {
-          setBamborakResponse(bamborakResponse)
-
           // Convert base64 audio to ArrayBuffer
           const audioData = atob(bamborakResponse.audio)
           const audioArray = new Uint8Array(audioData.length)
