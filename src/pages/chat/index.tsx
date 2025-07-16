@@ -8,6 +8,7 @@ import Message, { MessageType } from '../../components/Message.tsx'
 import ChatInput from '../../components/chat-input'
 import ErrorMessage from '../../components/ErrorMessage'
 import { ErrorType } from '../../types/errors'
+import { useWociCentered } from '../../components/woci-mikanje/WociCenteredContext'
 
 const ChatScreen: React.FC<{
   messages: MessageType[]
@@ -34,30 +35,47 @@ const ChatScreen: React.FC<{
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, lastError])
 
+  const wociCtx = useWociCentered();
+  const isCentered = wociCtx?.isCentered ?? false;
+
   return (
     <div style={chatScreenStyle}>
-      <div style={messagesWrapperStyle} className="no-scrollbar messagesWrapper">
-        {messages.map((msg, i) => (
-          <Message key={i} role={msg.role} content={msg.content} />
-        ))}
-        {lastError && (
-          <ErrorMessage
-            errorType={lastError.type as ErrorType}
-            message={lastError.message}
-            onRetry={onRetry}
+      {!isCentered && (
+        <div style={messagesWrapperStyle} className="no-scrollbar messagesWrapper">
+          {messages.map((msg, i) => (
+            <Message key={i} role={msg.role} content={msg.content} />
+          ))}
+          {lastError && (
+            <ErrorMessage
+              errorType={lastError.type as ErrorType}
+              message={lastError.message}
+              onRetry={onRetry}
+            />
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      )}
+      {isCentered ? (
+        <div style={{position: 'fixed', bottom: 0, zIndex: 0, width: '100%'}}>
+          <ChatInput
+            value={input}
+            onChange={onInputChange}
+            onSend={onSend}
+            onKeyDown={onInputKeyDown}
+            isLoading={isLoading}
           />
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-      <div style={inputBarWrapperStyle}>
-        <ChatInput
-          value={input}
-          onChange={onInputChange}
-          onSend={onSend}
-          onKeyDown={onInputKeyDown}
-          isLoading={isLoading}
-        />
-      </div>
+        </div>
+      ) : (
+        <div style={inputBarWrapperStyle}>
+          <ChatInput
+            value={input}
+            onChange={onInputChange}
+            onSend={onSend}
+            onKeyDown={onInputKeyDown}
+            isLoading={isLoading}
+          />
+        </div>
+      )}
     </div>
   )
 }
