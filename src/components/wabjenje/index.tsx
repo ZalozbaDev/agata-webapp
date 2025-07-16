@@ -13,13 +13,16 @@ import Ocr from '../../assets/05 OCR - 150px.png';
 import Eather from'../../assets/06 eatherpad.png';
 import ScanText from '../../assets/07 Beta scan Text.png';
 import pucnik from '../../assets/08 Pucnik digitalny swet.png';
+import workadventure from '../../assets/09 Workadventure.png';
+import slp from '../../assets/10 Gaussia.png';
 
-const page2images = [Eather, ScanText, pucnik];
+const page2images = [Eather, ScanText, pucnik, workadventure, slp];
 const page1images = [Lucija, Digiserb, Bamborak, SerbskiCaptioner, Ocr];
 const page2links = [
   'https://etherpad.serbski-inkubator.de/',
   'https://spoznawanje.serbski-inkubator.de/',
   'https://www.yumpu.com/xx/document/read/69582698/pucnik-po-digitalnym-swece',
+  'https://play.workadventu.re/@/zalozba/berow/prenipospyt',
   'https://gaussia.de/slp/',
 ];
 const page1links = [
