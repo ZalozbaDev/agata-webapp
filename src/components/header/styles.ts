@@ -56,7 +56,7 @@ export const popupStyle: React.CSSProperties = {
   backgroundColor: '#2a2d36',
   color: '#a9a8a8ff',
   padding: '20px',
-  zIndex: 1000,
+ zIndex: 9000,
   borderRadius: '8px',
   fontSize: '30px',
   textAlign: 'center',
@@ -127,10 +127,12 @@ position: 'fixed',
 background: 'none',
 border: 'none',
 padding: 0,
+zIndex: 9000,
 }
 
 export const checkboxstyle: React.CSSProperties = {
 width: '2.8rem',
 height: '2.8rem',
 accentColor: '#1c9bc5ff',
+zIndex: 9000,
 }
