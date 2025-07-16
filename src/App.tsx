@@ -21,11 +21,9 @@ import { MessageType } from './components/Message.tsx'
 import { chatService } from './services/api'
 import { getErrorType, getErrorMessage } from './types/errors'
 import { WociMikanje } from './components/woci-mikanje'
-import { WociCenteredContext } from './components/woci-mikanje/WociCenteredContext';
+import { WociCenteredContext } from './components/woci-mikanje/WociCenteredContext'
 import { Wabjenje } from './components/wabjenje/index.tsx'
 import { getAudioFromText } from './services/bamborak.ts'
-import { audioQueueService } from './services/AudioQueueService.ts'
-import { useAudioContext } from './hooks/useAudioContext.ts'
 import TalkingPuppet from './components/lotti/index.tsx'
 import { BamborakAudioResponse } from './types/bamborak'
 
@@ -41,14 +39,6 @@ const ChatApp: React.FC = () => {
     type: string
     message: string
   } | null>(null)
-
-  const audioContext = useAudioContext()
-
-  useEffect(() => {
-    // Initialize audio context when the component mounts
-    audioContext.initializeAudioContext()
-    audioQueueService.initialize(audioContext)
-  }, [audioContext])
 
   // Cleanup audio URL when component unmounts or audio changes
   useEffect(() => {
@@ -92,7 +82,6 @@ const ChatApp: React.FC = () => {
           const blob = new Blob([audioBuffer], { type: 'audio/wav' })
           const url = URL.createObjectURL(blob)
           setAudioUrl(url)
-          audioQueueService.addToQueue(audioBuffer)
         }
       )
       // Add assistant response to chat
@@ -164,7 +153,7 @@ const ChatApp: React.FC = () => {
   }
 
   return (
-    <div style={chatAppStyle} onClick={audioContext.initializeAudioContext}>
+    <div style={chatAppStyle}>
       {audioUrl && bamborakResponse && (
         <TalkingPuppet
           audioFile={audioUrl}
@@ -230,24 +219,28 @@ const AppContentInner: React.FC<{
 }> = ({ appStyle, spacerStyle }) => {
   const location = useLocation()
   const isMain = location.pathname === '/'
-  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100);
-  const [isExtraWide, setIsExtraWide] = useReactState(() => window.innerWidth > 1250);
-  const [isCentered, setIsCentered] = useState(false);
+  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100)
+  const [isExtraWide, setIsExtraWide] = useReactState(
+    () => window.innerWidth > 1250
+  )
+  const [isCentered, setIsCentered] = useState(false)
 
   useEffect(() => {
     const handleResize = () => {
-      setIsWide(window.innerWidth > 1100);
-      setIsExtraWide(window.innerWidth > 1250);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+      setIsWide(window.innerWidth > 1100)
+      setIsExtraWide(window.innerWidth > 1250)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   return (
     <WociCenteredContext.Provider value={{ isCentered, setIsCentered }}>
       <div style={appStyle}>
         <Header />
-        {isMain && (isCentered || isExtraWide) && <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered} />}
+        {isMain && (isCentered || isExtraWide) && (
+          <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered} />
+        )}
         {isMain && isWide && <Wabjenje />}
         {isMain && <Footer />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}

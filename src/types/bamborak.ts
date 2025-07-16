@@ -1,10 +1,10 @@
 // Types for Bamborak API responses
 
 export interface Viseme {
-  type: string
+  viseme: string
   startTime: number
   endTime: number
-  duration: number
+  intensity?: number
 }
 
 export interface BamborakAudioResponse {

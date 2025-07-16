@@ -1,112 +1,177 @@
 import React, { useRef, useEffect, useState } from 'react'
-import Lottie from 'lottie-react'
-import puppetAnimation from './puppet-mouth.json'
 import { Viseme } from '../../types/bamborak'
+
+// Import PNG images for different mouth positions
+import mjezwoce from './wobrazy/mjezwoco.png'
+import woci from './wobrazy/woci-wocinjene.png'
+import brjowcki from './wobrazy/brjowcki.png'
+import closedImg from './wobrazy/closed.png'
+import aImg from './wobrazy/a.png'
+import eImg from './wobrazy/e.png'
+import iImg from './wobrazy/i.png'
+import oImg from './wobrazy/o.png'
+import uImg from './wobrazy/u.png'
+import mImg from './wobrazy/m.png'
+import fImg from './wobrazy/f.png'
+import sImg from './wobrazy/s.png'
+import thImg from './wobrazy/th.png'
+import lImg from './wobrazy/l.png'
+import nImg from './wobrazy/n.png'
+import kImg from './wobrazy/k.png'
+import gImg from './wobrazy/g.png'
+import neutralImg from './wobrazy/neutral.png'
+
+const mouthFramesImage = {
+  closed: closedImg,
+  a: aImg,
+  e: eImg,
+  i: iImg,
+  o: oImg,
+  u: uImg,
+  m: mImg,
+  f: fImg,
+  s: sImg,
+  th: thImg,
+  l: lImg,
+  n: nImg,
+  k: kImg,
+  g: gImg,
+  neutral: neutralImg,
+}
 
 interface TalkingPuppetProps {
   audioFile: string
-  visemes?: Viseme[]
+  visemes?:
+    | Viseme[]
+    | { visemes: Viseme[]; duration?: number; sampleRate?: number }
   duration?: number
 }
 
 const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   audioFile,
-  visemes = [],
+  visemes,
   duration = 0,
 }) => {
+  // Handle viseme data structure - it might be an object with visemes property or direct array
+  const visemesArray = React.useMemo(() => {
+    if (!visemes) return []
+    if (Array.isArray(visemes)) return visemes
+    if (
+      typeof visemes === 'object' &&
+      'visemes' in visemes &&
+      Array.isArray(visemes.visemes)
+    ) {
+      return visemes.visemes
+    }
+    return []
+  }, [visemes])
+
   const audioRef = useRef<HTMLAudioElement>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
   const [currentViseme, setCurrentViseme] = useState<string>('closed')
-  const lottieRef = useRef<any>(null)
   const animationFrameRef = useRef<number | undefined>(undefined)
   const startTimeRef = useRef<number>(0)
+  const frameCountRef = useRef<number>(0)
+  const isPlayingRef = useRef<boolean>(false)
 
-  // Map viseme types to animation frames
-  const visemeToFrame = (visemeType: string): number => {
+  // Map viseme types to image paths
+  const visemeToName = (visemeType: string) => {
     switch (visemeType.toLowerCase()) {
       case 'closed':
       case 'sil':
-        return 0
+      case 'rest':
+        return mouthFramesImage.closed
       case 'a':
       case 'aa':
       case 'ah':
-        return 32 // Wide open mouth for 'a' sound
+        return mouthFramesImage.a // Wide open mouth for 'a' sound
       case 'e':
       case 'eh':
       case 'ey':
-        return 24 // Semi-open mouth for 'e' sound
+        return mouthFramesImage.e // Semi-open mouth for 'e' sound
       case 'i':
       case 'iy':
-        return 28 // Slightly open for 'i' sound
+        return mouthFramesImage.i // Slightly open for 'i' sound
       case 'o':
       case 'ow':
-        return 20 // Rounded lips for 'o' sound
+        return mouthFramesImage.o // Rounded lips for 'o' sound
       case 'u':
       case 'uw':
-        return 16 // Tight rounded lips for 'u' sound
+        return mouthFramesImage.u // Tight rounded lips for 'u' sound
       case 'm':
       case 'b':
       case 'p':
-        return 8 // Closed lips for 'm', 'b', 'p' sounds
+      case 'mm':
+        return mouthFramesImage.m // Closed lips for 'm', 'b', 'p' sounds
       case 'f':
       case 'v':
-        return 12 // Lower lip to upper teeth for 'f', 'v' sounds
+      case 'ff':
+        return mouthFramesImage.f // Lower lip to upper teeth for 'f', 'v' sounds
       case 's':
       case 'z':
       case 'sh':
       case 'zh':
-        return 16 // Slightly open with teeth showing for 's' sounds
+      case 'ss':
+        return mouthFramesImage.s // Slightly open with teeth showing for 's' sounds
       case 'th':
-        return 14 // Tongue between teeth for 'th' sound
+        return mouthFramesImage.th // Tongue between teeth for 'th' sound
       case 'l':
       case 'r':
-        return 18 // Tongue position for 'l', 'r' sounds
+      case 'll':
+        return mouthFramesImage.l // Tongue position for 'l', 'r' sounds
       case 'n':
       case 'd':
       case 't':
-        return 10 // Tongue to alveolar ridge for 'n', 'd', 't' sounds
+      case 'nn':
+        return mouthFramesImage.n // Tongue to alveolar ridge for 'n', 'd', 't' sounds
       case 'k':
       case 'g':
-        return 6 // Back of tongue to soft palate for 'k', 'g' sounds
+      case 'kk':
+        return mouthFramesImage.k // Back of tongue to soft palate for 'k', 'g' sounds
+      case 'ww':
+        return mouthFramesImage.m // 'ww' is similar to 'm' - rounded lips
       default:
-        return 12 // Neutral mouth position
+        console.log('Unknown viseme type:', visemeType)
+        return mouthFramesImage.neutral
     }
   }
 
   const animateMouthWithVisemes = () => {
-    if (!isPlaying || visemes.length === 0) return
+    frameCountRef.current += 1
+
+    if (!isPlayingRef.current || visemesArray.length === 0) {
+      return
+    }
 
     const currentTime = Date.now() - startTimeRef.current
     const currentTimeSeconds = currentTime / 1000
 
     // Find the current viseme based on timing
-    let activeViseme = visemes.find(
-      viseme =>
+    let activeViseme = visemesArray.find(
+      (viseme: Viseme) =>
         currentTimeSeconds >= viseme.startTime &&
         currentTimeSeconds <= viseme.endTime
     )
 
-    if (activeViseme && activeViseme.type !== currentViseme) {
-      setCurrentViseme(activeViseme.type)
-      console.log(
-        'Current viseme:',
-        activeViseme.type,
-        'at time:',
-        currentTimeSeconds
-      )
+    if (activeViseme && activeViseme.viseme !== currentViseme) {
+      setCurrentViseme(activeViseme.viseme)
+    } else if (!activeViseme && currentViseme !== 'closed') {
+      // If no active viseme found, default to closed
+      setCurrentViseme('closed')
     }
 
+    // Always continue the animation loop
     animationFrameRef.current = requestAnimationFrame(animateMouthWithVisemes)
   }
 
   const handlePlay = () => {
-    setIsPlaying(true)
+    isPlayingRef.current = true
     startTimeRef.current = Date.now()
+    frameCountRef.current = 0
     animateMouthWithVisemes()
   }
 
   const handlePause = () => {
-    setIsPlaying(false)
+    isPlayingRef.current = false
     setCurrentViseme('closed')
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current)
@@ -114,7 +179,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   }
 
   const handleEnded = () => {
-    setIsPlaying(false)
+    isPlayingRef.current = false
     setCurrentViseme('closed')
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current)
@@ -138,96 +203,119 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
       audioElement.removeEventListener('pause', handlePause)
       audioElement.removeEventListener('ended', handleEnded)
     }
-  }, [visemes])
+  }, [visemesArray])
 
-  // Control mouth position based on current viseme
+  // Auto-play when audioFile is available
   useEffect(() => {
-    if (lottieRef.current) {
-      const targetFrame = visemeToFrame(currentViseme)
+    const audioElement = audioRef.current
+    if (audioElement && audioFile) {
+      // Reset to beginning and play
+      audioElement.currentTime = 0
 
-      try {
-        if (lottieRef.current.goToAndStop) {
-          lottieRef.current.goToAndStop(targetFrame, true)
-        } else if (lottieRef.current.playSegments) {
-          lottieRef.current.playSegments([targetFrame, targetFrame], true)
+      // Ensure audio is loaded before playing
+      if (audioElement.readyState >= 2) {
+        // HAVE_CURRENT_DATA
+        audioElement.play().catch(error => {
+          console.warn('Auto-play failed:', error)
+          // Auto-play might be blocked by browser policy, that's okay
+        })
+      } else {
+        // Wait for audio to load
+        const handleCanPlay = () => {
+          audioElement.play().catch(error => {
+            console.warn('Auto-play failed:', error)
+          })
+          audioElement.removeEventListener('canplay', handleCanPlay)
         }
-      } catch (error) {
-        console.error('Error controlling Lottie animation:', error)
+        audioElement.addEventListener('canplay', handleCanPlay)
       }
     }
-  }, [currentViseme])
-
-  // Initialize Lottie when component mounts
-  useEffect(() => {
-    if (lottieRef.current) {
-      try {
-        lottieRef.current.goToAndStop(0, true)
-      } catch (error) {
-        console.error('Error initializing Lottie:', error)
-      }
-    }
-  }, [])
+  }, [audioFile])
 
   return (
-    <div style={{ width: '200px', height: '200px' }}>
-      <Lottie
-        lottieRef={lottieRef}
-        animationData={puppetAnimation}
-        loop={false}
-        autoplay={false}
-        style={{ width: '100%', height: '100%' }}
-        onDOMLoaded={() => {
-          console.log('Lottie DOM loaded, setting initial frame')
-          if (lottieRef.current) {
-            lottieRef.current.goToAndStop(0, true)
-          }
+    <div
+      style={{
+        width: '200px',
+        height: '200px',
+        position: 'relative',
+        display: 'block',
+      }}
+    >
+      {/* Display the current viseme image */}
+      <img
+        key={currentViseme} // Force re-render when viseme changes
+        src={mjezwoce}
+        alt={`Mouth position: ${currentViseme}`}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}
+        onError={e => {
+          console.warn(`Failed to load image for viseme: ${currentViseme}`)
+          // Fallback to neutral or closed image if the current one fails to load
+          const target = e.target as HTMLImageElement
+          target.src = mouthFramesImage.neutral
         }}
       />
-      <audio
-        ref={audioRef}
-        controls
-        src={audioFile}
-        style={{ width: '100%', marginTop: '10px' }}
+      <img
+        src={brjowcki}
+        alt='Brjowcki'
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}
       />
-      {/* Debug info */}
-      <div style={{ fontSize: '12px', marginTop: '5px', color: '#666' }}>
-        Status: {isPlaying ? 'Playing' : 'Stopped'} | Viseme: {currentViseme}
-        {visemes.length > 0 && ` | Visemes: ${visemes.length}`}
-        {duration > 0 && ` | Duration: ${duration.toFixed(1)}s`}
-      </div>
-      {/* Test buttons for manual viseme testing */}
-      <div style={{ marginTop: '10px' }}>
-        <button
-          onClick={() => setCurrentViseme('closed')}
-          style={{ marginRight: '5px', fontSize: '10px' }}
-        >
-          Closed
-        </button>
-        <button
-          onClick={() => setCurrentViseme('a')}
-          style={{ marginRight: '5px', fontSize: '10px' }}
-        >
-          A
-        </button>
-        <button
-          onClick={() => setCurrentViseme('e')}
-          style={{ marginRight: '5px', fontSize: '10px' }}
-        >
-          E
-        </button>
-        <button
-          onClick={() => setCurrentViseme('m')}
-          style={{ marginRight: '5px', fontSize: '10px' }}
-        >
-          M
-        </button>
-        <button
-          onClick={() => setCurrentViseme('s')}
-          style={{ fontSize: '10px' }}
-        >
-          S
-        </button>
-      </div>
+      <img
+        key={currentViseme} // Force re-render when viseme changes
+        src={woci}
+        alt={`Mouth position: ${currentViseme}`}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}
+        onError={e => {
+          console.warn(`Failed to load image for viseme: ${currentViseme}`)
+          // Fallback to neutral or closed image if the current one fails to load
+          const target = e.target as HTMLImageElement
+          target.src = mouthFramesImage.neutral
+        }}
+      />
+      <img
+        key={currentViseme} // Force re-render when viseme changes
+        src={visemeToName(currentViseme)}
+        alt={`Mouth position: ${currentViseme}`}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          display: 'block',
+        }}
+        onError={e => {
+          console.warn(`Failed to load image for viseme: ${currentViseme}`)
+          // Fallback to neutral or closed image if the current one fails to load
+          const target = e.target as HTMLImageElement
+          target.src = mouthFramesImage.neutral
+        }}
+      />
+      <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
     </div>
   )
 }
