@@ -69,9 +69,8 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   const audioRef = useRef<HTMLAudioElement>(null)
   const [currentViseme, setCurrentViseme] = useState<string>('closed')
   const animationFrameRef = useRef<number | undefined>(undefined)
-  const startTimeRef = useRef<number>(0)
-  const frameCountRef = useRef<number>(0)
   const isPlayingRef = useRef<boolean>(false)
+  const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
 
   // Map viseme types to image paths
   const visemeToName = (visemeType: string) => {
@@ -136,14 +135,17 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   }
 
   const animateMouthWithVisemes = () => {
-    frameCountRef.current += 1
-
     if (!isPlayingRef.current || visemesArray.length === 0) {
       return
     }
 
-    const currentTime = Date.now() - startTimeRef.current
-    const currentTimeSeconds = currentTime / 1000
+    const audioElement = audioRef.current
+    if (!audioElement) {
+      return
+    }
+
+    // Use the actual audio currentTime instead of Date.now()
+    const currentTimeSeconds = audioElement.currentTime
 
     // Find the current viseme based on timing
     let activeViseme = visemesArray.find(
@@ -159,14 +161,12 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
       setCurrentViseme('closed')
     }
 
-    // Always continue the animation loop
+    // Continue the animation loop
     animationFrameRef.current = requestAnimationFrame(animateMouthWithVisemes)
   }
 
   const handlePlay = () => {
     isPlayingRef.current = true
-    startTimeRef.current = Date.now()
-    frameCountRef.current = 0
     animateMouthWithVisemes()
   }
 
@@ -181,8 +181,44 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   const handleEnded = () => {
     isPlayingRef.current = false
     setCurrentViseme('closed')
+    setShowPlayButton(false)
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current)
+    }
+  }
+
+  const handleManualPlay = () => {
+    const audioElement = audioRef.current
+    if (audioElement) {
+      audioElement.play().catch(error => {
+        console.warn('Manual play failed:', error)
+      })
+      setShowPlayButton(false)
+    }
+  }
+
+  const handleTimeUpdate = () => {
+    // This ensures the mouth animation updates even when the audio is paused/resumed
+    // and helps maintain sync during playback
+    if (isPlayingRef.current && visemesArray.length > 0) {
+      const audioElement = audioRef.current
+      if (!audioElement) return
+
+      const currentTimeSeconds = audioElement.currentTime
+
+      // Find the current viseme based on timing
+      let activeViseme = visemesArray.find(
+        (viseme: Viseme) =>
+          currentTimeSeconds >= viseme.startTime &&
+          currentTimeSeconds <= viseme.endTime
+      )
+
+      if (activeViseme && activeViseme.viseme !== currentViseme) {
+        setCurrentViseme(activeViseme.viseme)
+      } else if (!activeViseme && currentViseme !== 'closed') {
+        // If no active viseme found, default to closed
+        setCurrentViseme('closed')
+      }
     }
   }
 
@@ -194,6 +230,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
     audioElement.addEventListener('play', handlePlay)
     audioElement.addEventListener('pause', handlePause)
     audioElement.addEventListener('ended', handleEnded)
+    audioElement.addEventListener('timeupdate', handleTimeUpdate)
 
     return () => {
       if (animationFrameRef.current) {
@@ -202,6 +239,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
       audioElement.removeEventListener('play', handlePlay)
       audioElement.removeEventListener('pause', handlePause)
       audioElement.removeEventListener('ended', handleEnded)
+      audioElement.removeEventListener('timeupdate', handleTimeUpdate)
     }
   }, [visemesArray])
 
@@ -209,21 +247,27 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   useEffect(() => {
     const audioElement = audioRef.current
     if (audioElement && audioFile) {
+      console.log('Audio file received:', audioFile)
       // Reset to beginning and play
       audioElement.currentTime = 0
 
       // Ensure audio is loaded before playing
       if (audioElement.readyState >= 2) {
         // HAVE_CURRENT_DATA
+        console.log('Audio ready, attempting to play...')
         audioElement.play().catch(error => {
           console.warn('Auto-play failed:', error)
-          // Auto-play might be blocked by browser policy, that's okay
+          // Auto-play might be blocked by browser policy, show play button
+          setShowPlayButton(true)
         })
       } else {
         // Wait for audio to load
+        console.log('Waiting for audio to load...')
         const handleCanPlay = () => {
+          console.log('Audio can play, attempting to start...')
           audioElement.play().catch(error => {
             console.warn('Auto-play failed:', error)
+            setShowPlayButton(true)
           })
           audioElement.removeEventListener('canplay', handleCanPlay)
         }
@@ -235,8 +279,8 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   return (
     <div
       style={{
-        width: '200px',
-        height: '200px',
+        width: '100%',
+        height: '100%',
         position: 'relative',
         display: 'block',
       }}
@@ -316,6 +360,29 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         }}
       />
       <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
+
+      {/* Manual play button if autoplay is blocked */}
+      {showPlayButton && (
+        <button
+          onClick={handleManualPlay}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 10,
+            padding: '10px 20px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: '16px',
+          }}
+        >
+          ▶ Play Audio
+        </button>
+      )}
     </div>
   )
 }

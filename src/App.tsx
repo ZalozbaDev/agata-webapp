@@ -27,7 +27,12 @@ import { getAudioFromText } from './services/bamborak.ts'
 import TalkingPuppet from './components/lotti/index.tsx'
 import { BamborakAudioResponse } from './types/bamborak'
 
-const ChatApp: React.FC = () => {
+const ChatApp: React.FC<{
+  onGetAudio: (
+    audioUrl: string,
+    bamborakResponse: BamborakAudioResponse
+  ) => void
+}> = ({ onGetAudio }) => {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [input, setInput] = useState('')
   const [started, setStarted] = useState(false)
@@ -82,6 +87,7 @@ const ChatApp: React.FC = () => {
           const blob = new Blob([audioBuffer], { type: 'audio/wav' })
           const url = URL.createObjectURL(blob)
           setAudioUrl(url)
+          onGetAudio(url, bamborakResponse)
         }
       )
       // Add assistant response to chat
@@ -154,13 +160,6 @@ const ChatApp: React.FC = () => {
 
   return (
     <div style={chatAppStyle}>
-      {audioUrl && bamborakResponse && (
-        <TalkingPuppet
-          audioFile={audioUrl}
-          visemes={bamborakResponse.visemes}
-          duration={bamborakResponse.duration}
-        />
-      )}
       {!started ? (
         <StartScreen
           input={input}
@@ -220,6 +219,9 @@ const AppContentInner: React.FC<{
   const location = useLocation()
   const isMain = location.pathname === '/'
   const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100)
+  const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  const [bamborakResponse, setBamborakResponse] =
+    useState<BamborakAudioResponse | null>(null)
   const [isExtraWide, setIsExtraWide] = useReactState(
     () => window.innerWidth > 1250
   )
@@ -234,18 +236,33 @@ const AppContentInner: React.FC<{
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  const onGetAudio = (
+    audioUrl: string,
+    bamborakResponse: BamborakAudioResponse
+  ) => {
+    setAudioUrl(audioUrl)
+    setBamborakResponse(bamborakResponse)
+  }
   return (
     <WociCenteredContext.Provider value={{ isCentered, setIsCentered }}>
       <div style={appStyle}>
         <Header />
         {isMain && (isCentered || isExtraWide) && (
-          <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered} />
+          <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
+            {audioUrl && bamborakResponse && (
+              <TalkingPuppet
+                audioFile={audioUrl}
+                visemes={bamborakResponse.visemes}
+                duration={bamborakResponse.duration}
+              />
+            )}
+          </WociMikanje>
         )}
         {isMain && isWide && <Wabjenje />}
         {isMain && <Footer />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
-          <Route path='/' element={<ChatApp />} />
+          <Route path='/' element={<ChatApp onGetAudio={onGetAudio} />} />
           <Route path='/urls' element={<UrlsPage />} />
           <Route path='/data' element={<DataPage />} />
           <Route path='/impresum' element={<ImpresumPage />} />

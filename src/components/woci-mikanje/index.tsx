@@ -12,9 +12,11 @@ const wociImages = [woci0, woci1, woci2, woci3, woci4, woci5, woci6]
 export const WociMikanje = ({
   isCentered,
   setIsCentered,
+  children,
 }: {
   isCentered: boolean
   setIsCentered: React.Dispatch<React.SetStateAction<boolean>>
+  children: React.ReactNode
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isForward, setIsForward] = useState(true)
@@ -56,6 +58,7 @@ export const WociMikanje = ({
         top: '50%',
         transform: 'translate(-50%, -50%)',
         zIndex: 2000,
+        width: 450,
         height: 600,
         transition: 'all 0.5s cubic-bezier(.4,2,.6,1)',
         cursor: 'pointer',
@@ -65,6 +68,7 @@ export const WociMikanje = ({
         bottom: 0,
         right: 0,
         zIndex: 1000,
+        width: 300,
         height: 300,
         transition: 'all 0.5s cubic-bezier(.4,2,.6,1)',
         cursor: 'pointer',
@@ -88,11 +92,12 @@ export const WociMikanje = ({
 
   return (
     <div style={containerStyle} onClick={handleClick}>
-      <img
+      {/* <img
         src={wociImages[currentIndex]}
         alt={`Woci ${currentIndex}`}
         style={imgStyle}
-      />
+      /> */}
+      {children}
     </div>
   )
 }
