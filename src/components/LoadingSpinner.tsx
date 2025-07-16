@@ -23,7 +23,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = 'medium' }) => {
     width: `${dotSize}px`,
     height: `${dotSize}px`,
     borderRadius: '50%',
-    backgroundColor: '#ececf1',
+    backgroundColor: '#0f0f0fff',
     animation: 'loadingDots 1.4s infinite ease-in-out',
   }
 
