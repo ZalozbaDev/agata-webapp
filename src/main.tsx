@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
 import ErrorBoundary from './components/ErrorBoundary'
+import background from './assets/pozadki/HG4.jpg'
 
 // Global styles
 const globalStyles = `
@@ -10,9 +11,36 @@ const globalStyles = `
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    background: #212121;
     color: #ececf1;
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+
+
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(${background});
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+    z-index: -2;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.8) 70%, rgba(0, 0, 0, 1) 100%);
+    z-index: -1;
   }
 
   body {

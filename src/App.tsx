@@ -21,29 +21,36 @@ import { MessageType } from './components/Message.tsx'
 import { chatService } from './services/api'
 import { getErrorType, getErrorMessage } from './types/errors'
 import { WociMikanje } from './components/woci-mikanje'
-import { WociCenteredContext } from './components/woci-mikanje/WociCenteredContext';
+import { WociCenteredContext } from './components/woci-mikanje/WociCenteredContext'
 import { Wabjenje } from './components/wabjenje/index.tsx'
 import { getAudioFromText } from './services/bamborak.ts'
-import { audioQueueService } from './services/AudioQueueService.ts'
-import { useAudioContext } from './hooks/useAudioContext.ts'
+import TalkingPuppet from './components/lotti/index.tsx'
+import { BamborakAudioResponse } from './types/bamborak'
 
-const ChatApp: React.FC = () => {
+const ChatApp: React.FC<{
+  onGetAudio: (
+    audioUrl: string,
+    bamborakResponse: BamborakAudioResponse
+  ) => void
+}> = ({ onGetAudio }) => {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [input, setInput] = useState('')
   const [started, setStarted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [lastError, setLastError] = useState<{
     type: string
     message: string
   } | null>(null)
 
-  const audioContext = useAudioContext()
-
+  // Cleanup audio URL when component unmounts or audio changes
   useEffect(() => {
-    // Initialize audio context when the component mounts
-    audioContext.initializeAudioContext()
-    audioQueueService.initialize(audioContext)
-  }, [audioContext])
+    return () => {
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl)
+      }
+    }
+  }, [audioUrl])
   const handleSend = useCallback(async () => {
     if (!input.trim() || isLoading) return
 
@@ -63,8 +70,20 @@ const ChatApp: React.FC = () => {
       const response = await chatService.sendMessage(userMessage)
 
       getAudioFromText(response.message, 'katka_2025_07').then(
-        audioResponse => {
-          audioQueueService.addToQueue(audioResponse.data)
+        bamborakResponse => {
+          // Convert base64 audio to ArrayBuffer
+          const audioData = atob(bamborakResponse.audio)
+          const audioArray = new Uint8Array(audioData.length)
+          for (let i = 0; i < audioData.length; i++) {
+            audioArray[i] = audioData.charCodeAt(i)
+          }
+          const audioBuffer = audioArray.buffer
+
+          // Create blob URL for the audio
+          const blob = new Blob([audioBuffer], { type: 'audio/wav' })
+          const url = URL.createObjectURL(blob)
+          setAudioUrl(url)
+          onGetAudio(url, bamborakResponse)
         }
       )
       // Add assistant response to chat
@@ -136,7 +155,7 @@ const ChatApp: React.FC = () => {
   }
 
   return (
-    <div style={chatAppStyle} onClick={audioContext.initializeAudioContext}>
+    <div style={chatAppStyle}>
       {!started ? (
         <StartScreen
           input={input}
@@ -164,14 +183,13 @@ const ChatApp: React.FC = () => {
     </div>
   )
 }
-
 const AppContent: React.FC = () => {
   const appStyle: React.CSSProperties = {
     minHeight: 'calc(100vh - 50px)',
     margin: 0,
     width: 'calc(100vw - 90px)',
     padding: 0,
-    background: '#212121',
+    // background: '#212121',
     color: '#ececf1',
     fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
     display: 'flex',
@@ -195,30 +213,56 @@ const AppContentInner: React.FC<{
 }> = ({ appStyle, spacerStyle }) => {
   const location = useLocation()
   const isMain = location.pathname === '/'
+
   const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100);
   const [isExtraWide, setIsExtraWide] = useReactState(() => window.innerWidth > 1250);
   const [isCentered, setIsCentered] = useState(false);
 const [wabjenjeOn, setWabjenjeOn] = useState(true);
 const [agataOn, setagataOn] = useState(true);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  const [bamborakResponse, setBamborakResponse] =
+    useState<BamborakAudioResponse | null>(null)
+
   useEffect(() => {
     const handleResize = () => {
-      setIsWide(window.innerWidth > 1100);
-      setIsExtraWide(window.innerWidth > 1250);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+      setIsWide(window.innerWidth > 1100)
+      setIsExtraWide(window.innerWidth > 1250)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
+  const onGetAudio = (
+    audioUrl: string,
+    bamborakResponse: BamborakAudioResponse
+  ) => {
+    setAudioUrl(audioUrl)
+    setBamborakResponse(bamborakResponse)
+  }
   return (
     <WociCenteredContext.Provider value={{ isCentered, setIsCentered }}>
       <div style={appStyle}>
+
         <Header agataOn={agataOn} wabjenjeOn={wabjenjeOn} onChangeagata={(isActive) => {setagataOn(isActive)} } onChangeWabjenje={(isActive) => {setWabjenjeOn(isActive)} }  />
-        {isMain && (isCentered || isExtraWide) && agataOn && <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered} />}
-        {isMain && isWide && wabjenjeOn && <Wabjenje />}
+
+
+        {isMain && (isCentered || isExtraWide) && agataOn && (
+          <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
+            {audioUrl && bamborakResponse && (
+              <TalkingPuppet
+                audioFile={audioUrl}
+                visemes={bamborakResponse.visemes}
+                duration={bamborakResponse.duration}
+              />
+            )}
+          </WociMikanje>
+        )}
+       {isMain && isWide && wabjenjeOn && <Wabjenje />}
+
         {isMain && <Footer />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
-          <Route path='/' element={<ChatApp />} />
+          <Route path='/' element={<ChatApp onGetAudio={onGetAudio} />} />
           <Route path='/urls' element={<UrlsPage />} />
           <Route path='/data' element={<DataPage />} />
           <Route path='/impresum' element={<ImpresumPage />} />
