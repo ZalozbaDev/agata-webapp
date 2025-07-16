@@ -21,6 +21,7 @@ import { MessageType } from './components/Message.tsx'
 import { chatService } from './services/api'
 import { getErrorType, getErrorMessage } from './types/errors'
 import { WociMikanje } from './components/woci-mikanje'
+import { WociCenteredContext } from './components/woci-mikanje/WociCenteredContext';
 import { Wabjenje } from './components/wabjenje/index.tsx'
 import { getAudioFromText } from './services/bamborak.ts'
 import { audioQueueService } from './services/AudioQueueService.ts'
@@ -229,28 +230,35 @@ const AppContentInner: React.FC<{
 }> = ({ appStyle, spacerStyle }) => {
   const location = useLocation()
   const isMain = location.pathname === '/'
-  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1350)
+  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100);
+  const [isExtraWide, setIsExtraWide] = useReactState(() => window.innerWidth > 1250);
+  const [isCentered, setIsCentered] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => setIsWide(window.innerWidth > 1350)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    const handleResize = () => {
+      setIsWide(window.innerWidth > 1100);
+      setIsExtraWide(window.innerWidth > 1250);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
-    <div style={appStyle}>
-      <Header />
-      {isMain && isWide && <WociMikanje />}
-      {isMain && isWide && <Wabjenje />}
-      {isMain && <Footer />}
-      <div style={spacerStyle} /> {/* Spacer for fixed header */}
-      <Routes>
-        <Route path='/' element={<ChatApp />} />
-        <Route path='/urls' element={<UrlsPage />} />
-        <Route path='/data' element={<DataPage />} />
-        <Route path='/impresum' element={<ImpresumPage />} />
-      </Routes>
-    </div>
+    <WociCenteredContext.Provider value={{ isCentered, setIsCentered }}>
+      <div style={appStyle}>
+        <Header />
+        {isMain && (isCentered || isExtraWide) && <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered} />}
+        {isMain && isWide && <Wabjenje />}
+        {isMain && <Footer />}
+        <div style={spacerStyle} /> {/* Spacer for fixed header */}
+        <Routes>
+          <Route path='/' element={<ChatApp />} />
+          <Route path='/urls' element={<UrlsPage />} />
+          <Route path='/data' element={<DataPage />} />
+          <Route path='/impresum' element={<ImpresumPage />} />
+        </Routes>
+      </div>
+    </WociCenteredContext.Provider>
   )
 }
 

@@ -9,14 +9,19 @@ import woci6 from '../../assets/woci-mikanje/woci6.png'
 
 const wociImages = [woci0, woci1, woci2, woci3, woci4, woci5, woci6]
 
-export const WociMikanje = () => {
+export const WociMikanje = ({
+  isCentered,
+  setIsCentered,
+}: {
+  isCentered: boolean
+  setIsCentered: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isForward, setIsForward] = useState(true)
   const [isPaused, setIsPaused] = useState(false)
-  const [isCentered, setIsCentered] = useState(false)
 
   useEffect(() => {
-    if (isPaused || isCentered) return
+    if (isPaused) return
 
     const interval = setInterval(() => {
       setCurrentIndex(prevIndex => {
@@ -46,7 +51,7 @@ export const WociMikanje = () => {
   // Animation styles
   const containerStyle = isCentered
     ? {
-        position: 'fixed',
+        position: 'fixed' as const,
         left: '50%',
         top: '50%',
         transform: 'translate(-50%, -50%)',
@@ -56,7 +61,7 @@ export const WociMikanje = () => {
         cursor: 'pointer',
       }
     : {
-        position: 'fixed',
+        position: 'fixed' as const,
         bottom: 0,
         right: 0,
         zIndex: 1000,
@@ -82,11 +87,7 @@ export const WociMikanje = () => {
   const handleClick = () => setIsCentered(c => !c)
 
   return (
-    <div
-      style={containerStyle}
-      onClick={handleClick}
-      title='Click to enlarge or shrink'
-    >
+    <div style={containerStyle} onClick={handleClick}>
       <img
         src={wociImages[currentIndex]}
         alt={`Woci ${currentIndex}`}
