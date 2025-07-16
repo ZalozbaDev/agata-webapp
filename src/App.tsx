@@ -213,14 +213,16 @@ const AppContentInner: React.FC<{
 }> = ({ appStyle, spacerStyle }) => {
   const location = useLocation()
   const isMain = location.pathname === '/'
-  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100)
+
+  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100);
+  const [isExtraWide, setIsExtraWide] = useReactState(() => window.innerWidth > 1250);
+  const [isCentered, setIsCentered] = useState(false);
+const [wabjenjeOn, setWabjenjeOn] = useState(true);
+const [agataOn, setagataOn] = useState(true);
+const [citanjeOn, setcitanjeOn] = useState(true);
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [bamborakResponse, setBamborakResponse] =
     useState<BamborakAudioResponse | null>(null)
-  const [isExtraWide, setIsExtraWide] = useReactState(
-    () => window.innerWidth > 1250
-  )
-  const [isCentered, setIsCentered] = useState(false)
 
   useEffect(() => {
     const handleResize = () => {
@@ -241,8 +243,11 @@ const AppContentInner: React.FC<{
   return (
     <WociCenteredContext.Provider value={{ isCentered, setIsCentered }}>
       <div style={appStyle}>
-        <Header />
-        {isMain && (isCentered || isExtraWide) && (
+
+        <Header citanjeOn={citanjeOn} agataOn={agataOn} wabjenjeOn={wabjenjeOn} onChangecitanje={(isActive) => {setcitanjeOn(isActive)} } onChangeagata={(isActive) => {setagataOn(isActive)} } onChangeWabjenje={(isActive) => {setWabjenjeOn(isActive)} }  />
+
+
+        {isMain && (isCentered || isExtraWide) && agataOn && (
           <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
             {audioUrl && bamborakResponse && (
               <TalkingPuppet
@@ -253,7 +258,8 @@ const AppContentInner: React.FC<{
             )}
           </WociMikanje>
         )}
-        {isMain && isWide && <Wabjenje />}
+       {isMain && isWide && wabjenjeOn && <Wabjenje />}
+
         {isMain && <Footer />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>

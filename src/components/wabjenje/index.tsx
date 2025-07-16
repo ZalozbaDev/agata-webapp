@@ -59,7 +59,7 @@ export const Wabjenje: React.FC = () => {
     };
   }, [showLucija]);
 
-  const tops = [50, 184, 318, 452, 586];
+  const tops = ['7vh', '25.5vh', '44vh', '62.5vh', '81vh'];
 
   const images = showLucija ? page2images : page1images;
   const links = showLucija ? page2links : page1links;
