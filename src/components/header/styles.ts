@@ -119,3 +119,18 @@ export const sendButtonStyle: React.CSSProperties = {
   fontSize: '40px',
   textAlign: 'center',
 }
+
+export const Settingsiconstyle: React.CSSProperties = {
+top: '5px',
+right: '5px',
+position: 'fixed',
+background: 'none',
+border: 'none',
+padding: 0,
+}
+
+export const checkboxstyle: React.CSSProperties = {
+width: '2.8rem',
+height: '2.8rem',
+accentColor: '#1c9bc5ff',
+}
