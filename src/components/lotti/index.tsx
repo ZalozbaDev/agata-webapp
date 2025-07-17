@@ -84,6 +84,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
       case 'a':
       case 'aa':
       case 'ah':
+      case 'hh':
         return 1 // Wide open mouth for 'a' sound
       case 'e':
       case 'eh':
@@ -93,6 +94,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
       case 'iy':
         return 2 // Slightly open for 'i' sound
       case 'o':
+      case 'oo':
       case 'ow':
         return 2 // Rounded lips for 'o' sound
       case 'u':
@@ -114,6 +116,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         return 14 // Tongue between teeth for 'th' sound
       case 'l':
       case 'r':
+      case 'rr':
         return 18 // Tongue position for 'l', 'r' sounds
       case 'n':
       case 'd':
@@ -369,7 +372,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
     >
       {/* Display the current viseme image */}
       <img
-        key={currentViseme} // Force re-render when viseme changes
+        // key={currentViseme} // Force re-render when viseme changes
         src={mjezwoce}
         alt={`Mouth position: ${currentViseme}`}
         style={{
@@ -389,7 +392,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         }}
       />
       <img
-        key={currentViseme} // Force re-render when viseme changes
+        // key={currentViseme} // Force re-render when viseme changes
         src={brjowcki}
         alt={`Mouth position: ${currentViseme}`}
         style={{
@@ -409,7 +412,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         }}
       />
       <img
-        key={currentViseme} // Force re-render when viseme changes
+        // key={currentViseme} // Force re-render when viseme changes
         src={woci}
         alt={`Mouth position: ${currentViseme}`}
         style={{
