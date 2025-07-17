@@ -34,13 +34,21 @@ export const SettingsIcon: React.FC = () => (
 )
 
 export const MicIcon: React.FC = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" 
-  width="24" 
-  height="24" 
-  viewBox="0 0 24 24">
-    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" 
-    stroke-width="2" 
-    d="M17.5 10.5A5.5 5.5 0 0 1 12 16m0 0a5.5 5.5 0 0 1-5.5-5.5M12 16v4m-4 0h4m0 0h4m-4-7a2.5 2.5 0 0 1-2.5-2.5v-4a2.5 2.5 0 0 1 5 0v4A2.5 2.5 0 0 1 12 13"/></svg>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width='24'
+    height='24'
+    viewBox='0 0 24 24'
+  >
+    <path
+      fill='none'
+      stroke='currentColor'
+      stroke-linecap='round'
+      stroke-linejoin='round'
+      stroke-width='2'
+      d='M17.5 10.5A5.5 5.5 0 0 1 12 16m0 0a5.5 5.5 0 0 1-5.5-5.5M12 16v4m-4 0h4m0 0h4m-4-7a2.5 2.5 0 0 1-2.5-2.5v-4a2.5 2.5 0 0 1 5 0v4A2.5 2.5 0 0 1 12 13'
+    />
+  </svg>
 )
 
 export const RetryIcon: React.FC = () => (
@@ -60,10 +68,15 @@ export const RetryIcon: React.FC = () => (
 
 export const Settingsicon: React.FC = () => (
   //from iconify
-<svg xmlns="http://www.w3.org/2000/svg" 
-width="48" 
-height="48" 
-viewBox="0 0 24 24">
-	<path fill="#cacaca" d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1m0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1M3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1" />
-</svg>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width='48'
+    height='48'
+    viewBox='0 0 24 24'
+  >
+    <path
+      fill='#cacaca'
+      d='M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1m0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1M3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1'
+    />
+  </svg>
 )
