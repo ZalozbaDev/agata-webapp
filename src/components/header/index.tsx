@@ -19,6 +19,7 @@ import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
 import mici from '../../assets/michael downsyndrom ziesch.jpg'
 import cigareta from '../../assets/cigareta.mp3'
+import punk from '../../assets/felix_punk.mp3'
 
 
 const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean, onChangecentagata:(isActive:boolean)=>void ,onChangeagata:(isActive:boolean)=>void, onChangeWabjenje:(isActive:boolean)=>void}> = ({centagataOn, onChangecentagata ,agataOn, onChangeagata, wabjenjeOn,onChangeWabjenje}) => {
@@ -62,6 +63,11 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
 
   // Handler for shift-clicking AGATA sign
   const handleAgataClick = (e: React.MouseEvent) => {
+    if (ismenuOpen) {
+      // Play alternate audio when menu is open and AGATA is clicked
+     const punkaudio = new Audio(punk);
+      punkaudio.play();
+    }
     if (e.shiftKey) {
       e.preventDefault();
       setAgataShiftClicks(prev => {
