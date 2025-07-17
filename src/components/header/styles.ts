@@ -131,8 +131,8 @@ zIndex: 9000,
 }
 
 export const checkboxstyle: React.CSSProperties = {
-width: '2.8rem',
-height: '2.8rem',
+width: '1.8rem',
+height: '1.8rem',
 accentColor: '#1c9bc5ff',
 zIndex: 9000,
 }

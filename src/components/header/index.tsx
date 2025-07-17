@@ -111,21 +111,21 @@ const Header: React.FC<{citanjeOn:boolean, agataOn:boolean, wabjenjeOn:boolean, 
         )}
       </header>
       {issetOpen && (
-        <div style={{...popupStyle, fontSize: '3.2rem'}}>
-          <button style={{...closeButtonStyle, fontSize:'5rem',}} onClick={() => setIssetOpen(false)}>
+        <div style={{...popupStyle, fontSize: '3rem'}}>
+          <button style={{...closeButtonStyle, fontSize:'3rem',}} onClick={() => setIssetOpen(false)}>
             ×
           </button>
           <p>Zastajenja</p>
-          <div style={{fontSize: '2.8rem', marginLeft: '10rem', marginRight: '10rem'}}>
-          Wabjenje <input type='checkbox' name='Wabjenje' id='wabjenje' checked={wabjenjeOn} onChange={e => {
+          <div style={{fontSize: '2rem', marginLeft: '5rem', marginRight: '5rem'}}>
+           <input type='checkbox' name='Wabjenje' id='wabjenje' checked={wabjenjeOn} onChange={e => {
               onChangeWabjenje(e.target.checked);
-            }} style={checkboxstyle}/>
-          <p>Agata <input type='checkbox' name='Agata' id='agata' checked={agataOn} onChange={e => {
+            }} style={checkboxstyle}/> Wabjenje
+          <p><input type='checkbox' name='Agata' id='agata' checked={agataOn} onChange={e => {
               onChangeagata(e.target.checked);
-            }} style={checkboxstyle}/></p>
-          <p>Předčitanje<input type='checkbox' name='Předčitanje' id='citanje' checked={citanjeOn} onChange={e => {
+            }} style={checkboxstyle}/>Agata</p>
+          <p><input type='checkbox' name='Předčitanje' id='citanje' checked={citanjeOn} onChange={e => {
               onChangecitanje(e.target.checked);
-            }} style={checkboxstyle}/></p>
+            }} style={checkboxstyle}/>Předčitanje</p>
           </div>
           </div>
       )}
