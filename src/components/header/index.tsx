@@ -91,13 +91,12 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
           <button
             style={{background: 'none', padding: 0}}
             onClick={e => {
-              const audio = new Audio(cigareta);
-              audio.play();
-              if (e.ctrlKey) {
+              if (e.shiftKey) {
                 setSettingsShiftClicks(prev => {
                   const next = prev + 1;
-                  if (next === 3) {
-                    
+                  if (next === 1) {
+                    const audio = new Audio(cigareta);
+              audio.play();
                     setPendingShowHiddenImage(true);
                     setTimeout(() => {
                       setShowHiddenImage(true);
