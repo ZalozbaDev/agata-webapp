@@ -18,6 +18,7 @@ import {
 import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
 import mici from '../../assets/michael downsyndrom ziesch.jpg'
+import cigareta from '../../assets/cigareta.mp3'
 
 
 const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean, onChangecentagata:(isActive:boolean)=>void ,onChangeagata:(isActive:boolean)=>void, onChangeWabjenje:(isActive:boolean)=>void}> = ({centagataOn, onChangecentagata ,agataOn, onChangeagata, wabjenjeOn,onChangeWabjenje}) => {
@@ -36,6 +37,7 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
   const [settingsShiftClicks, setSettingsShiftClicks] = useState(0);
   const [pendingShowHiddenImage, setPendingShowHiddenImage] = useState(false);
   const hideTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  
 
   const handleCreateUrl = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -89,10 +91,13 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
           <button
             style={{background: 'none', padding: 0}}
             onClick={e => {
-              if (e.shiftKey) {
+              const audio = new Audio(cigareta);
+              audio.play();
+              if (e.ctrlKey) {
                 setSettingsShiftClicks(prev => {
                   const next = prev + 1;
                   if (next === 3) {
+                    
                     setPendingShowHiddenImage(true);
                     setTimeout(() => {
                       setShowHiddenImage(true);
@@ -100,8 +105,8 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
                         setShowHiddenImage(false);
                         setSettingsShiftClicks(0);
                         setPendingShowHiddenImage(false);
-                      }, 5000); // Show for 5 seconds
-                    }, 3000); // Wait 3 seconds before showing
+                      }, 50000); // Show for 5 seconds
+                    }, 10000); // Wait 3 seconds before showing
                     return 0;
                   }
                   return next;
