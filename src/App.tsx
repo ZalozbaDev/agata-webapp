@@ -219,6 +219,14 @@ const AppContentInner: React.FC<{
 const [wabjenjeOn, setWabjenjeOn] = useState(true);
 const [agataOn, setagataOn] = useState(true);
 const [centagataOn, setcentagataOn] = useState(false);
+
+useEffect(() => {
+  if (centagataOn) {
+    setIsCentered(true);
+  }
+}, [centagataOn]);
+
+
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [bamborakResponse, setBamborakResponse] =
     useState<BamborakAudioResponse | null>(null)
@@ -244,7 +252,6 @@ const [centagataOn, setcentagataOn] = useState(false);
       <div style={appStyle}>
 
         <Header centagataOn={centagataOn} agataOn={agataOn} wabjenjeOn={wabjenjeOn}  onChangecentagata={(isActive) => {setcentagataOn(isActive)} } onChangeagata={(isActive) => {setagataOn(isActive)} } onChangeWabjenje={(isActive) => {setWabjenjeOn(isActive)} }  />
-
 
         {isMain && (isCentered || isExtraWide) && agataOn && (
           <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
