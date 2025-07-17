@@ -5,16 +5,16 @@ import {
   imageStyle,
 } from './styles';
 
-import Lucija from '../../assets/01 Logo LUCIJA - 150px.png';
-import Digiserb from '../../assets/02 Logo DIGISERB - 150px.png';
-import Bamborak from '../../assets/03 Logo BAMBORAK - 150px.png';
-import SerbskiCaptioner from '../../assets/04 Logo WEBCAPTIONER - 150px.png';
-import Ocr from '../../assets/05 Wito OCR - 150px.png';
-import Eather from'../../assets/06 eatherpad.png';
-import ScanText from '../../assets/07 Beta scan Text.png';
-import pucnik from '../../assets/08 Pucnik digitalny swet.png';
-import workadventure from '../../assets/09 Workadventure.png';
-import slp from '../../assets/10 Gaussia.png';
+import Lucija from '../../assets/logos/01 Logo LUCIJA - 150px.png';
+import Digiserb from '../../assets/logos/02 Logo DIGISERB - 150px.png';
+import Bamborak from '../../assets/logos/03 Logo BAMBORAK - 150px.png';
+import SerbskiCaptioner from '../../assets/logos/04 Logo WEBCAPTIONER - 150px.png';
+import Ocr from '../../assets/logos/05 Wito OCR - 150px.png';
+import Eather from'../../assets/logos/06 eatherpad.png';
+import ScanText from '../../assets/logos/07 Beta scan Text.png';
+import pucnik from '../../assets/logos/08 Pucnik digitalny swet.png';
+import workadventure from '../../assets/logos/09 Workadventure.png';
+import slp from '../../assets/logos/10 Gaussia.png';
 
 const page2images = [Eather, ScanText, pucnik, workadventure, slp];
 const page1images = [Lucija, Digiserb, Bamborak, SerbskiCaptioner, Ocr];

@@ -17,6 +17,8 @@ import {
 } from './styles'
 import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
+import mici from '../../assets/michael downsyndrom ziesch.jpg'
+import cigareta from '../../assets/cigareta.mp3'
 
 
 const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean, onChangecentagata:(isActive:boolean)=>void ,onChangeagata:(isActive:boolean)=>void, onChangeWabjenje:(isActive:boolean)=>void}> = ({centagataOn, onChangecentagata ,agataOn, onChangeagata, wabjenjeOn,onChangeWabjenje}) => {
@@ -31,7 +33,11 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
   })
   const [showLinks, setShowLinks] = useState(false)
   const [agataShiftClicks, setAgataShiftClicks] = useState(0)
+  const [showHiddenImage, setShowHiddenImage] = useState(false);
+  const [settingsShiftClicks, setSettingsShiftClicks] = useState(0);
+  const [pendingShowHiddenImage, setPendingShowHiddenImage] = useState(false);
   const hideTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  
 
   const handleCreateUrl = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -82,7 +88,34 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
           </Link>
         </div>
         <div style={Settingsiconstyle}>
-          <button style={{background: 'none', padding: 0}} onClick={() => setIsmenuOpen(!ismenuOpen)}>
+          <button
+            style={{background: 'none', padding: 0}}
+            onClick={e => {
+              const audio = new Audio(cigareta);
+              audio.play();
+              if (e.ctrlKey) {
+                setSettingsShiftClicks(prev => {
+                  const next = prev + 1;
+                  if (next === 3) {
+                    
+                    setPendingShowHiddenImage(true);
+                    setTimeout(() => {
+                      setShowHiddenImage(true);
+                      setTimeout(() => {
+                        setShowHiddenImage(false);
+                        setSettingsShiftClicks(0);
+                        setPendingShowHiddenImage(false);
+                      }, 50000); // Show for 5 seconds
+                    }, 10000); // Wait 3 seconds before showing
+                    return 0;
+                  }
+                  return next;
+                });
+              } else {
+                setIsmenuOpen(!ismenuOpen);
+              }
+            }}
+          >
             <Settingsicon />
           </button>
         </div>
@@ -190,6 +223,28 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
           </form>
         </div>
       )}
+      {showHiddenImage && (
+          <div style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 99999, background: '#000'}}>
+            <img
+              src={mici}
+              alt="Hidden"
+              style={{
+                width: '100vw',
+                height: '100vh',
+                objectFit: 'cover',
+                opacity: 1,
+                transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s',
+                animation: 'growMici 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
+            <style>{`
+              @keyframes growMici {
+                from { transform: scale(0.0); }
+                to { transform: scale(1.0); }
+              }
+            `}</style>
+          </div>
+        )}
     </>
   )
 }
