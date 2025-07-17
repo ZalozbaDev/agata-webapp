@@ -5,7 +5,7 @@ import { Viseme } from '../../types/bamborak'
 import mjezwoce from './wobrazy/mjezwoco.png'
 import woci_wocinjene from './wobrazy/woci_wocinjene.png'
 import woci_zacinjene from './wobrazy/woci_zacinjene.png'
-import brjowcki from './wobrazy/brjowcki.png'
+import brjowcki from './wobrazy/browcki1.png'
 import brjowcki2 from './wobrazy/browcki2.png'
 import closedImg from './wobrazy/closed.png'
 import aImg from './wobrazy/a.png'
@@ -76,7 +76,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   const isPlayingRef = useRef<boolean>(false)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const lottieRef = useRef<any>(null)
-  let augenCounter = 0
+
   // Eyebrow animation state
   const [eyebrowFrame, setEyebrowFrame] = useState<'brjowcki' | 'brjowcki2'>(
     'brjowcki'
@@ -85,12 +85,28 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
     'woci_wocinjene' | 'woci_zacinjene'
   >('woci_wocinjene')
 
-  // Toggle eyebrows every 2 seconds
+  // Natural random blinking effect
   useEffect(() => {
-    const interval = setInterval(() => {
-      setEyebrowFrame(prev => (prev === 'brjowcki' ? 'brjowcki2' : 'brjowcki'))
-    }, 2000)
-    return () => clearInterval(interval)
+    let blinkTimeout: NodeJS.Timeout | null = null
+    let blinkDurationTimeout: NodeJS.Timeout | null = null
+
+    const startBlinking = () => {
+      // Random delay between 2 and 6 seconds
+      const nextBlink = Math.random() * 4000 + 10000
+      blinkTimeout = setTimeout(() => {
+        setEyesFrame('woci_zacinjene') // closed eyes
+        blinkDurationTimeout = setTimeout(() => {
+          setEyesFrame('woci_wocinjene') // open eyes
+          startBlinking() // schedule next blink
+        }, 200) // blink lasts 200ms
+      }, nextBlink)
+    }
+
+    startBlinking()
+    return () => {
+      if (blinkTimeout) clearTimeout(blinkTimeout)
+      if (blinkDurationTimeout) clearTimeout(blinkDurationTimeout)
+    }
   }, [])
 
   // Natural random blinking effect
@@ -100,11 +116,11 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
 
     const startBlinking = () => {
       // Random delay between 2 and 6 seconds
-      const nextBlink = Math.random() * 4000 + 2000
+      const nextBlink = Math.random() * 5000 + 2000
       blinkTimeout = setTimeout(() => {
-        setEyesFrame('woci_zacinjene') // closed eyes
+        setEyebrowFrame('brjowcki2') // closed eyes
         blinkDurationTimeout = setTimeout(() => {
-          setEyesFrame('woci_wocinjene') // open eyes
+          setEyebrowFrame('brjowcki') // open eyes
           startBlinking() // schedule next blink
         }, 200) // blink lasts 200ms
       }, nextBlink)
