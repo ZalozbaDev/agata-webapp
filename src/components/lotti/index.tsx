@@ -3,8 +3,10 @@ import { Viseme } from '../../types/bamborak'
 
 // Import PNG images for different mouth positions
 import mjezwoce from './wobrazy/mjezwoco.png'
-import woci from './wobrazy/woci_wocinjene.png'
+import woci_wocinjene from './wobrazy/woci_wocinjene.png'
+import woci_zacinjene from './wobrazy/woci_zacinjene.png'
 import brjowcki from './wobrazy/brjowcki.png'
+import brjowcki2 from './wobrazy/browcki2.png'
 import closedImg from './wobrazy/closed.png'
 import aImg from './wobrazy/a.png'
 import eImg from './wobrazy/e.png'
@@ -74,6 +76,46 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   const isPlayingRef = useRef<boolean>(false)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const lottieRef = useRef<any>(null)
+  let augenCounter = 0
+  // Eyebrow animation state
+  const [eyebrowFrame, setEyebrowFrame] = useState<'brjowcki' | 'brjowcki2'>(
+    'brjowcki'
+  )
+  const [eyesFrame, setEyesFrame] = useState<
+    'woci_wocinjene' | 'woci_zacinjene'
+  >('woci_wocinjene')
+
+  // Toggle eyebrows every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setEyebrowFrame(prev => (prev === 'brjowcki' ? 'brjowcki2' : 'brjowcki'))
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Natural random blinking effect
+  useEffect(() => {
+    let blinkTimeout: NodeJS.Timeout | null = null
+    let blinkDurationTimeout: NodeJS.Timeout | null = null
+
+    const startBlinking = () => {
+      // Random delay between 2 and 6 seconds
+      const nextBlink = Math.random() * 4000 + 2000
+      blinkTimeout = setTimeout(() => {
+        setEyesFrame('woci_zacinjene') // closed eyes
+        blinkDurationTimeout = setTimeout(() => {
+          setEyesFrame('woci_wocinjene') // open eyes
+          startBlinking() // schedule next blink
+        }, 200) // blink lasts 200ms
+      }, nextBlink)
+    }
+
+    startBlinking()
+    return () => {
+      if (blinkTimeout) clearTimeout(blinkTimeout)
+      if (blinkDurationTimeout) clearTimeout(blinkDurationTimeout)
+    }
+  }, [])
 
   // Map viseme types to animation frames
   const visemeToFrame = (visemeType: string): number => {
@@ -404,9 +446,8 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         }}
       />
       <img
-        // key={currentViseme} // Force re-render when viseme changes
-        src={brjowcki}
-        alt={`Mouth position: ${currentViseme}`}
+        src={eyebrowFrame === 'brjowcki' ? brjowcki : brjowcki2}
+        alt={`Eyebrows frame: ${eyebrowFrame}`}
         style={{
           width: '100%',
           height: '100%',
@@ -417,15 +458,14 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
           left: 0,
         }}
         onError={e => {
-          console.warn(`Failed to load image for viseme: ${currentViseme}`)
-          // Fallback to neutral or closed image if the current one fails to load
+          console.warn(`Failed to load eyebrow image: ${eyebrowFrame}`)
           const target = e.target as HTMLImageElement
-          target.src = mouthFramesImage.neutral
+          target.src = brjowcki
         }}
       />
       <img
         // key={currentViseme} // Force re-render when viseme changes
-        src={woci}
+        src={eyesFrame === 'woci_wocinjene' ? woci_wocinjene : woci_zacinjene}
         alt={`Mouth position: ${currentViseme}`}
         style={{
           width: '100%',
