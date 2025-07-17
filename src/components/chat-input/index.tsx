@@ -56,6 +56,7 @@ const ChatInput: React.FC<{
           onKeyDown={onKeyDown}
           disabled={isLoading}
           autoFocus
+          spellCheck={false}
         />
         <button style={disabledButtonStyle} disabled={isLoading}>
           <MicIcon />
