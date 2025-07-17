@@ -121,18 +121,28 @@ export const sendButtonStyle: React.CSSProperties = {
 }
 
 export const Settingsiconstyle: React.CSSProperties = {
-top: '5px',
+top: 0,
 right: '5px',
 position: 'fixed',
 background: 'none',
+color: '#8d8d8dff',
 border: 'none',
 padding: 0,
 zIndex: 9000,
 }
 
 export const checkboxstyle: React.CSSProperties = {
-width: '2.8rem',
-height: '2.8rem',
+width: '1.6rem',
+height: '1.6rem',
 accentColor: '#1c9bc5ff',
 zIndex: 9000,
+}
+
+export const impresumstyle: React.CSSProperties = {
+  color: 'goldenrod',
+  textDecoration: 'none',
+  fontSize: '1rem',
+  fontWeight: 500,
+  transition: 'color 0.3s ease',
+  marginBottom  : '-1000px',
 }

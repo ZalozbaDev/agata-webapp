@@ -13,14 +13,16 @@ import {
   urlsButtonStyle,
   Settingsiconstyle,
   checkboxstyle,
+  impresumstyle
 } from './styles'
 import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
 
 
-const Header: React.FC<{citanjeOn:boolean, agataOn:boolean, wabjenjeOn:boolean, onChangecitanje:(isActive:boolean)=>(void), onChangeagata:(isActive:boolean)=>void, onChangeWabjenje:(isActive:boolean)=>void}> = ({citanjeOn, onChangecitanje, agataOn, onChangeagata, wabjenjeOn,onChangeWabjenje}) => {
+const Header: React.FC<{agataOn:boolean, wabjenjeOn:boolean, onChangeagata:(isActive:boolean)=>void, onChangeWabjenje:(isActive:boolean)=>void}> = ({agataOn, onChangeagata, wabjenjeOn,onChangeWabjenje}) => {
   const [isOpen, setIsOpen] = useState(false)
     const [issetOpen, setIssetOpen] = useState(false)
+    const [ismenuOpen, setIsmenuOpen] = useState(false)
   const [newUrl, setNewUrl] = useState<CreateUrlRequest>({
     url: '',
     username: '',
@@ -80,7 +82,7 @@ const Header: React.FC<{citanjeOn:boolean, agataOn:boolean, wabjenjeOn:boolean, 
           </Link>
         </div>
         <div style={Settingsiconstyle}>
-          <button style={{background: 'none', padding: 0}} onClick={() => setIssetOpen(true)}>
+          <button style={{background: 'none', padding: 0}} onClick={() => setIsmenuOpen(!ismenuOpen)}>
             <Settingsicon />
           </button>
         </div>
@@ -110,22 +112,29 @@ const Header: React.FC<{citanjeOn:boolean, agataOn:boolean, wabjenjeOn:boolean, 
           </div>
         )}
       </header>
+      {ismenuOpen && (
+        <div onClick={() => setIsmenuOpen(false)} style={{...popupStyle, fontSize: '3rem', top:'90px', left: 'null', right: '-160px', zIndex: 1000}}>
+<Link to='/impresum' style={{...impresumstyle, fontSize: '2rem'}}>
+              Impresum
+            </Link>
+            <br></br><button onClick={() => setIssetOpen(true)} style={{...impresumstyle, fontSize: '2rem', background: 'none', border: 'none',}}>
+              Zastajenja
+              </button>
+        </div>
+      )}
       {issetOpen && (
-        <div style={{...popupStyle, fontSize: '3.2rem'}}>
-          <button style={{...closeButtonStyle, fontSize:'5rem',}} onClick={() => setIssetOpen(false)}>
+        <div style={{...popupStyle, fontSize: '3rem'}}>
+          <button style={{...closeButtonStyle, fontSize:'3rem',}} onClick={() => setIssetOpen(false)}>
             ×
           </button>
           <p>Zastajenja</p>
-          <div style={{fontSize: '2.8rem', marginLeft: '10rem', marginRight: '10rem'}}>
-          Wabjenje <input type='checkbox' name='Wabjenje' id='wabjenje' checked={wabjenjeOn} onChange={e => {
+          <div style={{fontSize: '2rem', marginLeft: '5rem', marginRight: '5rem'}}>
+           <input type='checkbox' name='Wabjenje' id='wabjenje' checked={wabjenjeOn} onChange={e => {
               onChangeWabjenje(e.target.checked);
-            }} style={checkboxstyle}/>
-          <p>Agata <input type='checkbox' name='Agata' id='agata' checked={agataOn} onChange={e => {
+            }} style={checkboxstyle}/> Wabjenje
+          <p><input type='checkbox' name='Agata' id='agata' checked={agataOn} onChange={e => {
               onChangeagata(e.target.checked);
-            }} style={checkboxstyle}/></p>
-          <p>Předčitanje<input type='checkbox' name='Předčitanje' id='citanje' checked={citanjeOn} onChange={e => {
-              onChangecitanje(e.target.checked);
-            }} style={checkboxstyle}/></p>
+            }} style={checkboxstyle}/> Agata</p>
           </div>
           </div>
       )}

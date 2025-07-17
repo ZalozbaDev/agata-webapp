@@ -28,7 +28,7 @@ export const messagesWrapperStyle: React.CSSProperties = {
 }
 
 export const inputBarWrapperStyle: React.CSSProperties = {
-  width: '100%',
+  width: '80vw',
   position: 'sticky',
   bottom: 0,
   // background: '#212121',

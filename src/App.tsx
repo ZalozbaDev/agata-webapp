@@ -11,7 +11,6 @@ import {
   useLocation,
 } from 'react-router-dom'
 import Header from './components/header'
-import { Footer } from './components/footer/index.tsx'
 import StartScreen from './pages/start'
 import ChatScreen from './pages/chat'
 import UrlsPage from './pages/urls'
@@ -219,7 +218,6 @@ const AppContentInner: React.FC<{
   const [isCentered, setIsCentered] = useState(false);
 const [wabjenjeOn, setWabjenjeOn] = useState(true);
 const [agataOn, setagataOn] = useState(true);
-const [citanjeOn, setcitanjeOn] = useState(true);
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [bamborakResponse, setBamborakResponse] =
     useState<BamborakAudioResponse | null>(null)
@@ -244,7 +242,7 @@ const [citanjeOn, setcitanjeOn] = useState(true);
     <WociCenteredContext.Provider value={{ isCentered, setIsCentered }}>
       <div style={appStyle}>
 
-        <Header citanjeOn={citanjeOn} agataOn={agataOn} wabjenjeOn={wabjenjeOn} onChangecitanje={(isActive) => {setcitanjeOn(isActive)} } onChangeagata={(isActive) => {setagataOn(isActive)} } onChangeWabjenje={(isActive) => {setWabjenjeOn(isActive)} }  />
+        <Header agataOn={agataOn} wabjenjeOn={wabjenjeOn} onChangeagata={(isActive) => {setagataOn(isActive)} } onChangeWabjenje={(isActive) => {setWabjenjeOn(isActive)} }  />
 
 
         {isMain && (isCentered || isExtraWide) && agataOn && (
@@ -260,7 +258,6 @@ const [citanjeOn, setcitanjeOn] = useState(true);
         )}
        {isMain && isWide && wabjenjeOn && <Wabjenje />}
 
-        {isMain && <Footer />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
           <Route path='/' element={<ChatApp onGetAudio={onGetAudio} />} />
