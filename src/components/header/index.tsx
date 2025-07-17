@@ -19,7 +19,7 @@ import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
 
 
-const Header: React.FC<{agataOn:boolean, wabjenjeOn:boolean, onChangeagata:(isActive:boolean)=>void, onChangeWabjenje:(isActive:boolean)=>void}> = ({agataOn, onChangeagata, wabjenjeOn,onChangeWabjenje}) => {
+const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean, onChangecentagata:(isActive:boolean)=>void ,onChangeagata:(isActive:boolean)=>void, onChangeWabjenje:(isActive:boolean)=>void}> = ({centagataOn, onChangecentagata ,agataOn, onChangeagata, wabjenjeOn,onChangeWabjenje}) => {
   const [isOpen, setIsOpen] = useState(false)
     const [issetOpen, setIssetOpen] = useState(false)
     const [ismenuOpen, setIsmenuOpen] = useState(false)
@@ -135,6 +135,9 @@ const Header: React.FC<{agataOn:boolean, wabjenjeOn:boolean, onChangeagata:(isAc
           <p><input type='checkbox' name='Agata' id='agata' checked={agataOn} onChange={e => {
               onChangeagata(e.target.checked);
             }} style={checkboxstyle}/> Agata</p>
+            <p><input type='checkbox' name='Centrěrowana Agata' id='centagata' checked={centagataOn} onChange={e => {
+              onChangecentagata(e.target.checked);
+            }} style={checkboxstyle}/>Centrěrowana Agata</p>
           </div>
           </div>
       )}

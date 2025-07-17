@@ -218,6 +218,7 @@ const AppContentInner: React.FC<{
   const [isCentered, setIsCentered] = useState(false);
 const [wabjenjeOn, setWabjenjeOn] = useState(true);
 const [agataOn, setagataOn] = useState(true);
+const [centagataOn, setcentagataOn] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [bamborakResponse, setBamborakResponse] =
     useState<BamborakAudioResponse | null>(null)
@@ -242,7 +243,7 @@ const [agataOn, setagataOn] = useState(true);
     <WociCenteredContext.Provider value={{ isCentered, setIsCentered }}>
       <div style={appStyle}>
 
-        <Header agataOn={agataOn} wabjenjeOn={wabjenjeOn} onChangeagata={(isActive) => {setagataOn(isActive)} } onChangeWabjenje={(isActive) => {setWabjenjeOn(isActive)} }  />
+        <Header centagataOn={centagataOn} agataOn={agataOn} wabjenjeOn={wabjenjeOn}  onChangecentagata={(isActive) => {setcentagataOn(isActive)} } onChangeagata={(isActive) => {setagataOn(isActive)} } onChangeWabjenje={(isActive) => {setWabjenjeOn(isActive)} }  />
 
 
         {isMain && (isCentered || isExtraWide) && agataOn && (
