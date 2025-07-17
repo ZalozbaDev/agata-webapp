@@ -87,6 +87,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
       case 'hh':
         return 1 // Wide open mouth for 'a' sound
       case 'e':
+      case 'ee':
       case 'eh':
       case 'ey':
         return 1 // Semi-open mouth for 'e' sound
@@ -95,6 +96,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         return 2 // Slightly open for 'i' sound
       case 'o':
       case 'oo':
+      case 'oh':
       case 'ow':
         return 2 // Rounded lips for 'o' sound
       case 'u':
@@ -123,7 +125,9 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
       case 't':
         return 10 // Tongue to alveolar ridge for 'n', 'd', 't' sounds
       case 'k':
+      case 'kk':
       case 'g':
+      case 'gg':
         return 6 // Back of tongue to soft palate for 'k', 'g' sounds
       default:
         return 12 // Neutral mouth position
@@ -167,15 +171,21 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
       case 'a':
       case 'aa':
       case 'ah':
+      case 'hh':
         return mouthFramesImage.a // Wide open mouth for 'a' sound
       case 'e':
+      case 'ee':
       case 'eh':
       case 'ey':
+      case 'y':
+      case 'yy':
         return mouthFramesImage.e // Semi-open mouth for 'e' sound
       case 'i':
       case 'iy':
         return mouthFramesImage.i // Slightly open for 'i' sound
       case 'o':
+      case 'oo':
+      case 'oh':
       case 'ow':
         return mouthFramesImage.o // Rounded lips for 'o' sound
       case 'u':
@@ -200,6 +210,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         return mouthFramesImage.th // Tongue between teeth for 'th' sound
       case 'l':
       case 'r':
+      case 'rr':
       case 'll':
         return mouthFramesImage.l // Tongue position for 'l', 'r' sounds
       case 'n':
@@ -209,6 +220,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         return mouthFramesImage.n // Tongue to alveolar ridge for 'n', 'd', 't' sounds
       case 'k':
       case 'g':
+      case 'gg':
       case 'kk':
         return mouthFramesImage.k // Back of tongue to soft palate for 'k', 'g' sounds
       case 'ww':
