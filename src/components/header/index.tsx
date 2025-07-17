@@ -131,7 +131,7 @@ const Header: React.FC<{agataOn:boolean, wabjenjeOn:boolean, onChangeagata:(isAc
           <div style={{fontSize: '2rem', marginLeft: '5rem', marginRight: '5rem'}}>
            <input type='checkbox' name='Wabjenje' id='wabjenje' checked={wabjenjeOn} onChange={e => {
               onChangeWabjenje(e.target.checked);
-            }} style={checkboxstyle}/> Wabjenje
+            }} style={checkboxstyle}/>Wabjenje
           <p><input type='checkbox' name='Agata' id='agata' checked={agataOn} onChange={e => {
               onChangeagata(e.target.checked);
             }} style={checkboxstyle}/>Agata</p>
