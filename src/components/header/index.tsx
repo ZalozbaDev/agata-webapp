@@ -61,10 +61,8 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
     } catch (err: any) {}
   }
 
-  // Handler for shift-clicking AGATA sign
   const handleAgataClick = (e: React.MouseEvent) => {
     if (ismenuOpen) {
-      // Play alternate audio when menu is open and AGATA is clicked
      const punkaudio = new Audio(punk);
       punkaudio.play();
     }
@@ -102,7 +100,12 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
                   const next = prev + 1;
                   if (next === 1) {
                     const audio = new Audio(cigareta);
-              audio.play();
+                    audio.play();
+                    // Stop audio after 1 minute
+                    setTimeout(() => {
+                      audio.pause();
+                      audio.currentTime = 0;
+                    }, 60000);
                     setPendingShowHiddenImage(true);
                     setTimeout(() => {
                       setShowHiddenImage(true);
@@ -151,13 +154,17 @@ const Header: React.FC<{centagataOn:boolean, agataOn:boolean, wabjenjeOn:boolean
         )}
       </header>
       {ismenuOpen && (
-        <div onClick={() => setIsmenuOpen(false)} style={{...popupStyle, fontSize: '3rem', top:'90px', left: 'null', right: '-160px', zIndex: 1000}}>
+        <div onClick={() => setIsmenuOpen(false)} style={{...popupStyle, fontSize: '3rem', top:'120px', left: 'null', right: '-160px', zIndex: 1000}}>
 <Link to='/impresum' style={{...impresumstyle, fontSize: '2rem'}}>
               Impresum
             </Link>
             <br></br><button onClick={() => setIssetOpen(true)} style={{...impresumstyle, fontSize: '2rem', background: 'none', border: 'none',}}>
               Zastajenja
               </button>
+              <br></br><a href="https://www.mdr.de/serbski-program/rozhlos/index.html" target="_blank" rel="noopener noreferrer" style={{...impresumstyle, fontSize: '2rem', background: 'none', border: 'none',}}>
+              Rozhłós
+            </a>
+
         </div>
       )}
       {issetOpen && (
