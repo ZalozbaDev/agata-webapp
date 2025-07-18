@@ -13,6 +13,7 @@ const starttilearray: { title: string }[] = [
   { title: 'Witaj, rjenje zo mje wopytaš ☺️' },
   { title: 'Kak móžu Ći pomhać?' },
   { title: 'Zapodaj prošu Twoje prašenje:' },
+  { title: 'Moin Mišter' },
 ]
 
 const fadeDuration = 500
@@ -34,14 +35,14 @@ const StartScreen: React.FC<{
   onRecordingToggle,
   isRecording = false,
 }) => {
-  const [titleIdx, setTitleIdx] = useState(0)
+  const [titleIdx, setTitleIdx] = useState(() => Math.floor(Math.random() * starttilearray.length))
   const [fade, setFade] = useState(true)
 
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false)
       setTimeout(() => {
-        setTitleIdx(idx => (idx + 1) % starttilearray.length)
+        setTitleIdx(() => Math.floor(Math.random() * starttilearray.length))
         setFade(true)
       }, fadeDuration)
     }, 4000)
