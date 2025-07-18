@@ -22,7 +22,8 @@ export const ChatApp: React.FC<{
     audioUrl: string,
     bamborakResponse: BamborakAudioResponse
   ) => void
-}> = ({ onGetAudio }) => {
+  ipAddress: string
+}> = ({ onGetAudio, ipAddress }) => {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [input, setInput] = useState('')
   const [started, setStarted] = useState(false)
@@ -90,7 +91,7 @@ export const ChatApp: React.FC<{
 
     try {
       // Send message to server
-      const response = await chatService.sendMessage(userMessage)
+      const response = await chatService.sendMessage(userMessage, ipAddress)
 
       getAudioFromText(response.message, 'katka_2025_07').then(
         bamborakResponse => {
@@ -138,7 +139,7 @@ export const ChatApp: React.FC<{
       setLastError(null)
 
       try {
-        const response = await chatService.sendMessage(message)
+        const response = await chatService.sendMessage(message, ipAddress)
 
         // Replace the last error message with the successful response
         setMessages(msgs => {

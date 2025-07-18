@@ -103,11 +103,12 @@ const retryRequest = async <T>(
 // API service functions
 export const chatService = {
   // Send a message to the server and get assistant response
-  async sendMessage(message: string): Promise<ChatResponse> {
+  async sendMessage(message: string, ipAddress: string): Promise<ChatResponse> {
     try {
       return await retryRequest<ChatResponse>(() =>
         api.post<ChatResponse>(SERVER_CONFIG.ENDPOINTS.CHAT, {
           message,
+          ipAddress,
         } as ChatRequest)
       )
     } catch (error) {

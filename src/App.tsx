@@ -57,6 +57,7 @@ const AppContentInner: React.FC<{
   const [agataOn, setagataOn] = useState(true)
   const [centagataOn, setcentagataOn] = useState(false)
   const [wopyty, setWopyty] = useState(0)
+  const [ipAddress, setIpAddress] = useState<string>('')
   const effectRan = useRef(false)
 
   useEffect(() => {
@@ -65,6 +66,7 @@ const AppContentInner: React.FC<{
       fetch('https://api.ipify.org?format=json')
         .then(res => res.json())
         .then(data => {
+          setIpAddress(data.ip)
           visitorService.detectVisitor({ ipAddress: data.ip })
         })
         .finally(() => {
@@ -137,7 +139,10 @@ const AppContentInner: React.FC<{
         {isMain && isWide && wabjenjeOn && <Wabjenje />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
-          <Route path='/' element={<ChatApp onGetAudio={onGetAudio} />} />
+          <Route
+            path='/'
+            element={<ChatApp onGetAudio={onGetAudio} ipAddress={ipAddress} />}
+          />
           <Route path='/urls' element={<UrlsPage />} />
           <Route path='/data' element={<DataPage />} />
           <Route path='/impresum' element={<ImpresumPage />} />
