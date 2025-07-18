@@ -121,7 +121,8 @@ const Header: React.FC<{
 
           {showTopMiddle && (
             <div style={topmiddlestyle}>
-              pokazka: jelizo wužiwaće k zapodaću naprašowanja waš mikrofon, so zwuk přechodnje składuje
+              pokazka: jelizo wužiwaće k zapodaću naprašowanja waš mikrofon, so
+              zwuk přechodnje składuje
             </div>
           )}
         </div>
@@ -230,15 +231,15 @@ const Header: React.FC<{
           </a>
           <br></br>
           <a
-  href={`mailto:info@agatha.chat`}
-  style={{
-    ...impresumstyle,
-    fontSize: '1.5rem',
-    background: 'none',
-  }}
->
-  Kontakt
-</a>
+            href={`mailto:info@agata.chat`}
+            style={{
+              ...impresumstyle,
+              fontSize: '1.5rem',
+              background: 'none',
+            }}
+          >
+            Kontakt
+          </a>
         </div>
       )}
       {issetOpen && (
