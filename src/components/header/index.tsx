@@ -113,9 +113,11 @@ const Header: React.FC<{
             pokazka: jeli-zo wužiwaće k zapodaću naprašowanja waš mikrofon, so zwuk přechodnje składuje !!
           </div>
         </div>
+        {!ismenuOpen && (
         <div style={userstyle}>
 Wopyty:
         </div>
+)}
         <div style={Settingsiconstyle}>
           <button
             style={{ background: 'none', padding: 0 }}
