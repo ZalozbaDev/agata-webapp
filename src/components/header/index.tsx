@@ -14,8 +14,10 @@ import {
   Settingsiconstyle,
   checkboxstyle,
   impresumstyle,
-  userstyle
+  userstyle,
+  // topmiddlestyle, // No longer used
 } from './styles'
+import './header.css'
 import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
 import mici from '../../assets/michael downsyndrom ziesch.jpg'
@@ -107,6 +109,9 @@ const Header: React.FC<{
           >
             AGATA
           </Link>
+          <div className="topmiddle-text">
+            pokazka: jeli-zo wužiwaće k zapodaću naprašowanja waš mikrofon, so zwuk přechodnje składuje !!
+          </div>
         </div>
         <div style={userstyle}>
 Wopyty:

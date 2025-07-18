@@ -154,3 +154,5 @@ right: 0,
 top: '46px',
 }
 
+// topmiddlestyle moved to CSS class in header.css
+
