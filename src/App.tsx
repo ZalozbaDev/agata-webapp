@@ -128,13 +128,13 @@ const AppContentInner: React.FC<{
         />
         {isMain && (isCentered || isExtraWide) && agataOn && (
           <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
-            {audioUrl && bamborakResponse && (
+            {
               <TalkingPuppet
                 audioFile={audioUrl}
-                visemes={bamborakResponse.visemes}
-                duration={bamborakResponse.duration}
+                visemes={bamborakResponse?.visemes}
+                duration={bamborakResponse?.duration}
               />
-            )}
+            }
           </WociMikanje>
         )}
         {isMain && isWide && wabjenjeOn && <Wabjenje />}

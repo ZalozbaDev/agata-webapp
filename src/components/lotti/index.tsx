@@ -46,7 +46,7 @@ const mouthFramesImage = {
 }
 
 interface TalkingPuppetProps {
-  audioFile: string
+  audioFile: string | null
   visemes?:
     | Viseme[]
     | { visemes: Viseme[]; duration?: number; sampleRate?: number }
@@ -518,7 +518,9 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
             target.src = mouthFramesImage.neutral
           }}
         />
-        <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
+        {audioFile && (
+          <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
+        )}
       </div>
     </WociMikanje>
   )
