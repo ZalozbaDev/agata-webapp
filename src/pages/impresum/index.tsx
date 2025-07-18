@@ -15,7 +15,7 @@ const ImpresumPage: React.FC = () => {
       <h1 style={impresumtitlestyle}>impresum</h1>
           <br />
       <h2 style={podnadpisma}>sobuskutkowacy:</h2>
-      <p style={pismo}>Beno Baier, Feliks Šołta,     <br />MiC, Jan Breindl</p>
+      <p style={pismo}>Beno Baier, Feliks Šołta,     <br />Michał Bjarnat Cyž, Jan Breindl</p>
           <br />
       <h2 style={podnadpisma}>programy, kotrež wužiwamy:</h2>
       <p style={pismo}>ChatGPT, TTS Bamborak,   <br />OCR Wita Bejmaka, STT Inkubator</p>
