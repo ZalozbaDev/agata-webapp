@@ -171,8 +171,8 @@ export const topmiddlestyle: React.CSSProperties = {
   textAlign: 'center',
 
   right: 48,
-  left: 74,
-  top: '14px',
+  left: 78,
+  top: '13px',
 }
 
 
