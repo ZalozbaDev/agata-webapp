@@ -195,7 +195,7 @@ const Header: React.FC<{
           style={{
             ...popupStyle,
             fontSize: '2.5rem',
-            top: '125px',
+            top: '140px',
             left: 'null',
             right: '-100px',
             zIndex: 1000,
@@ -228,6 +228,17 @@ const Header: React.FC<{
           >
             rozhłós
           </a>
+          <br></br>
+          <a
+  href={`mailto:info@agatha.chat`}
+  style={{
+    ...impresumstyle,
+    fontSize: '1.5rem',
+    background: 'none',
+  }}
+>
+  Kontakt
+</a>
         </div>
       )}
       {issetOpen && (
