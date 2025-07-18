@@ -125,11 +125,7 @@ const Header: React.FC<{
             </div>
           )}
         </div>
-        {!ismenuOpen && (
-        <div style={userstyle}>
-wopyty:
-        </div>
-)}
+        {!ismenuOpen && <div style={userstyle}>wopyty: {wopyty}</div>}
 
         <div style={Settingsiconstyle}>
           <button
