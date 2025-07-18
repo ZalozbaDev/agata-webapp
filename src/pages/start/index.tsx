@@ -13,7 +13,6 @@ const starttilearray: { title: string }[] = [
   { title: 'Witaj, rjenje zo mje wopytaš ☺️' },
   { title: 'Kak móžu Ći pomhać?' },
   { title: 'Zapodaj prošu Twoje prašenje:' },
-  { title: 'Moin Mišter' },
 ]
 
 const fadeDuration = 500
