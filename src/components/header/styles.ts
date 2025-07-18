@@ -146,3 +146,11 @@ export const impresumstyle: React.CSSProperties = {
   transition: 'color 0.3s ease',
   marginBottom  : '-1000px',
 }
+
+export const userstyle: React.CSSProperties = {
+position: 'fixed',
+fontSize: '2rem',
+right: 0,
+top: '46px',
+}
+

@@ -14,6 +14,7 @@ import {
   Settingsiconstyle,
   checkboxstyle,
   impresumstyle,
+  userstyle
 } from './styles'
 import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
@@ -107,6 +108,9 @@ const Header: React.FC<{
             AGATA
           </Link>
         </div>
+        <div style={userstyle}>
+Wopyty:
+        </div>
         <div style={Settingsiconstyle}>
           <button
             style={{ background: 'none', padding: 0 }}
@@ -175,7 +179,7 @@ const Header: React.FC<{
           style={{
             ...popupStyle,
             fontSize: '3rem',
-            top: '120px',
+            top: '125px',
             left: 'null',
             right: '-160px',
             zIndex: 1000,
