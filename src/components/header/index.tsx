@@ -238,7 +238,7 @@ const Header: React.FC<{
               background: 'none',
             }}
           >
-            Kontakt
+            kontakt
           </a>
         </div>
       )}
