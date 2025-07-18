@@ -10,6 +10,7 @@ export const SERVER_CONFIG = {
     CHAT_HISTORY: '/api/chat/history',
     URLS: '/api/urls',
     DATA: '/api/data',
+    VISITORS: '/api/visitors',
   },
 
   // Request timeout in milliseconds

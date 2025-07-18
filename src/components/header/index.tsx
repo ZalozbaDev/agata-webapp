@@ -25,6 +25,7 @@ import cigareta from '../../assets/cigareta.mp3'
 import punk from '../../assets/felix_punk.mp3'
 
 const Header: React.FC<{
+  wopyty: number
   centagataOn: boolean
   agataOn: boolean
   wabjenjeOn: boolean
@@ -32,6 +33,7 @@ const Header: React.FC<{
   onChangeagata: (isActive: boolean) => void
   onChangeWabjenje: (isActive: boolean) => void
 }> = ({
+  wopyty,
   centagataOn,
   onChangecentagata,
   agataOn,
@@ -109,13 +111,12 @@ const Header: React.FC<{
           >
             AGATA
           </Link>
-          <div className="topmiddle-text">
-            pokazka: jeli-zo wužiwaće k zapodaću naprašowanja waš mikrofon, so zwuk přechodnje składuje !!
+          <div className='topmiddle-text'>
+            pokazka: jeli-zo wužiwaće k zapodaću naprašowanja waš mikrofon, so
+            zwuk přechodnje składuje !!
           </div>
         </div>
-        <div style={userstyle}>
-Wopyty:
-        </div>
+        <div style={userstyle}>Wopyty: {wopyty}</div>
         <div style={Settingsiconstyle}>
           <button
             style={{ background: 'none', padding: 0 }}
