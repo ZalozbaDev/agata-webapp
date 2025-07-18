@@ -256,7 +256,7 @@ const Header: React.FC<{
               }}
               style={checkboxstyle}
             />{' '}
-            Wabjenje
+            wotkazy
             <p>
               <input
                 type='checkbox'
@@ -281,7 +281,7 @@ const Header: React.FC<{
                 }}
                 style={checkboxstyle}
               />
-              Centrěrowana Agata
+              Agata na šmóratku
             </p>
           </div>
         </div>
