@@ -1,9 +1,9 @@
 export const chatScreenStyle: React.CSSProperties = {
-  display: 'flex',
+  display: 'sticky',
   flexDirection: 'column',
   height: '100vh',
-  width: '50vw',
-  maxWidth: '100vw',
+  width: '95vw',
+  maxWidth: '800px',
   // background: 'rgba(255, 255, 255, 0.3)',
   borderRadius: 0,
   boxShadow: 'none',
@@ -20,7 +20,7 @@ export const messagesWrapperStyle: React.CSSProperties = {
   justifyContent: 'flex-start',
   padding: '0 0 0 0',
   width: '100%',
-  maxWidth: '800px',
+
   scrollbarWidth: 'none', // Hide scrollbar in Firefox
   // To hide scrollbar in WebKit browsers, add this to your CSS:
   // .messagesWrapper::-webkit-scrollbar { display: none; }
