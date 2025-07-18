@@ -245,7 +245,7 @@ const Header: React.FC<{
           </a>
           <br></br>
           <Link to='/faq' style={{ ...impresumstyle, fontSize: '1.5rem' }}>
-            Husto stajene Prašenja
+            husto stajene Prašenja
           </Link>
         </div>
       )}
