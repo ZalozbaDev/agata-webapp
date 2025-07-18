@@ -8,11 +8,11 @@ import ChatInput from '../../components/chat-input'
 import { useWociCentered } from '../../components/woci-mikanje/WociCenteredContext'
 
 const starttilearray: { title: string }[] = [
-  { title: 'Witaj, rjenje zo sy tu' },
-  { title: 'Moin Mišter' },
-  { title: 'Budź chwaleny Jězus Chrystus!' },
-  { title: 'Dobry dźeń, što chceš wědźeć?' },
-  { title: 'Halo, što leži Tebi na wutrobje?' },
+  { title: 'Budź chwaleny Jězus Chrystus.' },
+  { title: 'Pomhaj Bóh.' },
+  { title: 'Witaj, rjenje zo mje wopytaš ☺️' },
+  { title: 'Kak móžu Ći pomhać?' },
+  { title: 'Zapodaj prošu Twoje prašenje:' },
 ]
 
 const fadeDuration = 500
@@ -44,7 +44,7 @@ const StartScreen: React.FC<{
         setTitleIdx(idx => (idx + 1) % starttilearray.length)
         setFade(true)
       }, fadeDuration)
-    }, 3000)
+    }, 4000)
     return () => clearInterval(interval)
   }, [])
 
