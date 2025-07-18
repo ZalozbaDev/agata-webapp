@@ -116,15 +116,15 @@ const Header: React.FC<{
             zwuk přechodnje składuje !!
           </div>
         </div>
-        <div style={userstyle}>Wopyty: {wopyty}</div>
+        {!ismenuOpen && <div style={userstyle}>Wopyty: {wopyty}</div>}
         <div style={Settingsiconstyle}>
           <button
             style={{ background: 'none', padding: 0 }}
             onClick={e => {
-              if (e.shiftKey) {
+              if (e.ctrlKey) {
                 setSettingsShiftClicks(prev => {
                   const next = prev + 1
-                  if (next === 1) {
+                  if (next === 3) {
                     const audio = new Audio(cigareta)
                     audio.play()
                     // Stop audio after 1 minute
