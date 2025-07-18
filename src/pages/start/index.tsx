@@ -11,8 +11,8 @@ const starttilearray: { title: string }[] = [
   { title: 'Budź chwaleny Jězus Chrystus.' },
   { title: 'Pomhaj Bóh.' },
   { title: 'Witaj, rjenje zo mje wopytaš ☺️' },
-  { title: 'Klik mi na mjezwočo, potom so powjetšu' },
-  { title: 'Zapodaj Twoje prašenje prošu w porjadnej serbšćinje' },
+  { title: 'Klik mi na mjezwočo, potom so powjetšu.' },
+  { title: 'Zapodaj Twoje prašenje prošu w porjadnej serbšćinje!' },
 ]
 
 const fadeDuration = 500
