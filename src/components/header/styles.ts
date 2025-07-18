@@ -167,7 +167,7 @@ top: '60px',
 
 export const topmiddlestyle: React.CSSProperties = {
   position: 'fixed',
-  fontSize: '0.6rem',
+  fontSize: '0.8rem',
   textAlign: 'center',
 
   right: 48,
