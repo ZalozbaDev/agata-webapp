@@ -10,7 +10,7 @@ const FaqPage: React.FC = () => {
   return (
     <div>
       <br />
-      <h1 style={impresumtitlestyle}>Husto stajene prašenja</h1>
+      <h1 style={impresumtitlestyle}>Husto stajene prašenja (FAQ)</h1>
           <br />
       <h2 style={podnadpisma}>Kak widźu Agatu na šmóratce?</h2>
       <p style={pismo}>W nastajenjach klikujće na "Agata na šmóratku."</p>
