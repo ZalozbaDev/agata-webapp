@@ -15,9 +15,9 @@ import {
   checkboxstyle,
   impresumstyle,
   userstyle,
+  topmiddlestyle
   // topmiddlestyle, // No longer used
 } from './styles'
-import './header.css'
 import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
 import mici from '../../assets/michael downsyndrom ziesch.jpg'
@@ -109,13 +109,13 @@ const Header: React.FC<{
           >
             AGATA
           </Link>
-          <div className="topmiddle-text">
-            pokazka: jeli-zo wužiwaće k zapodaću naprašowanja waš mikrofon, so zwuk přechodnje składuje !!
+          <div style={topmiddlestyle}>
+            pokazka: jelizo wužiwaće k zapodaću naprašowanja waš mikrofon, so zwuk přechodnje składuje
           </div>
         </div>
         {!ismenuOpen && (
         <div style={userstyle}>
-Wopyty:
+wopyty:
         </div>
 )}
         <div style={Settingsiconstyle}>
@@ -192,7 +192,7 @@ Wopyty:
             zIndex: 1000,
           }}
         >
-          <Link to='/impresum' style={{ ...impresumstyle, fontSize: '2rem' }}>
+          <Link to='/impresum' style={{ ...impresumstyle, fontSize: '1.5rem' }}>
             Impresum
           </Link>
           <br></br>
@@ -200,7 +200,7 @@ Wopyty:
             onClick={() => setIssetOpen(true)}
             style={{
               ...impresumstyle,
-              fontSize: '2rem',
+              fontSize: '1.5rem',
               background: 'none',
               border: 'none',
             }}
@@ -214,7 +214,7 @@ Wopyty:
             rel='noopener noreferrer'
             style={{
               ...impresumstyle,
-              fontSize: '2rem',
+              fontSize: '1.5rem',
               background: 'none',
               border: 'none',
             }}

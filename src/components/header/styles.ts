@@ -121,7 +121,7 @@ export const sendButtonStyle: React.CSSProperties = {
 }
 
 export const Settingsiconstyle: React.CSSProperties = {
-top: 0,
+top: 10,
 right: '5px',
 position: 'fixed',
 background: 'none',
@@ -139,7 +139,7 @@ zIndex: 9000,
 }
 
 export const impresumstyle: React.CSSProperties = {
-  color: 'goldenrod',
+  color: '#1c9bc5ff',
   textDecoration: 'none',
   fontSize: '1rem',
   fontWeight: 500,
@@ -149,10 +149,20 @@ export const impresumstyle: React.CSSProperties = {
 
 export const userstyle: React.CSSProperties = {
 position: 'fixed',
-fontSize: '2rem',
+fontSize: '0.8rem',
+fontWeight: 500,
 right: 0,
-top: '46px',
+top: '60px',
 }
 
-// topmiddlestyle moved to CSS class in header.css
+export const topmiddlestyle: React.CSSProperties = {
+  position: 'fixed',
+  fontSize: '0.8rem',
+  textAlign: 'center',
+
+  right: 48,
+  left: 100,
+  top: '14px',
+}
+
 

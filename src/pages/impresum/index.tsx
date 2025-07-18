@@ -9,11 +9,16 @@ from './styles';
 const ImpresumPage: React.FC = () => {
   return (
     <div>
-      <h1 style={impresumtitlestyle}>Impresum</h1>
-      <h2 style={podnadpisma}>Sobuskutkowacy:</h2>
-      <p style={pismo}>Beno Baier, Feliks Šołta, MiC, Jan Breindl</p>
-      <h2 style={podnadpisma}>Programy, kotrež wužiwamy:</h2>
-      <p style={pismo}>ChatGPT, Bamborak, Ocr wot Wita Bejmaka, Inkubator</p>
+      <br />
+      <br />
+      <br />
+      <h1 style={impresumtitlestyle}>impresum</h1>
+          <br />
+      <h2 style={podnadpisma}>sobuskutkowacy:</h2>
+      <p style={pismo}>Beno Baier, Feliks Šołta,     <br />MiC, Jan Breindl</p>
+          <br />
+      <h2 style={podnadpisma}>programy, kotrež wužiwamy:</h2>
+      <p style={pismo}>ChatGPT, TTS Bamborak,   <br />OCR Wita Bejmaka, STT Inkubator</p>
     </div>
   )
 }
