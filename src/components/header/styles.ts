@@ -140,6 +140,16 @@ zIndex: 9000,
 
 export const impresumstyle: React.CSSProperties = {
   color: '#1c9bc5ff',
+  textShadow: `
+      -0.2px -0.5px 0 white,
+       0   -0.2px 0 white,
+       0.2px -0.2px 0 white,
+       0.2px  0   0 white,
+       0.2px  0.2px 0 white,
+       0    0.2px 0 white,
+      0px  0.5px 0 white,
+      0px  0   0 white
+    `,
   textDecoration: 'none',
   fontSize: '1rem',
   fontWeight: 500,

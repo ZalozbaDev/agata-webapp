@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   headerStyle,
@@ -15,9 +15,10 @@ import {
   checkboxstyle,
   impresumstyle,
   userstyle,
-  topmiddlestyle
+  topmiddlestyle,
   // topmiddlestyle, // No longer used
 } from './styles'
+// Show top middle text for 20 seconds, then hide
 import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
 import mici from '../../assets/michael downsyndrom ziesch.jpg'
@@ -41,6 +42,12 @@ const Header: React.FC<{
   wabjenjeOn,
   onChangeWabjenje,
 }) => {
+  // Show top middle text for 20 seconds, then hide
+  const [showTopMiddle, setShowTopMiddle] = useState(true)
+  useEffect(() => {
+    const timer = setTimeout(() => setShowTopMiddle(false), 20000)
+    return () => clearTimeout(timer)
+  }, [])
   const [isOpen, setIsOpen] = useState(false)
   const [issetOpen, setIssetOpen] = useState(false)
   const [ismenuOpen, setIsmenuOpen] = useState(false)
@@ -112,9 +119,11 @@ const Header: React.FC<{
             AGATA
           </Link>
 
-          <div style={topmiddlestyle}>
-            pokazka: jelizo wužiwaće k zapodaću naprašowanja waš mikrofon, so zwuk přechodnje składuje
-          </div>
+          {showTopMiddle && (
+            <div style={topmiddlestyle}>
+              pokazka: jelizo wužiwaće k zapodaću naprašowanja waš mikrofon, so zwuk přechodnje składuje
+            </div>
+          )}
         </div>
         {!ismenuOpen && (
         <div style={userstyle}>
@@ -189,15 +198,15 @@ wopyty:
           onClick={() => setIsmenuOpen(false)}
           style={{
             ...popupStyle,
-            fontSize: '3rem',
+            fontSize: '2.5rem',
             top: '125px',
             left: 'null',
-            right: '-160px',
+            right: '-100px',
             zIndex: 1000,
           }}
         >
           <Link to='/impresum' style={{ ...impresumstyle, fontSize: '1.5rem' }}>
-            Impresum
+            impresum
           </Link>
           <br></br>
           <button
@@ -206,10 +215,9 @@ wopyty:
               ...impresumstyle,
               fontSize: '1.5rem',
               background: 'none',
-              border: 'none',
             }}
           >
-            Zastajenja
+            zastajenja
           </button>
           <br></br>
           <a
@@ -220,10 +228,9 @@ wopyty:
               ...impresumstyle,
               fontSize: '1.5rem',
               background: 'none',
-              border: 'none',
             }}
           >
-            Rozhłós
+            rozhłós
           </a>
         </div>
       )}
