@@ -21,7 +21,7 @@ const AppContent: React.FC = () => {
   const appStyle: React.CSSProperties = {
     minHeight: 'calc(100vh - 50px)',
     margin: 0,
-    width: 'calc(100vw - 90px)',
+    width: '100vw',
     padding: 0,
     // background: '#212121',
     color: '#ececf1',
