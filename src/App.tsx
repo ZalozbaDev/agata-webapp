@@ -1,4 +1,4 @@
-import { useState, useEffect, useState as useReactState } from 'react'
+import { useState, useEffect, useState as useReactState, useRef } from 'react'
 import {
   BrowserRouter as Router,
   Routes,
@@ -15,6 +15,7 @@ import { Wabjenje } from './components/wabjenje/index.tsx'
 import TalkingPuppet from './components/lotti/index.tsx'
 import { BamborakAudioResponse } from './types/bamborak'
 import { ChatApp } from './ChatApp.tsx'
+import visitorService from './services/visitorService.ts'
 
 const AppContent: React.FC = () => {
   const appStyle: React.CSSProperties = {
@@ -55,6 +56,30 @@ const AppContentInner: React.FC<{
   const [wabjenjeOn, setWabjenjeOn] = useState(true)
   const [agataOn, setagataOn] = useState(true)
   const [centagataOn, setcentagataOn] = useState(false)
+  const [wopyty, setWopyty] = useState(0)
+  const [ipAddress, setIpAddress] = useState<string>('')
+  const effectRan = useRef(false)
+
+  useEffect(() => {
+    if (!effectRan.current) {
+      // Get client IP address
+      fetch('https://api.ipify.org?format=json')
+        .then(res => res.json())
+        .then(data => {
+          setIpAddress(data.ip)
+          visitorService.detectVisitor({ ipAddress: data.ip })
+        })
+        .finally(() => {
+          visitorService.getVisitCount().then(count => {
+            setWopyty(count)
+          })
+        })
+    }
+
+    return () => {
+      effectRan.current = true
+    }
+  }, [])
 
   useEffect(() => {
     if (centagataOn) {
@@ -86,6 +111,7 @@ const AppContentInner: React.FC<{
     <WociCenteredContext.Provider value={{ isCentered, setIsCentered }}>
       <div style={appStyle}>
         <Header
+          wopyty={wopyty}
           centagataOn={centagataOn}
           agataOn={agataOn}
           wabjenjeOn={wabjenjeOn}
@@ -113,7 +139,10 @@ const AppContentInner: React.FC<{
         {isMain && isWide && wabjenjeOn && <Wabjenje />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
-          <Route path='/' element={<ChatApp onGetAudio={onGetAudio} />} />
+          <Route
+            path='/'
+            element={<ChatApp onGetAudio={onGetAudio} ipAddress={ipAddress} />}
+          />
           <Route path='/urls' element={<UrlsPage />} />
           <Route path='/data' element={<DataPage />} />
           <Route path='/impresum' element={<ImpresumPage />} />
