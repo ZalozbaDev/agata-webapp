@@ -19,6 +19,8 @@ const ChatScreen: React.FC<{
   isLoading?: boolean
   lastError?: { type: string; message: string } | null
   onRetry?: () => void
+  onRecordingToggle?: () => void
+  isRecording?: boolean
 }> = ({
   messages,
   input,
@@ -28,6 +30,8 @@ const ChatScreen: React.FC<{
   isLoading = false,
   lastError,
   onRetry,
+  onRecordingToggle,
+  isRecording = false,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -35,13 +39,16 @@ const ChatScreen: React.FC<{
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, lastError])
 
-  const wociCtx = useWociCentered();
-  const isCentered = wociCtx?.isCentered ?? false;
+  const wociCtx = useWociCentered()
+  const isCentered = wociCtx?.isCentered ?? false
 
   return (
     <div style={chatScreenStyle}>
       {!isCentered && (
-        <div style={messagesWrapperStyle} className="no-scrollbar messagesWrapper">
+        <div
+          style={messagesWrapperStyle}
+          className='no-scrollbar messagesWrapper'
+        >
           {messages.map((msg, i) => (
             <Message key={i} role={msg.role} content={msg.content} />
           ))}
@@ -56,13 +63,15 @@ const ChatScreen: React.FC<{
         </div>
       )}
       {isCentered ? (
-        <div style={{position: 'fixed', bottom: 0, zIndex: 0, width: '100%'}}>
+        <div style={{ position: 'fixed', bottom: 0, zIndex: 0, width: '100%' }}>
           <ChatInput
             value={input}
             onChange={onInputChange}
             onSend={onSend}
             onKeyDown={onInputKeyDown}
             isLoading={isLoading}
+            onRecordingToggle={onRecordingToggle}
+            isRecording={isRecording}
           />
         </div>
       ) : (
@@ -73,6 +82,8 @@ const ChatScreen: React.FC<{
             onSend={onSend}
             onKeyDown={onInputKeyDown}
             isLoading={isLoading}
+            onRecordingToggle={onRecordingToggle}
+            isRecording={isRecording}
           />
         </div>
       )}

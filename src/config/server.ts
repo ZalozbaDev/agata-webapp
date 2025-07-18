@@ -2,6 +2,7 @@
 export const SERVER_CONFIG = {
   // Base URL for the API server
   BASE_URL: import.meta.env.VITE_API_URL,
+  VOSK_URL: import.meta.env.VITE_VOSK_URL,
 
   // API endpoints
   ENDPOINTS: {

@@ -5,9 +5,9 @@ import {
   inputBarWrapperStyle,
 } from './styles'
 import ChatInput from '../../components/chat-input'
-import { useWociCentered } from '../../components/woci-mikanje/WociCenteredContext';
+import { useWociCentered } from '../../components/woci-mikanje/WociCenteredContext'
 
-const starttilearray: { title: string}[] = [
+const starttilearray: { title: string }[] = [
   { title: 'Witaj, rjenje zo sy tu' },
   { title: 'Moin Mišter' },
   { title: 'Budź chwaleny Jězus Chrystus!' },
@@ -15,7 +15,7 @@ const starttilearray: { title: string}[] = [
   { title: 'Halo, što leži Tebi na wutrobje?' },
 ]
 
-const fadeDuration = 500;
+const fadeDuration = 500
 
 const StartScreen: React.FC<{
   input: string
@@ -23,23 +23,33 @@ const StartScreen: React.FC<{
   onSend: () => void
   onInputKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void
   isLoading?: boolean
-}> = ({ input, onInputChange, onSend, onInputKeyDown, isLoading = false }) => {
-  const [titleIdx, setTitleIdx] = useState(0);
-  const [fade, setFade] = useState(true);
+  onRecordingToggle?: () => void
+  isRecording?: boolean
+}> = ({
+  input,
+  onInputChange,
+  onSend,
+  onInputKeyDown,
+  isLoading = false,
+  onRecordingToggle,
+  isRecording = false,
+}) => {
+  const [titleIdx, setTitleIdx] = useState(0)
+  const [fade, setFade] = useState(true)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFade(false);
+      setFade(false)
       setTimeout(() => {
-        setTitleIdx(idx => (idx + 1) % starttilearray.length);
-        setFade(true);
-      }, fadeDuration);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+        setTitleIdx(idx => (idx + 1) % starttilearray.length)
+        setFade(true)
+      }, fadeDuration)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
 
-  const wociCtx = useWociCentered();
-  const isCentered = wociCtx?.isCentered ?? false;
+  const wociCtx = useWociCentered()
+  const isCentered = wociCtx?.isCentered ?? false
 
   return (
     <div style={startScreenStyle}>
@@ -68,22 +78,35 @@ const StartScreen: React.FC<{
             onSend={onSend}
             onKeyDown={onInputKeyDown}
             isLoading={isLoading}
+            onRecordingToggle={onRecordingToggle}
+            isRecording={isRecording}
           />
         </div>
       ) : null}
       {isCentered ? (
-        <div style={{position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 3000, padding: 16}}>
+        <div
+          style={{
+            position: 'fixed',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 3000,
+            padding: 16,
+          }}
+        >
           <ChatInput
             value={input}
             onChange={onInputChange}
             onSend={onSend}
             onKeyDown={onInputKeyDown}
             isLoading={isLoading}
+            onRecordingToggle={onRecordingToggle}
+            isRecording={isRecording}
           />
         </div>
       ) : null}
     </div>
-  );
+  )
 }
 
 export default StartScreen
