@@ -69,7 +69,7 @@ const ChatInput: React.FC<{
         <input
           style={disabledInputStyle}
           type='text'
-          placeholder='Powěsć zapodać...'
+          placeholder='Zapodaj Twoje prašenje ...'
           value={value}
           onChange={onChange}
           onKeyDown={onKeyDown}
