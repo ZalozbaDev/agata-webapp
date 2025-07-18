@@ -10,7 +10,7 @@ const FaqPage: React.FC = () => {
   return (
     <div>
       <br />
-      <h1 style={impresumtitlestyle}>Husto stajene prašenja (FAQ)</h1>
+      <h1 style={impresumtitlestyle}>husto stajene prašenja (FAQ)</h1>
           <br />
       <h2 style={podnadpisma}>Kak widźu Agatu na šmóratce?</h2>
       <p style={pismo}>W nastajenjach klikujće na "Agata na šmóratku."</p>
@@ -33,7 +33,7 @@ const FaqPage: React.FC = () => {
       <h2 style={podnadpisma}>Wotmołwy njemóžu čitać/ su pře małke.</h2>
       <p style={pismo}>To zaleži na wašim nastroju</p>
       <br />
-      <h2 style={podnadpisma}>Njeje so waše prašenje wotmołwiło?<br /> Kontaktěrujeće nas pod emailce agata@lucija.de</h2>
+      <h2 style={podnadpisma}>Njeje so waše prašenje wotmołwiło?<br /> Kontaktěrujeće nas pod emailce <a style={{textDecoration: 'none'}} href={`mailto:agata@lucija.de`}>agata@lucija.de</a></h2>
       <h2 style={{...podnadpisma, color: 'red', fontWeight: '1000'}}>Prošu stajće nam jenož chutne prašenja</h2>
     </div>
   )
