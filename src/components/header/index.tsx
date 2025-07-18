@@ -15,7 +15,7 @@ import {
   checkboxstyle,
   impresumstyle,
   userstyle,
-  topmiddlestyle
+  topmiddlestyle,
   // topmiddlestyle, // No longer used
 } from './styles'
 import { CreateUrlRequest, urlService } from '../../services/urlService'
@@ -113,14 +113,11 @@ const Header: React.FC<{
           </Link>
 
           <div style={topmiddlestyle}>
-            pokazka: jelizo wužiwaće k zapodaću naprašowanja waš mikrofon, so zwuk přechodnje składuje
+            pokazka: jelizo wužiwaće k zapodaću naprašowanja waš mikrofon, so
+            zwuk přechodnje składuje
           </div>
         </div>
-        {!ismenuOpen && (
-        <div style={userstyle}>
-wopyty:
-        </div>
-)}
+        {!ismenuOpen && <div style={userstyle}>wopyty: {wopyty}</div>}
 
         <div style={Settingsiconstyle}>
           <button
