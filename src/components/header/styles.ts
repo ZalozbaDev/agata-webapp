@@ -56,7 +56,7 @@ export const popupStyle: React.CSSProperties = {
   backgroundColor: '#2a2d36',
   color: '#a9a8a8ff',
   padding: '20px',
- zIndex: 9000,
+  zIndex: 9000,
   borderRadius: '8px',
   fontSize: '30px',
   textAlign: 'center',
@@ -121,21 +121,21 @@ export const sendButtonStyle: React.CSSProperties = {
 }
 
 export const Settingsiconstyle: React.CSSProperties = {
-top: 10,
-right: '5px',
-position: 'fixed',
-background: 'none',
-color: '#8d8d8dff',
-border: 'none',
-padding: 0,
-zIndex: 9000,
+  top: 10,
+  right: '5px',
+  position: 'fixed',
+  background: 'none',
+  color: '#8d8d8dff',
+  border: 'none',
+  padding: 0,
+  zIndex: 9000,
 }
 
 export const checkboxstyle: React.CSSProperties = {
-width: '1.6rem',
-height: '1.6rem',
-accentColor: '#1c9bc5ff',
-zIndex: 9000,
+  width: '1.6rem',
+  height: '1.6rem',
+  accentColor: '#1c9bc5ff',
+  zIndex: 9000,
 }
 
 export const impresumstyle: React.CSSProperties = {
@@ -154,15 +154,12 @@ export const impresumstyle: React.CSSProperties = {
   fontSize: '1rem',
   fontWeight: 500,
   transition: 'color 0.3s ease',
-  marginBottom  : '-1000px',
+  marginBottom: '-1000px',
 }
 
 export const userstyle: React.CSSProperties = {
-position: 'fixed',
-fontSize: '0.8rem',
-fontWeight: 500,
-right: 0,
-top: '60px',
+  fontSize: '0.8rem',
+  fontWeight: 500,
 }
 
 export const topmiddlestyle: React.CSSProperties = {
@@ -174,5 +171,3 @@ export const topmiddlestyle: React.CSSProperties = {
   left: 86,
   top: '13px',
 }
-
-
