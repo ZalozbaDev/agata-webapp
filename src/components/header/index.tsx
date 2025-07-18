@@ -213,7 +213,7 @@ const Header: React.FC<{
               background: 'none',
             }}
           >
-            zastajenja
+            nastajenja
           </button>
           <br></br>
           <a
@@ -238,7 +238,7 @@ const Header: React.FC<{
           >
             ×
           </button>
-          <p>Zastajenja</p>
+          <p>nastajenja</p>
           <div
             style={{
               fontSize: '2rem',
