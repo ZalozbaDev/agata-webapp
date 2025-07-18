@@ -58,19 +58,19 @@ export const WociMikanje = ({
         top: '50%',
         transform: 'translate(-50%, -50%)',
         zIndex: 2000,
-        width: '80%',
-        height: '80%',
-        transition: 'all 0.5s cubic-bezier(.4,2,.6,1)',
+        width: '70%',
+        height: '70%',
+        transition: 'all 0.5s cubic-bezier(.4,2,.6,.6)',
         cursor: 'pointer',
       }
     : {
         position: 'fixed' as const,
         bottom: 0,
         right: 0,
-        zIndex: 1000,
+        zIndex: 2000,
         width: 300,
         height: 300,
-        transition: 'all 0.5s cubic-bezier(.4,2,.6,1)',
+        transition: 'all 0.5s cubic-bezier(.4,2,.6,.6)',
         cursor: 'pointer',
       }
 
@@ -79,13 +79,13 @@ export const WociMikanje = ({
         width: 450,
         height: 'auto',
         display: 'block',
-        transition: 'all 0.5s cubic-bezier(.4,2,.6,1)',
+        transition: 'all 0.5s cubic-bezier(.4,2,.6,.6)',
       }
     : {
         width: 300,
         height: 'auto',
         display: 'block',
-        transition: 'all 0.5s cubic-bezier(.4,2,.6,1)',
+        transition: 'all 0.5s cubic-bezier(.4,2,.6,.6)',
       }
 
   const handleClick = () => setIsCentered(c => !c)
