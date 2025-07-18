@@ -25,6 +25,8 @@ import neutralImg from './wobrazy/neutral.png'
 import Lottie from 'lottie-react'
 import puppetAnimation from './puppet-mouth.json'
 
+import { WociMikanje } from '../woci-mikanje'
+
 const mouthFramesImage = {
   closed: closedImg,
   a: aImg,
@@ -56,6 +58,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   visemes,
   duration = 0,
 }) => {
+  const [isCentered, setIsCentered] = useState(false)
   // Handle viseme data structure - it might be an object with visemes property or direct array
   const visemesArray = React.useMemo(() => {
     if (!visemes) return []
@@ -432,109 +435,92 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   }, [audioFile])
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        display: 'block',
-      }}
-    >
-      {/* Display the current viseme image */}
-      <img
-        // key={currentViseme} // Force re-render when viseme changes
-        src={mjezwoce}
-        alt={`Mouth position: ${currentViseme}`}
+    <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
+      <div
         style={{
           width: '100%',
           height: '100%',
-          objectFit: 'contain',
-          display: 'block',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-        }}
-        onError={e => {
-          console.warn(`Failed to load image for viseme: ${currentViseme}`)
-          // Fallback to neutral or closed image if the current one fails to load
-          const target = e.target as HTMLImageElement
-          target.src = mouthFramesImage.neutral
-        }}
-      />
-      <img
-        src={eyebrowFrame === 'brjowcki' ? brjowcki : brjowcki2}
-        alt={`Eyebrows frame: ${eyebrowFrame}`}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          display: 'block',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-        }}
-        onError={e => {
-          console.warn(`Failed to load eyebrow image: ${eyebrowFrame}`)
-          const target = e.target as HTMLImageElement
-          target.src = brjowcki
-        }}
-      />
-      <img
-        // key={currentViseme} // Force re-render when viseme changes
-        src={eyesFrame === 'woci_wocinjene' ? woci_wocinjene : woci_zacinjene}
-        alt={`Mouth position: ${currentViseme}`}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          display: 'block',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-        }}
-        onError={e => {
-          console.warn(`Failed to load image for viseme: ${currentViseme}`)
-          // Fallback to neutral or closed image if the current one fails to load
-          const target = e.target as HTMLImageElement
-          target.src = mouthFramesImage.neutral
-        }}
-      />
-      <img
-        key={currentViseme} // Force re-render when viseme changes
-        src={visemeToName(currentViseme)}
-        alt={`Mouth position: ${currentViseme}`}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          position: 'absolute',
-          top: 0,
-          left: 0,
+          position: 'relative',
           display: 'block',
         }}
-        onError={e => {
-          console.warn(`Failed to load image for viseme: ${currentViseme}`)
-          // Fallback to neutral or closed image if the current one fails to load
-          const target = e.target as HTMLImageElement
-          target.src = mouthFramesImage.neutral
-        }}
-      />
-      {/*       
-      <Lottie
-        lottieRef={lottieRef}
-        animationData={puppetAnimation}
-        loop={false}
-        autoplay={false}
-        style={{ width: '100%', height: '100%' }}
-        onDOMLoaded={() => {
-          console.log('Lottie DOM loaded, setting initial frame')
-          if (lottieRef.current) {
-            lottieRef.current.goToAndStop(0, true)
-          }
-        }}
-      /> */}
-      <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
-    </div>
+      >
+        {/* Display the current viseme image */}
+        <img
+          src={mjezwoce}
+          alt={`Mouth position: ${currentViseme}`}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            display: 'block',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+          onError={e => {
+            console.warn(`Failed to load image for viseme: ${currentViseme}`)
+            const target = e.target as HTMLImageElement
+            target.src = mouthFramesImage.neutral
+          }}
+        />
+        <img
+          src={eyebrowFrame === 'brjowcki' ? brjowcki : brjowcki2}
+          alt={`Eyebrows frame: ${eyebrowFrame}`}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            display: 'block',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+          onError={e => {
+            console.warn(`Failed to load eyebrow image: ${eyebrowFrame}`)
+            const target = e.target as HTMLImageElement
+            target.src = brjowcki
+          }}
+        />
+        <img
+          src={eyesFrame === 'woci_wocinjene' ? woci_wocinjene : woci_zacinjene}
+          alt={`Mouth position: ${currentViseme}`}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            display: 'block',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+          onError={e => {
+            console.warn(`Failed to load image for viseme: ${currentViseme}`)
+            const target = e.target as HTMLImageElement
+            target.src = mouthFramesImage.neutral
+          }}
+        />
+        <img
+          key={currentViseme}
+          src={visemeToName(currentViseme)}
+          alt={`Mouth position: ${currentViseme}`}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            display: 'block',
+          }}
+          onError={e => {
+            console.warn(`Failed to load image for viseme: ${currentViseme}`)
+            const target = e.target as HTMLImageElement
+            target.src = mouthFramesImage.neutral
+          }}
+        />
+        <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
+      </div>
+    </WociMikanje>
   )
 }
 
