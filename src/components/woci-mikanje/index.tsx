@@ -58,8 +58,8 @@ export const WociMikanje = ({
         top: '50%',
         transform: 'translate(-50%, -50%)',
         zIndex: 2000,
-        width: '70%',
-        height: '70%',
+        width: '80%',
+        height: '80%',
         transition: 'all 0.5s cubic-bezier(.4,2,.6,.6)',
         cursor: 'pointer',
       }
