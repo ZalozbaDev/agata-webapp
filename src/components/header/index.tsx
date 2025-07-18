@@ -199,9 +199,9 @@ const Header: React.FC<{
           style={{
             ...popupStyle,
             fontSize: '2.5rem',
-            top: '140px',
+            top: '165px',
             left: 'null',
-            right: '-100px',
+            right: '-140px',
             zIndex: 1000,
           }}
         >
@@ -243,6 +243,10 @@ const Header: React.FC<{
           >
             kontakt
           </a>
+          <br></br>
+          <Link to='/faq' style={{ ...impresumstyle, fontSize: '1.5rem' }}>
+            Husto stajene Prašenja
+          </Link>
         </div>
       )}
       {issetOpen && (
