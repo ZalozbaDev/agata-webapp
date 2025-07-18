@@ -24,6 +24,7 @@ import { Settingsicon } from '../../assets/icons'
 import mici from '../../assets/michael downsyndrom ziesch.jpg'
 import cigareta from '../../assets/cigareta.mp3'
 import punk from '../../assets/felix_punk.mp3'
+import { WociMikanje } from '../woci-mikanje'
 
 const Header: React.FC<{
   wopyty: number
@@ -49,6 +50,7 @@ const Header: React.FC<{
     return () => clearTimeout(timer)
   }, [])
   const [isOpen, setIsOpen] = useState(false)
+    const [isCentered, setIsCentered] = useState(false)
   const [issetOpen, setIssetOpen] = useState(false)
   const [ismenuOpen, setIsmenuOpen] = useState(false)
   const [newUrl, setNewUrl] = useState<CreateUrlRequest>({
@@ -108,6 +110,7 @@ const Header: React.FC<{
   }
 
   return (
+    
     <>
       <header style={headerStyle}>
         <div style={headerLeftStyle}>
@@ -231,7 +234,7 @@ const Header: React.FC<{
           </a>
           <br></br>
           <a
-            href={`mailto:info@agata.chat`}
+            href={`mailto:agata@lucija.de`}
             style={{
               ...impresumstyle,
               fontSize: '1.5rem',
