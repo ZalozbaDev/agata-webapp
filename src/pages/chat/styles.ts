@@ -1,5 +1,5 @@
 export const chatScreenStyle: React.CSSProperties = {
-  display: 'sticky',
+  display: 'flex',
   flexDirection: 'column',
   height: '100vh',
   width: '95vw',
