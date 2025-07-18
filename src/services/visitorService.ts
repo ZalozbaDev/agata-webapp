@@ -25,7 +25,9 @@ export interface DetectVisitorRequest {
 }
 
 export interface CountResponse {
-  count: number
+  visitors: number
+  total: number
+  prompts: number
 }
 
 // Visitor service functions
@@ -56,10 +58,10 @@ export const visitorService = {
   },
 
   // Get total visit count
-  async getVisitCount(): Promise<number> {
+  async getVisitCount(): Promise<CountResponse> {
     try {
       const response = await api.get<CountResponse>('/api/visitors/count')
-      return response.data.count
+      return response.data
     } catch (error) {
       console.error('Error fetching visit count:', error)
       throw error

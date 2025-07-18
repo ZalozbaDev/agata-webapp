@@ -58,6 +58,7 @@ const AppContentInner: React.FC<{
   const [agataOn, setagataOn] = useState(true)
   const [centagataOn, setcentagataOn] = useState(false)
   const [wopyty, setWopyty] = useState(0)
+  const [prompts, setPrompts] = useState(0)
   const [ipAddress, setIpAddress] = useState<string>('')
   const effectRan = useRef(false)
 
@@ -71,8 +72,9 @@ const AppContentInner: React.FC<{
           visitorService.detectVisitor({ ipAddress: data.ip })
         })
         .finally(() => {
-          visitorService.getVisitCount().then(count => {
-            setWopyty(count)
+          visitorService.getVisitCount().then(result => {
+            setWopyty(result.visitors)
+            setPrompts(result.prompts)
           })
         })
     }
@@ -113,6 +115,7 @@ const AppContentInner: React.FC<{
       <div style={appStyle}>
         <Header
           wopyty={wopyty}
+          propmts={prompts}
           centagataOn={centagataOn}
           agataOn={agataOn}
           wabjenjeOn={wabjenjeOn}
