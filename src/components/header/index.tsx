@@ -21,9 +21,6 @@ import {
 // Show top middle text for 20 seconds, then hide
 import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
-import mici from '../../assets/michael downsyndrom ziesch.jpg'
-import cigareta from '../../assets/cigareta.mp3'
-import punk from '../../assets/felix_punk.mp3'
 import { WociMikanje } from '../woci-mikanje'
 
 const Header: React.FC<{
@@ -90,10 +87,6 @@ const Header: React.FC<{
   }
 
   const handleAgataClick = (e: React.MouseEvent) => {
-    if (ismenuOpen) {
-      const punkaudio = new Audio(punk)
-      punkaudio.play()
-    }
     if (e.shiftKey) {
       e.preventDefault()
       setAgataShiftClicks(prev => {
@@ -145,13 +138,6 @@ const Header: React.FC<{
                 setSettingsShiftClicks(prev => {
                   const next = prev + 1
                   if (next === 3) {
-                    const audio = new Audio(cigareta)
-                    audio.play()
-                    // Stop audio after 1 minute
-                    setTimeout(() => {
-                      audio.pause()
-                      audio.currentTime = 0
-                    }, 60000)
                     setPendingShowHiddenImage(true)
                     setTimeout(() => {
                       setShowHiddenImage(true)
@@ -372,19 +358,6 @@ const Header: React.FC<{
             background: '#000',
           }}
         >
-          <img
-            src={mici}
-            alt='Hidden'
-            style={{
-              width: '100vw',
-              height: '100vh',
-              objectFit: 'cover',
-              opacity: 1,
-              transition:
-                'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s',
-              animation: 'growMici 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
-            }}
-          />
           <style>{`
               @keyframes growMici {
                 from { transform: scale(0.0); }
