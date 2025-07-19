@@ -18,7 +18,7 @@ const ImpresumPage: React.FC = () => {
       <p style={pismo}>Beno Baier, Feliks Šołta,     <br />Michał Cyž, Jan Breindl</p>
           <br />
       <h2 style={podnadpisma}>programy, kotrež wužiwamy:</h2>
-      <p style={pismo}>ChatGPT, TTS Bamborak, Sotra.app   <br />OCR Wita Bejmaka, STT Inkubator</p>
+      <p style={pismo}>ChatGPT, TTS Bamborak, Sotra.APP   <br />OCR Wita Bejmaka, STT Inkubator</p>
     </div>
   )
 }
