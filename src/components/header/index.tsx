@@ -133,7 +133,7 @@ const Header: React.FC<{
         {!ismenuOpen && (
           <div style={{ position: 'fixed', top: '60px', right: '1rem' }}>
             <div style={userstyle}>wopyty: {wopyty}</div>
-            <div style={userstyle}>naprasowanje: {propmts}</div>
+            <div style={userstyle}>naprašowanja: {propmts}</div>
           </div>
         )}
 
