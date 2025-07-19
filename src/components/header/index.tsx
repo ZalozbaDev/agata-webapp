@@ -28,6 +28,7 @@ import { WociMikanje } from '../woci-mikanje'
 
 const Header: React.FC<{
   wopyty: number
+  propmts: number
   centagataOn: boolean
   agataOn: boolean
   wabjenjeOn: boolean
@@ -36,6 +37,7 @@ const Header: React.FC<{
   onChangeWabjenje: (isActive: boolean) => void
 }> = ({
   wopyty,
+  propmts,
   centagataOn,
   onChangecentagata,
   agataOn,
@@ -44,13 +46,13 @@ const Header: React.FC<{
   onChangeWabjenje,
 }) => {
   // Show top middle text for 20 seconds, then hide
-  const [showTopMiddle, setShowTopMiddle] = useState(true)
+  const [showTopMiddle, setShowTopMiddle] = useState(false) // TODO: Apply when needed
   useEffect(() => {
     const timer = setTimeout(() => setShowTopMiddle(false), 20000)
     return () => clearTimeout(timer)
   }, [])
   const [isOpen, setIsOpen] = useState(false)
-    const [isCentered, setIsCentered] = useState(false)
+  const [isCentered, setIsCentered] = useState(false)
   const [issetOpen, setIssetOpen] = useState(false)
   const [ismenuOpen, setIsmenuOpen] = useState(false)
   const [newUrl, setNewUrl] = useState<CreateUrlRequest>({
@@ -110,7 +112,6 @@ const Header: React.FC<{
   }
 
   return (
-    
     <>
       <header style={headerStyle}>
         <div style={headerLeftStyle}>
@@ -129,7 +130,12 @@ const Header: React.FC<{
             </div>
           )}
         </div>
-        {!ismenuOpen && <div style={userstyle}>wopyty: {wopyty}</div>}
+        {!ismenuOpen && (
+          <div style={{ position: 'fixed', top: '60px', right: '1rem' }}>
+            <div style={userstyle}>wopyty: {wopyty}</div>
+            <div style={userstyle}>naprasowanje: {propmts}</div>
+          </div>
+        )}
 
         <div style={Settingsiconstyle}>
           <button
