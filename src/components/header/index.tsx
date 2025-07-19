@@ -46,7 +46,7 @@ const Header: React.FC<{
   onChangeWabjenje,
 }) => {
   // Show top middle text for 20 seconds, then hide
-  const [showTopMiddle, setShowTopMiddle] = useState(true)
+  const [showTopMiddle, setShowTopMiddle] = useState(false) // TODO: Apply when needed
   useEffect(() => {
     const timer = setTimeout(() => setShowTopMiddle(false), 20000)
     return () => clearTimeout(timer)
