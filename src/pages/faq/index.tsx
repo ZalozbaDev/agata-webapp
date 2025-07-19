@@ -18,7 +18,7 @@ const FaqPage: React.FC = () => {
       <h2 style={podnadpisma}>Njesłyšu Agatu.</h2>
       <p style={pismo}>Pruwuj wótrosć wótřerěčaka na swojim nastroju.</p>
       <br />
-      <h2 style={podnadpisma}>Agata nima wotmołwu na moje prašenje.</h2>
+      <h2 style={podnadpisma}>Agata nima prawu wotmołwu na prašenje.</h2>
       <p style={pismo}>Agata hišće wšitko, wona pak wuknje.</p>
       <br />
       <h2 style={podnadpisma}>Kak hasnu Agatu abo wotkazy?</h2>
