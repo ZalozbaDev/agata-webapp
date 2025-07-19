@@ -18,7 +18,8 @@ const ImpresumPage: React.FC = () => {
       <p style={pismo}>Beno Baier, Feliks Šołta,    
                   <br />Michał Cyž, Jan Breindl
                   <br />social media: Franciska Vcelichowa</p>
-          <br />
+      
+      
       <h2 style={podnadpisma}>programy, kotrež wužiwamy:</h2>
       <p style={pismo}>ChatGPT, TTS Bamborak, Sotra.APP  
                  <br />OCR Wito Bejmak, STT Inkubator</p>
