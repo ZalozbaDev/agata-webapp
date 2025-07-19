@@ -10,7 +10,7 @@ const ImpresumPage: React.FC = () => {
   return (
     <div>
       <br />
-      <br />
+    
       <br />
       <h1 style={impresumtitlestyle}>impresum</h1>
           <br />
