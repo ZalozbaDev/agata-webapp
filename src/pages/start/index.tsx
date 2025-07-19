@@ -13,7 +13,7 @@ const starttilearray: { title: string }[] = [
   { title: 'Witaj, rjenje zo mje wopytaš ☺️' },
   { title: 'Klikń mi na mjezwočo, potom so powjetšu.' },
   { title: 'Zapodaj Twoje prašenje prošu w porjadnej serbšćinje!' },
-  { title: 'Dalše nastajenja namakaš w meniju - horjeka na prawo' },
+  { title: 'Dalše nastajenja namakaš w meniju - horjeka na prawo!' },
 ]
 
 const fadeDuration = 500
