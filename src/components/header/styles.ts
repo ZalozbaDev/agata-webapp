@@ -139,7 +139,7 @@ export const checkboxstyle: React.CSSProperties = {
 }
 
 export const impresumstyle: React.CSSProperties = {
-  color: '#2ebcdbff',
+  color: '#8d8d8dff',
   textShadow: `
       -0px -0px 0 white,
        0   -0px 0 white,
