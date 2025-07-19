@@ -21,7 +21,11 @@ const ImpresumPage: React.FC = () => {
           <br />
       <h2 style={podnadpisma}>programy, kotrež wužiwamy:</h2>
       <p style={pismo}>ChatGPT, TTS Bamborak, Sotra.APP  
-                 <br />OCR Wita Bejmaka, STT Inkubator</p>
+                 <br />OCR Wito Bejmak, STT Inkubator</p>
+
+      <h2 style={podnadpisma}>wosebity dźak za podpěru:</h2>
+      <p style={pismo}>Daniel Zoba, Bernhard Baier  
+                 <br />****************************</p>
     </div>
   )
 }
