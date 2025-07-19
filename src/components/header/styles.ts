@@ -134,12 +134,12 @@ export const Settingsiconstyle: React.CSSProperties = {
 export const checkboxstyle: React.CSSProperties = {
   width: '1.6rem',
   height: '1.6rem',
-  accentColor: '#8d8d8dff',
+  accentColor: '#2ebcdbff',
   zIndex: 9000,
 }
 
 export const impresumstyle: React.CSSProperties = {
-  color: '#000000ff',
+  color: '#8d8d8dff',
   textShadow: `
       -0px -0px 0 black,
        0   -0px 0 black,
