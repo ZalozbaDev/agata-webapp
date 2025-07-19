@@ -12,13 +12,13 @@ const FaqPage: React.FC = () => {
       <br />
       <h1 style={impresumtitlestyle}>husto stajene prašenja (FAQ)</h1>
           <br />
-      <h2 style={podnadpisma}>Kak widźu Agatu na šmóratku?</h2>
-      <p style={pismo}>W nastajenjach klikń na "Agata na šmóratku."</p>
+      <h2 style={podnadpisma}>Kak aktiwizuju Agatu na šmóratku?</h2>
+      <p style={pismo}>Horjeka na prawo w nastajenjach: klikń na "Agata na šmóratku."</p>
           <br />
       <h2 style={podnadpisma}>Njesłyšu Agatu.</h2>
       <p style={pismo}>Pruwuj wótrosć wótřerěčaka na swojim nastroju.</p>
       <br />
-      <h2 style={podnadpisma}>Agata nima prawu wotmołwu na prašenje.</h2>
+      <h2 style={podnadpisma}>Wotmołwy na moje prašenja njejsu prawe!</h2>
       <p style={pismo}>Agata hišće wšitko njewě, wona pak wuknje.</p>
       <br />
       <h2 style={podnadpisma}>Kak hasnu Agatu abo wotkazy?</h2>
