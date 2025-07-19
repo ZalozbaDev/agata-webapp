@@ -12,29 +12,29 @@ const FaqPage: React.FC = () => {
       <br />
       <h1 style={impresumtitlestyle}>husto stajene prašenja (FAQ)</h1>
           <br />
-      <h2 style={podnadpisma}>Kak widźu Agatu na šmóratce?</h2>
-      <p style={pismo}>W nastajenjach klikujće na "Agata na šmóratku."</p>
+      <h2 style={podnadpisma}>Kak widźu Agatu na šmóratku?</h2>
+      <p style={pismo}>W nastajenjach klikń na "Agata na šmóratku."</p>
           <br />
       <h2 style={podnadpisma}>Njesłyšu Agatu.</h2>
-      <p style={pismo}>Hladajće, zo maće zwuk na swojim nastroju.</p>
+      <p style={pismo}>Pruwuj wótrosć wótřerěčaka na swojim nastroju.</p>
       <br />
-      <h2 style={podnadpisma}>Agata njewě wotmołwu na tute prašenje.</h2>
-      <p style={pismo}>Agata njewě wšitko, wona wuknje hišće.</p>
+      <h2 style={podnadpisma}>Agata nima wotmołwu na moje prašenje.</h2>
+      <p style={pismo}>Agata hišće wšitko, wona pak wuknje.</p>
       <br />
       <h2 style={podnadpisma}>Kak hasnu Agatu abo wotkazy?</h2>
       <p style={pismo}>W nastajenjach.</p>
       <br />
       <h2 style={podnadpisma}>Mikrofon njefunguje.</h2>
-      <p style={pismo}>Hladajće, zo sće Agaće přistup na mikrofon dali.</p>
+      <p style={pismo}>Dyrbiš Agaće wužiwanje mikrofona dowolić.</p>
       <br />
-      <h2 style={podnadpisma}>Njewidźu wotmołwy.</h2>
-      <p style={pismo}>Hladajće, zo Agata njeje srjedźa.</p>
+      <h2 style={podnadpisma}>Njewidźu tekst wotmołwy.</h2>
+      <p style={pismo}>Klikń na mjezwočo Agaty, jelizo pokaza so wosrjedź wobrazowki.</p>
       <br />
-      <h2 style={podnadpisma}>Wotmołwy njemóžu čitać/ su pře małke.</h2>
-      <p style={pismo}>To zaleži na wašim nastroju</p>
+      <h2 style={podnadpisma}>Njemóžu wotmołwy čitać, su pře małke.</h2>
+      <p style={pismo}>Změn ZOOM faktor wobrazowki, na kompjuteru z STRG +</p>
       <br />
-      <h2 style={podnadpisma}>Njeje so waše prašenje wotmołwiło?<br /> Kontaktěrujeće nas pod emailce <a style={{textDecoration: 'none'}} href={`mailto:agata@lucija.de`}>agata@lucija.de</a></h2>
-      <h2 style={{...podnadpisma, color: 'red', fontWeight: '1000'}}>Prošu stajće nam jenož chutne prašenja</h2>
+      <h2 style={podnadpisma}>Maš dalše prašenja?<br /> Kontaktěruj nas přez mailku <a style={{textDecoration: 'none'}} href={`mailto:agata@lucija.de`}>agata@lucija.de</a></h2>
+      <h2 style={{...podnadpisma, color: 'red', fontWeight: '1000'}}>Wutrobny dźak za pokiwy a konstruktiwne prašenja.</h2>
     </div>
   )
 }
