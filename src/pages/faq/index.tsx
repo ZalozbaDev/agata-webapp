@@ -34,7 +34,7 @@ const FaqPage: React.FC = () => {
       <p style={pismo}>Změn ZOOM faktor wobrazowki, na kompjuteru z STRG +</p>
       <br />
       <h2 style={podnadpisma}>Maš dalše prašenja?<br /> Kontaktěruj nas přez mailku <a style={{color: 'green', textDecoration: 'none'}} href={`mailto:agata@lucija.de`}>agata@lucija.de</a></h2>
-      <h2 style={{...podnadpisma, color: 'red', fontWeight: '1000'}}>Wutrobny dźak za pokiwy a konstruktiwne prašenja.</h2>
+      <h2 style={{...podnadpisma, color: 'red', fontWeight: '1000'}}>Wutrobny dźak za pokiwy a konstruktiwnu kritiku.</h2>
     </div>
   )
 }
