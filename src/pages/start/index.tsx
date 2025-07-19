@@ -12,7 +12,7 @@ const starttilearray: { title: string }[] = [
   { title: 'Pomhaj Bóh.' },
   { title: 'Witaj, rjenje zo mje wopytaš ☺️' },
   { title: 'Klikń mi na mjezwočo, potom so powjetšu.' },
-  { title: 'Zapodaj Twoje prašenje prošu w porjadnej serbšćinje!' },
+  { title: 'Zapodaj swoje prašenje prošu w porjadnej serbšćinje!' },
   { title: 'Dalše nastajenja namakaš w meniju - horjeka na prawo!' },
 ]
 
