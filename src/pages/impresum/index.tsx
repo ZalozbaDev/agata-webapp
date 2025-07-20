@@ -21,8 +21,10 @@ const ImpresumPage: React.FC = () => {
       
       
       <h2 style={podnadpisma}>programy, kotrež wužiwamy:</h2>
-      <p style={pismo}>ChatGPT/ OpenAI<br /> TTS bamborak. / Korla Baier
-      <br /> sotra / Witaj Sprachzentrum  <br />STT bamborak / Korla Baier</p>
+      <p style={pismo}>sotra / Witaj Sprachzentrum/ strona: <a href="https://sotra.app" target="_blank" rel="noopener noreferrer">https://sotra.app</a>
+      <br /> TTS bamborak / Korla Baier/ strona: <a href="https://bamborak.de" target="_blank" rel="noopener noreferrer">https://bamborak.de</a>
+      <br />STT bamborak / Korla Baier/ strona: <a href="https://bamborak.de" target="_blank" rel="noopener noreferrer">https://bamborak.de</a>
+      <br />ChatGPT/ OpenAI/ strona: <a href="https://openai.com/de-DE/index/chatgpt" target="_blank" rel="noopener noreferrer">https://openai.com/de-DE/index/chatgpt</a></p>
 
       <h2 style={podnadpisma}>wosebity dźak za podpěru:</h2>
       <p style={pismo}>Daniel Zoba, Bernhard Baier  
