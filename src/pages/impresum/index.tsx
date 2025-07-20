@@ -21,8 +21,8 @@ const ImpresumPage: React.FC = () => {
       
       
       <h2 style={podnadpisma}>programy, kotrež wužiwamy:</h2>
-      <p style={pismo}>ChatGPT, TTS Bamborak, Sotra.APP  
-                 <br />OCR Wito Bejmak, STT Inkubator</p>
+      <p style={pismo}>ChatGPT/ OpenAI<br /> TTS bamborak. / Korla Baier
+      <br /> sotra / Witaj Sprachzentrum  <br />STT bamborak / Korla Baier</p>
 
       <h2 style={podnadpisma}>wosebity dźak za podpěru:</h2>
       <p style={pismo}>Daniel Zoba, Bernhard Baier  
