@@ -19,3 +19,10 @@ fontFamily: 'Arial, sans-serif',
 color: '#ffffffff',
 textAlign: 'center',
 }
+
+export const wotkazyFAQ: React.CSSProperties = {
+fontSize: '1.5rem',
+fontFamily: 'Arial, sans-serif',
+color: '#6daefdff',
+textAlign: 'center',
+}
