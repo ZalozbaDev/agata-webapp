@@ -23,7 +23,7 @@ const ImpresumPage: React.FC = () => {
       
       <h2 style={podnadpisma}>programy, kotrež wužiwamy:</h2>
       <p style={pismo}>sotra / Witaj Sprachzentrum / <a href="https://sotra.app" 
-      target="_blank" rel="noopener noreferrer"  >https://sotra.app</a>
+      target="_blank" rel="noopener noreferrer" style={wotkazy} >https://sotra.app</a>
       
       <br /> TTS bamborak (model) / Korla Baier / <a href="https://bamborak.de" 
       target="_blank" rel="noopener noreferrer" style={wotkazy} >https://bamborak.de</a>
