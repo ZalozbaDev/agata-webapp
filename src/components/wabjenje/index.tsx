@@ -9,7 +9,7 @@ import Lucija from '../../assets/logos/01 Logo LUCIJA - 150px.png';
 import Digiserb from '../../assets/logos/02 Logo DIGISERB - 150px.png';
 import Bamborak from '../../assets/logos/03 Logo BAMBORAK - 150px.png';
 import SerbskiCaptioner from '../../assets/logos/04 Logo WEBCAPTIONER - 150px.png';
-import Ocr from '../../assets/logos/05 Wito OCR - 150px.png';
+import Ocr from '../../assets/logos/05 OCR - 150px.png';
 import Eather from'../../assets/logos/06 eatherpad.png';
 import ScanText from '../../assets/logos/07 Beta scan Text.png';
 import pucnik from '../../assets/logos/08 Pucnik digitalny swet.png';
@@ -30,7 +30,7 @@ const page1links = [
   'https://digiserb.de/de/',
   'https://bamborak.mudrowak.de/',
   'https://youtu.be/YdJh6-CdVNs',
-  'https://sorbib.de/ocr',
+  'https://2ocr.com/online-ocr-czech/',
 ];
 
 export const Wabjenje: React.FC = () => {
