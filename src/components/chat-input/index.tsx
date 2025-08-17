@@ -2,6 +2,7 @@ import React from 'react'
 import { MicIcon } from '../../assets/icons'
 import SendIcon from '../../assets/SendIcon.png'
 import LoadingSpinner from '../LoadingSpinner'
+import { SpellCheckedInput } from '../spell-checked-input'
 import {
   chatInputStyle,
   inputIconStyle,
@@ -66,16 +67,14 @@ const ChatInput: React.FC<{
         <button style={disabledButtonStyle} disabled={isLoading}>
           <SettingsIcon />
         </button> */}
-        <input
+        <SpellCheckedInput
           style={disabledInputStyle}
-          type='text'
           placeholder='Zapodaj tule swoje prašenje ...'
           value={value}
           onChange={onChange}
           onKeyDown={onKeyDown}
           disabled={isLoading}
           autoFocus
-          spellCheck={false}
         />
         <button
           style={recordingButtonStyle}
