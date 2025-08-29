@@ -1,10 +1,11 @@
 import React from 'react'
-// import { MicIcon } from '../../assets/icons'
+import { MicIcon } from '../../assets/icons'
 import SendIcon from '../../assets/SendIcon.png'
 import LoadingSpinner from '../LoadingSpinner'
+import { SpellCheckedInput } from '../spell-checked-input'
 import {
   chatInputStyle,
-  // inputIconStyle,
+  inputIconStyle,
   innerInputBarStyle,
   inputBarStyle,
   sendIconStyle,
@@ -24,8 +25,8 @@ const ChatInput: React.FC<{
   onSend,
   onKeyDown,
   isLoading = false,
-  // onRecordingToggle,
-  // isRecording = false,
+  onRecordingToggle,
+  isRecording = false,
 }) => {
   // Create disabled input style when loading
   const disabledInputStyle: React.CSSProperties = {
@@ -34,12 +35,12 @@ const ChatInput: React.FC<{
     cursor: isLoading ? 'not-allowed' : 'text',
   }
 
-  // // Create disabled button style when loading
-  // const disabledButtonStyle: React.CSSProperties = {
-  //   ...inputIconStyle,
-  //   opacity: isLoading ? 0.5 : 1,
-  //   cursor: isLoading ? 'not-allowed' : 'pointer',
-  // }
+  // Create disabled button style when loading
+  const disabledButtonStyle: React.CSSProperties = {
+    ...inputIconStyle,
+    opacity: isLoading ? 0.5 : 1,
+    cursor: isLoading ? 'not-allowed' : 'pointer',
+  }
 
   const disabledSendButtonStyle: React.CSSProperties = {
     ...sendIconStyle,
@@ -49,13 +50,13 @@ const ChatInput: React.FC<{
   }
 
   // Create recording button style
-  // const recordingButtonStyle: React.CSSProperties = {
-  //   ...disabledButtonStyle,
-  //   backgroundColor: isRecording ? '#f44336' : 'transparent',
-  //   color: isRecording ? '#fff' : '#000000ff',
-  //   transition: 'background-color 0.3s ease',
-  //   position: 'relative',
-  // }
+  const recordingButtonStyle: React.CSSProperties = {
+    ...disabledButtonStyle,
+    backgroundColor: isRecording ? '#f44336' : 'transparent',
+    color: isRecording ? '#fff' : '#000000ff',
+    transition: 'background-color 0.3s ease',
+    position: 'relative',
+  }
 
   return (
     <div style={inputBarStyle}>
@@ -66,18 +67,16 @@ const ChatInput: React.FC<{
         <button style={disabledButtonStyle} disabled={isLoading}>
           <SettingsIcon />
         </button> */}
-        <input
+        <SpellCheckedInput
           style={disabledInputStyle}
-          type='text'
           placeholder='Zapodaj tule swoje prašenje ...'
           value={value}
           onChange={onChange}
           onKeyDown={onKeyDown}
           disabled={isLoading}
           autoFocus
-          spellCheck={false}
         />
-        {/* <button
+        <button
           style={recordingButtonStyle}
           disabled={isLoading}
           onClick={onRecordingToggle}
@@ -98,7 +97,7 @@ const ChatInput: React.FC<{
               }}
             />
           )}
-        </button> */}
+        </button>
         <button
           style={disabledSendButtonStyle}
           onClick={onSend}
