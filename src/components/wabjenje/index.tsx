@@ -30,7 +30,7 @@ const page1links = [
   'https://digiserb.de/de/',
   'https://bamborak.mudrowak.de/',
   'https://youtu.be/YdJh6-CdVNs',
-  'https://2ocr.com/online-ocr-czech/',
+  'https://www.sorbib.de/ocr',
 ];
 
 export const Wabjenje: React.FC = () => {
