@@ -14,7 +14,7 @@ export const SERVER_CONFIG = {
   },
 
   // Request timeout in milliseconds
-  TIMEOUT: 10000,
+  TIMEOUT: 100000,
 }
 
 export default SERVER_CONFIG
