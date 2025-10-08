@@ -18,6 +18,7 @@ const ImpresumPage: React.FC = () => {
       <h2 style={podnadpisma}>sobuskutkowacy:</h2>
       <p style={pismo}>Beno Baier, Feliks Šołta,    
                   <br />Michał Cyž, Jan Breindl
+                  <br />Daniel Zoba
                   <br />social media: Franciska Vcelichowa</p>
       
       

@@ -44,25 +44,9 @@ export const Wabjenje: React.FC = () => {
     'Rjek mi rjany žort.',
   ];
 
-  const [pageOrder, setPageOrder] = useState(() => {
-    // Randomize at mount
-    return shuffleArray([0, 1, 2]);
-  });
+  const pageOrder = [0, 1, 2];
   const [pageIdx, setPageIdx] = useState(0);
   const [fade, setFade] = useState(false);
-
-  // Fisher-Yates shuffle
-  function shuffleArray(array: number[]) {
-    const arr = array.slice();
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
-
-  // Store previous order to avoid immediate repeat
-  const prevOrderRef = React.useRef<number[] | null>(null);
 
   useEffect(() => {
     let fadeTimeout: NodeJS.Timeout;
@@ -74,17 +58,6 @@ export const Wabjenje: React.FC = () => {
         setFade(false);
         setPageIdx((prevIdx) => {
           if (prevIdx === pageOrder.length - 1) {
-            // End of cycle, randomize next order (avoid immediate repeat)
-            setPageOrder((oldOrder) => {
-              let newOrder;
-              let tries = 0;
-              do {
-                newOrder = shuffleArray([0, 1, 2]);
-                tries++;
-              } while (prevOrderRef.current && newOrder.join() === prevOrderRef.current.join() && tries < 10);
-              prevOrderRef.current = oldOrder;
-              return newOrder;
-            });
             return 0;
           }
           return prevIdx + 1;
