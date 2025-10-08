@@ -58,10 +58,13 @@ export const WociMikanje = ({
         top: '50%',
         transform: 'translate(-50%, -50%)',
         zIndex: 2000,
-        width: '80%',
-        height: '80%',
+        width: 'min(90vw, 400px)',
+        height: 'min(90vw, 400px)',
+        maxWidth: '100vw',
+        maxHeight: '100vh',
         transition: 'all 0.5s cubic-bezier(.4,2,.6,.6)',
         cursor: 'pointer',
+        background: 'transparent',
       }
     : {
         position: 'fixed' as const,
@@ -72,23 +75,33 @@ export const WociMikanje = ({
         height: 300,
         transition: 'all 0.5s cubic-bezier(.4,2,.6,.6)',
         cursor: 'pointer',
+        background: 'transparent',
       }
 
   const imgStyle = isCentered
     ? {
-        width: 450,
-        height: 'auto',
+        width: '100%',
+        height: '100%',
         display: 'block',
         transition: 'all 0.5s cubic-bezier(.4,2,.6,.6)',
+        objectFit: 'contain',
       }
     : {
-        width: 300,
-        height: 'auto',
+        width: '100%',
+        height: '100%',
         display: 'block',
         transition: 'all 0.5s cubic-bezier(.4,2,.6,.6)',
+        objectFit: 'contain',
       }
 
-  const handleClick = () => setIsCentered(c => !c)
+  // Prevent rapid toggling during transition
+  const [canClick, setCanClick] = useState(true)
+  const handleClick = () => {
+    if (!canClick) return;
+    setCanClick(false);
+    setIsCentered(c => !c);
+    setTimeout(() => setCanClick(true), 600);
+  }
 
   return (
     <div style={containerStyle} onClick={handleClick}>
