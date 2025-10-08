@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import {
   wabjenjeStyle,
@@ -11,40 +10,54 @@ import Digiserb from '../../assets/logos/02 Logo DIGISERB - 150px.png';
 import Bamborak from '../../assets/logos/03 Logo BAMBORAK - 150px.png';
 import SerbskiCaptioner from '../../assets/logos/04 Logo WEBCAPTIONER - 150px.png';
 import Ocr from '../../assets/logos/05 OCR - 150px.png';
-import Eather from'../../assets/logos/06 eatherpad.png';
+import Eather from '../../assets/logos/06 eatherpad.png';
 import ScanText from '../../assets/logos/07 Beta scan Text.png';
 import pucnik from '../../assets/logos/08 Pucnik digitalny swet.png';
 import workadventure from '../../assets/logos/09 Workadventure.png';
 import slp from '../../assets/logos/10 Gaussia.png';
+import hornjoserbsce from '../../assets/logos/Icon - Hornjoserbsce.png';
+import dolnoserbski from '../../assets/logos/Icon - Dolnoserbski.png';
+import nemsce from '../../assets/logos/Icon - nemsce.png';
 
-const page2images = [Eather, ScanText, pucnik, workadventure, slp];
-const page1images = [Lucija, Digiserb, Bamborak, SerbskiCaptioner, Ocr];
-const page2links = [
-  'https://etherpad.serbski-inkubator.de/',
-  'https://spoznawanje.serbski-inkubator.de/',
-  'https://www.yumpu.com/xx/document/read/69582698/pucnik-po-digitalnym-swece',
-  'https://play.workadventu.re/@/zalozba/berow/prenipospyt',
-  'https://gaussia.de/slp/',
-];
+const page1images = [Lucija, Digiserb, ScanText, Ocr, Bamborak];
+const page2images = [Eather, workadventure, slp, pucnik, SerbskiCaptioner];
+const page4images = [ScanText, hornjoserbsce, dolnoserbski, nemsce, ScanText];
+
 const page1links = [
   'https://www.lucija.de/',
   'https://digiserb.de/de/',
-  'https://bamborak.mudrowak.de/',
-  'https://youtu.be/YdJh6-CdVNs',
+  'https://spoznawanje.serbski-inkubator.de/',
   'https://www.sorbib.de/ocr',
+  'https://bamborak.mudrowak.de/',
+   
+];
+const page2links = [
+  'https://etherpad.serbski-inkubator.de/',
+  'https://play.workadventu.re/@/zalozba/berow/prenipospyt',
+  'https://gaussia.de/slp/',
+  'https://www.yumpu.com/xx/document/read/69582698/pucnik-po-digitalnym-swece',
+  'https://youtu.be/YdJh6-CdVNs',
+
+];
+const page4links = [
+    'https://spoznawanje.serbski-inkubator.de/',
+    'https://spoznawanje.serbski-inkubator.de/',
+    'https://spoznawanje.serbski-inkubator.de/',
+    'https://spoznawanje.serbski-inkubator.de/',
+    'https://spoznawanje.serbski-inkubator.de/',
+            
 ];
 
 export const Wabjenje: React.FC = () => {
-  // 0: page1, 1: page2, 2: text page
   const textParts = [
-    'Kak budźe jutře wjedro w Budyšinje?',
-    'Hdy su njedźelu kemše w Chrósćicach?',
-    'Kotre serbske zarjadowanja su kónctydźenja?',
-    'Powjedaj mi bajku.',
-    'Rjek mi rjany žort.',
+    'Zapodaj prašenja a komanda:',
+    'Kajke budźe jutře wjedro w Hórkach?',
+    'Podaj mi přehlad Božich mšow w Chrósćicach.',
+    'Kotre serbske zarjadowanja su kónc tydźenja?',
+    'Powědaj mi serbsku bajku.',
   ];
 
-  const pageOrder = [0, 1, 2];
+  const pageOrder = [0, 1, 2, 3];
   const [pageIdx, setPageIdx] = useState(0);
   const [fade, setFade] = useState(false);
 
@@ -56,12 +69,7 @@ export const Wabjenje: React.FC = () => {
       setFade(true);
       fadeTimeout = setTimeout(() => {
         setFade(false);
-        setPageIdx((prevIdx) => {
-          if (prevIdx === pageOrder.length - 1) {
-            return 0;
-          }
-          return prevIdx + 1;
-        });
+        setPageIdx((prevIdx) => (prevIdx === pageOrder.length - 1 ? 0 : prevIdx + 1));
         swapTimeout = setTimeout(startCycle, 10000);
       }, 500);
     };
@@ -76,29 +84,35 @@ export const Wabjenje: React.FC = () => {
   }, []);
 
   const tops = ['7vh', '25.5vh', '44vh', '62.5vh', '81vh'];
+  const currentPage = pageOrder[pageIdx];
 
   let content;
-  const currentPage = pageOrder[pageIdx];
   if (currentPage === 2) {
-    // Show all text parts in the same layout as images
     content = (
       <div style={wabjenjeStyle} className="wabjenje-stack">
         {tops.map((top, idx) => (
           <div
             key={idx}
-            style={{...textstyle, top, opacity: fade ? 0 : 1,}}
+            style={{ ...textstyle, top, opacity: fade ? 0 : 1 }}
           >
-            <span style={{padding: '0.5rem', lineHeight: 1.2}}>{textParts[idx]}</span>
+            <span style={{ padding: '0.5rem', lineHeight: 1.2 }}>{textParts[idx]}</span>
           </div>
         ))}
       </div>
     );
   } else {
-    const images = currentPage === 1 ? page2images : page1images;
-    const links = currentPage === 1 ? page2links : page1links;
-    const alts = currentPage === 1
-      ? ['Lucija 1','Lucija 2','Lucija 3','Lucija 4','Lucija 5']
-      : ['Digiserb 1','Digiserb 2','Digiserb 3','Digiserb 4','Digiserb 5'];
+    let images, links;
+    if (currentPage === 1) {
+      images = page2images;
+      links = page2links;
+    } else if (currentPage === 3) {
+      images = page4images;
+      links = page4links;
+    } else {
+      images = page1images;
+      links = page1links;
+    }
+
     content = (
       <div style={wabjenjeStyle} className="wabjenje-stack">
         {images.map((imgSrc, idx) => (
@@ -111,7 +125,6 @@ export const Wabjenje: React.FC = () => {
           >
             <img
               src={imgSrc}
-              alt={alts[idx]}
               style={{
                 ...imageStyle,
                 top: 0,
