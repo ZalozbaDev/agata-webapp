@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import {
   wabjenjeStyle,
   imageStyle,
+  textstyle,
 } from './styles';
 
 import Lucija from '../../assets/logos/01 Logo LUCIJA - 150px.png';
@@ -34,8 +35,34 @@ const page1links = [
 ];
 
 export const Wabjenje: React.FC = () => {
-  const [showLucija, setShowLucija] = useState(false);
+  // 0: page1, 1: page2, 2: text page
+  const textParts = [
+    'Kak budźe jutře w Budyšinje wjedro?',
+    'Hdy su njedźelu w Chrósćicach kemše?',
+    'Kotre serbske zarjadowanja su kónctydźenja?',
+    'Powjedaj mi bajku!',
+    'Rjek mi rjany žort!',
+  ];
+
+  const [pageOrder, setPageOrder] = useState(() => {
+    // Randomize at mount
+    return shuffleArray([0, 1, 2]);
+  });
+  const [pageIdx, setPageIdx] = useState(0);
   const [fade, setFade] = useState(false);
+
+  // Fisher-Yates shuffle
+  function shuffleArray(array: number[]) {
+    const arr = array.slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // Store previous order to avoid immediate repeat
+  const prevOrderRef = React.useRef<number[] | null>(null);
 
   useEffect(() => {
     let fadeTimeout: NodeJS.Timeout;
@@ -44,8 +71,24 @@ export const Wabjenje: React.FC = () => {
     const startCycle = () => {
       setFade(true);
       fadeTimeout = setTimeout(() => {
-        setShowLucija((prev) => !prev);
         setFade(false);
+        setPageIdx((prevIdx) => {
+          if (prevIdx === pageOrder.length - 1) {
+            // End of cycle, randomize next order (avoid immediate repeat)
+            setPageOrder((oldOrder) => {
+              let newOrder;
+              let tries = 0;
+              do {
+                newOrder = shuffleArray([0, 1, 2]);
+                tries++;
+              } while (prevOrderRef.current && newOrder.join() === prevOrderRef.current.join() && tries < 10);
+              prevOrderRef.current = oldOrder;
+              return newOrder;
+            });
+            return 0;
+          }
+          return prevIdx + 1;
+        });
         swapTimeout = setTimeout(startCycle, 10000);
       }, 500);
     };
@@ -57,36 +100,57 @@ export const Wabjenje: React.FC = () => {
       clearTimeout(swapTimeout);
       clearTimeout(initialTimeout);
     };
-  }, [showLucija]);
+  }, []);
 
   const tops = ['7vh', '25.5vh', '44vh', '62.5vh', '81vh'];
 
-  const images = showLucija ? page2images : page1images;
-  const links = showLucija ? page2links : page1links;
-  const alts = showLucija ? ['Lucija 1','Lucija 2','Lucija 3','Lucija 4','Lucija 5'] : ['Digiserb 1','Digiserb 2','Digiserb 3','Digiserb 4','Digiserb 5'];
+  let content;
+  const currentPage = pageOrder[pageIdx];
+  if (currentPage === 2) {
+    // Show all text parts in the same layout as images
+    content = (
+      <div style={wabjenjeStyle} className="wabjenje-stack">
+        {tops.map((top, idx) => (
+          <div
+            key={idx}
+            style={{...textstyle, top, opacity: fade ? 0 : 1,}}
+          >
+            <span style={{padding: '0.5rem', lineHeight: 1.2}}>{textParts[idx]}</span>
+          </div>
+        ))}
+      </div>
+    );
+  } else {
+    const images = currentPage === 1 ? page2images : page1images;
+    const links = currentPage === 1 ? page2links : page1links;
+    const alts = currentPage === 1
+      ? ['Lucija 1','Lucija 2','Lucija 3','Lucija 4','Lucija 5']
+      : ['Digiserb 1','Digiserb 2','Digiserb 3','Digiserb 4','Digiserb 5'];
+    content = (
+      <div style={wabjenjeStyle} className="wabjenje-stack">
+        {images.map((imgSrc, idx) => (
+          <a
+            key={idx}
+            href={links[idx]}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'block', position: 'absolute', left: 0, top: tops[idx] }}
+          >
+            <img
+              src={imgSrc}
+              alt={alts[idx]}
+              style={{
+                ...imageStyle,
+                top: 0,
+                transition: 'opacity 0.5s',
+                opacity: fade ? 0 : 1,
+              }}
+            />
+          </a>
+        ))}
+      </div>
+    );
+  }
 
-  return (
-    <div style={wabjenjeStyle} className="wabjenje-stack">
-      {images.map((imgSrc, idx) => (
-        <a
-          key={idx}
-          href={links[idx]}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ display: 'block', position: 'absolute', left: 0, top: tops[idx] }}
-        >
-          <img
-            src={imgSrc}
-            alt={alts[idx]}
-            style={{
-              ...imageStyle,
-              top: 0,
-              transition: 'opacity 0.5s',
-              opacity: fade ? 0 : 1,
-            }}
-          />
-        </a>
-      ))}
-    </div>
-  );
+  return content;
 };
