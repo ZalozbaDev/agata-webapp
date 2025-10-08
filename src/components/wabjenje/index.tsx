@@ -37,11 +37,11 @@ const page1links = [
 export const Wabjenje: React.FC = () => {
   // 0: page1, 1: page2, 2: text page
   const textParts = [
-    'Kak budźe jutře w Budyšinje wjedro?',
-    'Hdy su njedźelu w Chrósćicach kemše?',
+    'Kak budźe jutře wjedro w Budyšinje?',
+    'Hdy su njedźelu kemše w Chrósćicach?',
     'Kotre serbske zarjadowanja su kónctydźenja?',
-    'Powjedaj mi bajku!',
-    'Rjek mi rjany žort!',
+    'Powjedaj mi bajku.',
+    'Rjek mi rjany žort.',
   ];
 
   const [pageOrder, setPageOrder] = useState(() => {
