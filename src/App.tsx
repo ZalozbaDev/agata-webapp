@@ -17,6 +17,7 @@ import TalkingPuppet from './components/lotti/index.tsx'
 import { BamborakAudioResponse } from './types/bamborak'
 import { ChatApp } from './ChatApp.tsx'
 import visitorService from './services/visitorService.ts'
+// import { Cookies }  from './components/cookies/index.tsx'
 
 const AppContent: React.FC = () => {
   const appStyle: React.CSSProperties = {
@@ -131,6 +132,7 @@ const AppContentInner: React.FC<{
             setWabjenjeOn(isActive)
           }}
         />
+        {/*isMain && <Cookies /> */}
         {isMain && (isCentered || isExtraWide) && agataOn && (
           <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
             <TalkingPuppet
