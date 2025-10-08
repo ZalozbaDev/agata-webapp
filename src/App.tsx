@@ -50,6 +50,7 @@ const AppContentInner: React.FC<{
   const isMain = location.pathname === '/'
 
   const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100)
+  const [ishigh, setishigh] = useReactState(() => window.innerHeight > 670)
   const [isExtraWide, setIsExtraWide] = useReactState(
     () => window.innerWidth > 1250
   )
@@ -97,6 +98,7 @@ const AppContentInner: React.FC<{
   useEffect(() => {
     const handleResize = () => {
       setIsWide(window.innerWidth > 1100)
+      setishigh(window.innerHeight > 670)
       setIsExtraWide(window.innerWidth > 1250)
     }
     window.addEventListener('resize', handleResize)
@@ -138,7 +140,7 @@ const AppContentInner: React.FC<{
             />
           </WociMikanje>
         )}
-        {isMain && isWide && wabjenjeOn && <Wabjenje />}
+        {isMain && isWide && ishigh && wabjenjeOn && <Wabjenje />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
           <Route
