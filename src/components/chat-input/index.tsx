@@ -11,7 +11,6 @@ import {
   sendIconStyle,
 } from './styles'
 import { registerInputSetter } from './ChatInputController'
-import { updateInputValue } from './ChatInputController'
 
 const ChatInput: React.FC<{
   value: string
@@ -109,7 +108,6 @@ const ChatInput: React.FC<{
           disabled={isLoading}
           onClick={() => {
             onRecordingToggle && onRecordingToggle()
-            updateInputValue('')
           }}
           title={isRecording ? 'Stop Recording' : 'Start Recording'}
         >
