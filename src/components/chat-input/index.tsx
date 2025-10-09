@@ -66,6 +66,32 @@ const ChatInput: React.FC<{
     position: 'relative',
   }
 
+  // WICHTIG: Gemeinsame Prüf-Logik für Klick und Enter
+  const openIfBajk = () => {
+    if (value.toLowerCase().includes('bajk')) {
+      window.open('https://dyrdomdej.de/?category=4', '_blank')
+    }
+  }
+
+  const handleSendClick = () => {
+    if (isLoading || !value.trim()) return
+    openIfBajk()
+    onSend()
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !isLoading && value.trim()) {
+      // Enter abfangen, Tab öffnen, dann senden
+      openIfBajk()
+      onSend()
+      // optional: Standard-Enter verhindern, falls Parent zusätzlich sendet
+      e.preventDefault()
+      return
+    }
+    // bestehendes KeyDown-Verhalten beibehalten
+    onKeyDown(e)
+  }
+
   return (
     <div style={inputBarStyle}>
       <div style={innerInputBarStyle}>
@@ -74,7 +100,7 @@ const ChatInput: React.FC<{
           placeholder='Zapodaj tule swoje prašenje ...'
           value={value}
           onChange={onChange}
-          onKeyDown={onKeyDown}
+          onKeyDown={handleKeyDown}
           disabled={isLoading}
           autoFocus
         />
@@ -82,10 +108,9 @@ const ChatInput: React.FC<{
           style={recordingButtonStyle}
           disabled={isLoading}
           onClick={() => {
-  onRecordingToggle;
-  updateInputValue('');
-}}
-
+            onRecordingToggle && onRecordingToggle()
+            updateInputValue('')
+          }}
           title={isRecording ? 'Stop Recording' : 'Start Recording'}
         >
           <MicIcon />
@@ -106,7 +131,7 @@ const ChatInput: React.FC<{
         </button>
         <button
           style={disabledSendButtonStyle}
-          onClick={onSend}
+          onClick={handleSendClick}
           disabled={isLoading || !value.trim()}
         >
           {isLoading ? (
