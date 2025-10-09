@@ -5,6 +5,10 @@ import {
   textstyle,
 } from './styles';
 
+import {
+  updateInputValue
+} from '../chat-input/ChatInputController'; // ← Import hinzugefügt
+
 import Lucija from '../../assets/logos/01 Logo LUCIJA - 150px.png';
 import Digiserb from '../../assets/logos/02 Logo DIGISERB - 150px.png';
 import Bamborak from '../../assets/logos/03 Logo BAMBORAK - 150px.png';
@@ -29,7 +33,6 @@ const page1links = [
   'https://spoznawanje.serbski-inkubator.de/',
   'https://www.sorbib.de/ocr',
   'https://bamborak.mudrowak.de/',
-   
 ];
 const page2links = [
   'https://etherpad.serbski-inkubator.de/',
@@ -37,15 +40,13 @@ const page2links = [
   'https://gaussia.de/slp/',
   'https://www.yumpu.com/xx/document/read/69582698/pucnik-po-digitalnym-swece',
   'https://youtu.be/YdJh6-CdVNs',
-
 ];
 const page4links = [
-    'https://spoznawanje.serbski-inkubator.de/',
-    'https://spoznawanje.serbski-inkubator.de/',
-    'https://spoznawanje.serbski-inkubator.de/',
-    'https://spoznawanje.serbski-inkubator.de/',
-    'https://spoznawanje.serbski-inkubator.de/',
-            
+  'https://spoznawanje.serbski-inkubator.de/',
+  'https://spoznawanje.serbski-inkubator.de/',
+  'https://spoznawanje.serbski-inkubator.de/',
+  'https://spoznawanje.serbski-inkubator.de/',
+  'https://spoznawanje.serbski-inkubator.de/',
 ];
 
 export const Wabjenje: React.FC = () => {
@@ -93,9 +94,12 @@ export const Wabjenje: React.FC = () => {
         {tops.map((top, idx) => (
           <div
             key={idx}
-            style={{ ...textstyle, top, opacity: fade ? 0 : 1 }}
+            style={{ ...textstyle, top, opacity: fade ? 0 : 1, cursor: 'pointer' }}
+            onClick={() => updateInputValue(textParts[idx])} // ← Klick setzt Text
           >
-            <span style={{ padding: '0.5rem', lineHeight: 1.2 }}>{textParts[idx]}</span>
+            <span style={{ padding: '0.5rem', lineHeight: 1.2 }}>
+              {textParts[idx]}
+            </span>
           </div>
         ))}
       </div>

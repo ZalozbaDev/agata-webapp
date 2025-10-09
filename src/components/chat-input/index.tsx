@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { MicIcon } from '../../assets/icons'
 import SendIcon from '../../assets/SendIcon.png'
 import LoadingSpinner from '../LoadingSpinner'
@@ -10,6 +10,7 @@ import {
   inputBarStyle,
   sendIconStyle,
 } from './styles'
+import { registerInputSetter } from './ChatInputController'
 
 const ChatInput: React.FC<{
   value: string
@@ -28,14 +29,21 @@ const ChatInput: React.FC<{
   onRecordingToggle,
   isRecording = false,
 }) => {
-  // Create disabled input style when loading
+  useEffect(() => {
+    registerInputSetter((newValue) => {
+      const syntheticEvent = {
+        target: { value: newValue },
+      } as React.ChangeEvent<HTMLInputElement>
+      onChange(syntheticEvent)
+    })
+  }, [onChange])
+
   const disabledInputStyle: React.CSSProperties = {
     ...chatInputStyle,
     opacity: isLoading ? 0.5 : 1,
     cursor: isLoading ? 'not-allowed' : 'text',
   }
 
-  // Create disabled button style when loading
   const disabledButtonStyle: React.CSSProperties = {
     ...inputIconStyle,
     opacity: isLoading ? 0.5 : 1,
@@ -49,7 +57,6 @@ const ChatInput: React.FC<{
     backgroundColor: 'transparent',
   }
 
-  // Create recording button style
   const recordingButtonStyle: React.CSSProperties = {
     ...disabledButtonStyle,
     backgroundColor: isRecording ? '#f44336' : 'transparent',
@@ -61,12 +68,6 @@ const ChatInput: React.FC<{
   return (
     <div style={inputBarStyle}>
       <div style={innerInputBarStyle}>
-        {/* <button style={disabledButtonStyle} disabled={isLoading}>
-          <PlusIcon />
-        </button>
-        <button style={disabledButtonStyle} disabled={isLoading}>
-          <SettingsIcon />
-        </button> */}
         <SpellCheckedInput
           style={disabledInputStyle}
           placeholder='Zapodaj tule swoje prašenje ...'
