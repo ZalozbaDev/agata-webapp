@@ -69,7 +69,7 @@ const ChatInput: React.FC<{
   // WICHTIG: Gemeinsame Prüf-Logik für Klick und Enter
   const openIfBajk = () => {
     if (value.toLowerCase().includes('bajk')) {
-      window.open('https://dyrdomdej.de/?category=4', '_blank')
+      window.open('https://dyrdomdej.de/?tema=53&category=4', '_blank')
     }
   }
 
