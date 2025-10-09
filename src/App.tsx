@@ -52,6 +52,7 @@ const AppContentInner: React.FC<{
 
   const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100)
   const [ishigh, setishigh] = useReactState(() => window.innerHeight > 670)
+  const [isextrahigh, setisextrahigh] = useReactState(() => window.innerHeight > 600)
   const [isExtraWide, setIsExtraWide] = useReactState(
     () => window.innerWidth > 1250
   )
@@ -100,6 +101,7 @@ const AppContentInner: React.FC<{
     const handleResize = () => {
       setIsWide(window.innerWidth > 1100)
       setishigh(window.innerHeight > 670)
+      setisextrahigh(window.innerHeight > 600)
       setIsExtraWide(window.innerWidth > 1250)
     }
     window.addEventListener('resize', handleResize)
@@ -133,7 +135,7 @@ const AppContentInner: React.FC<{
           }}
         />
         {/*isMain && <Cookies /> */}
-        {isMain && (isCentered || isExtraWide) && agataOn && (
+        {isMain && (isCentered || isExtraWide) && isextrahigh && agataOn && (
           <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
             <TalkingPuppet
               audioFile={audioUrl}
