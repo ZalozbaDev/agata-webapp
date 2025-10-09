@@ -22,7 +22,7 @@ import nImg from './wobrazy/n.png'
 import kImg from './wobrazy/k.png'
 import gImg from './wobrazy/g.png'
 import neutralImg from './wobrazy/neutral.png'
-import muteIcon from '../../assets/mute.svg'
+import muteIcon from '../../assets/mute.png'
 import Lottie from 'lottie-react'
 import puppetAnimation from './puppet-mouth.json'
 
@@ -470,13 +470,13 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         <img
           src={muteIcon}
           style={{
-            width: '24px',
-            height: '24px',
+            width: '36px',
+            height: '36px',
             objectFit: 'contain',
             display: 'block',
             position: 'absolute',
-            left: '75%',
-            bottom: '32px',
+            left: '82%',
+            bottom: '12px',
             transform: 'translateX(-50%)',
             zIndex: 10,
           }}
