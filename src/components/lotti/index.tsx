@@ -458,7 +458,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
             objectFit: 'contain',
             display: 'block',
             position: 'absolute',
-            top: -30,
+            top: 0,
             left: 0,
           }}
           onError={e => {
@@ -475,8 +475,8 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
             objectFit: 'contain',
             display: 'block',
             position: 'absolute',
-            left: '46%',
-            bottom: '8px',
+            left: '75%',
+            bottom: '32px',
             transform: 'translateX(-50%)',
             zIndex: 10,
           }}
@@ -499,7 +499,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
             objectFit: 'contain',
             display: 'block',
             position: 'absolute',
-            top: -30,
+            top: 0,
             left: 0,
           }}
           onError={e => {
@@ -517,7 +517,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
             objectFit: 'contain',
             display: 'block',
             position: 'absolute',
-            top: -30,
+            top: 0,
             left: 0,
           }}
           onError={e => {
@@ -535,7 +535,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
             height: '100%',
             objectFit: 'contain',
             position: 'absolute',
-            top: -30,
+            top: 0,
             left: 0,
             display: 'block',
           }}

@@ -55,7 +55,7 @@ export const WociMikanje = ({
     ? {
         position: 'fixed' as const,
         left: '47%',
-        top: '47%',
+        top: '42%',
         transform: 'translate(-50%, -50%) scale(1.35)',
         zIndex: 2000,
         width: 'min(90vw, 400px)',
