@@ -17,6 +17,7 @@ export const welcomeTitleStyle: React.CSSProperties = {
   color: '#ececf1',
   marginBottom: '2.5rem',
   textAlign: 'center',
+  textShadow: '5px 5px 10px rgba(0, 0, 0, 0.8)'
 }
 
 export const inputBarWrapperStyle: React.CSSProperties = {
