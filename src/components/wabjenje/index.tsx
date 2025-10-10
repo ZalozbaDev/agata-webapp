@@ -22,9 +22,10 @@ import slp from '../../assets/logos/10 Gaussia.png';
 import hornjoserbsce from '../../assets/logos/Icon - Hornjoserbsce.png';
 import dolnoserbski from '../../assets/logos/Icon - Dolnoserbski.png';
 import nemsce from '../../assets/logos/Icon - nemsce.png';
+import dubbing from '../../assets/logos/11 Ki synchro.png'
 
 const page1images = [Lucija, Digiserb, ScanText, Ocr, Bamborak];
-const page2images = [Eather, workadventure, slp, pucnik, SerbskiCaptioner];
+const page2images = [Eather, workadventure, slp, pucnik, dubbing];
 const page4images = [ScanText, hornjoserbsce, dolnoserbski, nemsce, SerbskiCaptioner];
 
 const page1links = [
