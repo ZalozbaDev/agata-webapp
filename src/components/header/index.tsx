@@ -292,7 +292,7 @@ const Header: React.FC<{
                 }}
                 style={checkboxstyle}
               />
-              Agata na šmóratku
+              AGATA na šmóratku
             </p>
           </div>
         </div>
@@ -302,7 +302,7 @@ const Header: React.FC<{
           <button style={closeButtonStyle} onClick={() => setIsOpen(false)}>
             ×
           </button>
-          <p>Zapodajće waše daty w tutych kasćikach</p>
+          <p>Zapodajće waše daty w tutych kašćikach</p>
           <form
             onSubmit={e => {
               handleCreateUrl(e)
@@ -341,7 +341,7 @@ const Header: React.FC<{
               style={textbottomInputStyle}
             />
             <button type='submit' style={sendButtonStyle}>
-              Wotpósłać
+              wotpósłać
             </button>
           </form>
         </div>
