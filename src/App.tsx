@@ -135,7 +135,7 @@ const AppContentInner: React.FC<{
           }}
         />
         {/*isMain && <Cookies /> */}
-        {isMain && (isCentered || isExtraWide) && isextrahigh && agataOn && (
+        {isMain && (isCentered || isWide) && ishigh && agataOn && (
           <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
             <TalkingPuppet
               audioFile={audioUrl}
