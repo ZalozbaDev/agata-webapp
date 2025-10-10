@@ -25,7 +25,7 @@ import nemsce from '../../assets/logos/Icon - nemsce.png';
 import dubbing from '../../assets/logos/11 Ki synchro.png'
 
 const page1images = [Lucija, Digiserb, ScanText, Ocr, Bamborak];
-const page2images = [Eather, workadventure, slp, pucnik, dubbing];
+const page2images = [dubbing, workadventure, slp, pucnik, Eather];
 const page4images = [ScanText, hornjoserbsce, dolnoserbski, nemsce, SerbskiCaptioner];
 
 const page1links = [
@@ -36,11 +36,11 @@ const page1links = [
   'https://bamborak.mudrowak.de/',
 ];
 const page2links = [
-  'https://etherpad.serbski-inkubator.de/',
+  'https://spoznawanje.serbski-inkubator.de/dubbing',
   'https://play.workadventu.re/@/zalozba/berow/prenipospyt',
   'https://gaussia.de/slp/',
   'https://www.yumpu.com/xx/document/read/69582698/pucnik-po-digitalnym-swece',
-  'https://spoznawanje.serbski-inkubator.de/dubbing',
+  'https://etherpad.serbski-inkubator.de/',
 ];
 const page4links = [
   'https://spoznawanje.serbski-inkubator.de/',
