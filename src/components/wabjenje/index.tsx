@@ -25,7 +25,7 @@ import nemsce from '../../assets/logos/Icon - nemsce.png';
 
 const page1images = [Lucija, Digiserb, ScanText, Ocr, Bamborak];
 const page2images = [Eather, workadventure, slp, pucnik, SerbskiCaptioner];
-const page4images = [ScanText, hornjoserbsce, dolnoserbski, nemsce, ScanText];
+const page4images = [ScanText, hornjoserbsce, dolnoserbski, nemsce, SerbskiCaptioner];
 
 const page1links = [
   'https://www.lucija.de/',
@@ -39,14 +39,14 @@ const page2links = [
   'https://play.workadventu.re/@/zalozba/berow/prenipospyt',
   'https://gaussia.de/slp/',
   'https://www.yumpu.com/xx/document/read/69582698/pucnik-po-digitalnym-swece',
-  'https://youtu.be/YdJh6-CdVNs',
+  'https://spoznawanje.serbski-inkubator.de/dubbing',
 ];
 const page4links = [
   'https://spoznawanje.serbski-inkubator.de/',
   'https://spoznawanje.serbski-inkubator.de/',
   'https://spoznawanje.serbski-inkubator.de/',
   'https://spoznawanje.serbski-inkubator.de/',
-  'https://spoznawanje.serbski-inkubator.de/',
+  'https://youtu.be/YdJh6-CdVNs',
 ];
 
 export const Wabjenje: React.FC = () => {
