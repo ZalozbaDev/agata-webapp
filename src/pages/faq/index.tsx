@@ -32,10 +32,10 @@ const FaqPage: React.FC = () => {
       <p style={pismo}>Klikń na mjezwočo Agaty, jelizo pokaza so wosrjedź wobrazowki.</p>
       <br />
       <h2 style={podnadpisma}>Njemóžu wotmołwy čitać, su pře małke.</h2>
-      <p style={pismo}>Změn ZOOM faktor wobrazowki, na kompjuteru z STRG +</p>
+      <p style={pismo}>Změn ZOOM faktor wobrazowki, na kompjuteru z tastomaj Strg +</p>
       <br />
 
-      <h2 style={podnadpisma}>Maš dalše prašenja?<br /> Kontaktěruj nas přez mailku:  
+      <h2 style={podnadpisma}>Maš dalše prašenja?<br /> Skontaktuj so z nami přez mailku:  
       <a style={wotkazyFAQ} href={`mailto:agata@lucija.de`}
       > agata@lucija.de</a></h2>
 
