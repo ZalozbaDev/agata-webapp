@@ -9,8 +9,8 @@ export const wabjenjeStyle: React.CSSProperties = {
 
 
 export const imageStyle: React.CSSProperties = {
-    width: '130px',
-    height: '130px',
+    width: '110px',
+    height: '110px',
     objectFit: 'cover',
     position: 'absolute',
     zIndex: 9,
@@ -19,8 +19,8 @@ export const imageStyle: React.CSSProperties = {
 export const textstyle: React.CSSProperties = {
     position: 'absolute',
               left: 0,
-              width: '125px', // match imageStyle
-              height: '125px', // match imageStyle
+              width: '100px', // match imageStyle
+              height: '100px', // match imageStyle
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
