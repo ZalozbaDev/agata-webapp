@@ -16,7 +16,7 @@ export const innerInputBarStyle: React.CSSProperties = {
   borderRadius: '1.2rem',
   padding: '0.25rem 0.5rem',
   width: '100%',
-  maxWidth: '800px',
+  maxWidth: '700px',
   gap: '0.25rem',
   minWidth: '0',
   flexShrink: 0,

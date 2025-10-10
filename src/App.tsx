@@ -52,9 +52,9 @@ const AppContentInner: React.FC<{
 
   const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100)
   const [ishigh, setishigh] = useReactState(() => window.innerHeight > 670)
-  const [isextrahigh, setisextrahigh] = useReactState(() => window.innerHeight > 600)
+  const [isextrahigh, setisextrahigh] = useReactState(() => window.innerHeight > 550)
   const [isExtraWide, setIsExtraWide] = useReactState(
-    () => window.innerWidth > 1070
+    () => window.innerWidth > 1020
   )
   const [isCentered, setIsCentered] = useState(false)
   const [wabjenjeOn, setWabjenjeOn] = useState(true)
@@ -101,8 +101,8 @@ const AppContentInner: React.FC<{
     const handleResize = () => {
       setIsWide(window.innerWidth > 1100)
       setishigh(window.innerHeight > 670)
-      setisextrahigh(window.innerHeight > 600)
-      setIsExtraWide(window.innerWidth > 1070)
+      setisextrahigh(window.innerHeight > 550)
+      setIsExtraWide(window.innerWidth > 1020)
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
