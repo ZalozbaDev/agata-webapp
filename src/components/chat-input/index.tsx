@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { MicIcon } from '../../assets/icons'
 import SendIcon from '../../assets/SendIcon.png'
 import LoadingSpinner from '../LoadingSpinner'
@@ -10,6 +10,7 @@ import {
   inputBarStyle,
   sendIconStyle,
 } from './styles'
+import { registerInputSetter } from './ChatInputController'
 
 const ChatInput: React.FC<{
   value: string
@@ -28,14 +29,21 @@ const ChatInput: React.FC<{
   onRecordingToggle,
   isRecording = false,
 }) => {
-  // Create disabled input style when loading
+  useEffect(() => {
+    registerInputSetter((newValue) => {
+      const syntheticEvent = {
+        target: { value: newValue },
+      } as React.ChangeEvent<HTMLInputElement>
+      onChange(syntheticEvent)
+    })
+  }, [onChange])
+
   const disabledInputStyle: React.CSSProperties = {
     ...chatInputStyle,
     opacity: isLoading ? 0.5 : 1,
     cursor: isLoading ? 'not-allowed' : 'text',
   }
 
-  // Create disabled button style when loading
   const disabledButtonStyle: React.CSSProperties = {
     ...inputIconStyle,
     opacity: isLoading ? 0.5 : 1,
@@ -49,7 +57,6 @@ const ChatInput: React.FC<{
     backgroundColor: 'transparent',
   }
 
-  // Create recording button style
   const recordingButtonStyle: React.CSSProperties = {
     ...disabledButtonStyle,
     backgroundColor: isRecording ? '#f44336' : 'transparent',
@@ -58,28 +65,50 @@ const ChatInput: React.FC<{
     position: 'relative',
   }
 
+  // WICHTIG: Gemeinsame Prüf-Logik für Klick und Enter
+  const openIfBajk = () => {
+    if (value.toLowerCase().includes('bajk')) {
+      window.open('https://dyrdomdej.de/?tema=53&category=4', '_blank')
+    }
+  }
+
+  const handleSendClick = () => {
+    if (isLoading || !value.trim()) return
+    openIfBajk()
+    onSend()
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !isLoading && value.trim()) {
+      // Enter abfangen, Tab öffnen, dann senden
+      openIfBajk()
+      onSend()
+      // optional: Standard-Enter verhindern, falls Parent zusätzlich sendet
+      e.preventDefault()
+      return
+    }
+    // bestehendes KeyDown-Verhalten beibehalten
+    onKeyDown(e)
+  }
+
   return (
     <div style={inputBarStyle}>
       <div style={innerInputBarStyle}>
-        {/* <button style={disabledButtonStyle} disabled={isLoading}>
-          <PlusIcon />
-        </button>
-        <button style={disabledButtonStyle} disabled={isLoading}>
-          <SettingsIcon />
-        </button> */}
         <SpellCheckedInput
           style={disabledInputStyle}
           placeholder='Zapodaj tule swoje prašenje ...'
           value={value}
           onChange={onChange}
-          onKeyDown={onKeyDown}
+          onKeyDown={handleKeyDown}
           disabled={isLoading}
           autoFocus
         />
         <button
           style={recordingButtonStyle}
           disabled={isLoading}
-          onClick={onRecordingToggle}
+          onClick={() => {
+            onRecordingToggle && onRecordingToggle()
+          }}
           title={isRecording ? 'Stop Recording' : 'Start Recording'}
         >
           <MicIcon />
@@ -100,7 +129,7 @@ const ChatInput: React.FC<{
         </button>
         <button
           style={disabledSendButtonStyle}
-          onClick={onSend}
+          onClick={handleSendClick}
           disabled={isLoading || !value.trim()}
         >
           {isLoading ? (

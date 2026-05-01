@@ -17,6 +17,7 @@ import TalkingPuppet from './components/lotti/index.tsx'
 import { BamborakAudioResponse } from './types/bamborak'
 import { ChatApp } from './ChatApp.tsx'
 import visitorService from './services/visitorService.ts'
+// import { Cookies }  from './components/cookies/index.tsx'
 
 const AppContent: React.FC = () => {
   const appStyle: React.CSSProperties = {
@@ -49,9 +50,11 @@ const AppContentInner: React.FC<{
   const location = useLocation()
   const isMain = location.pathname === '/'
 
-  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 1100)
+  const [isWide, setIsWide] = useReactState(() => window.innerWidth > 950)
+  const [ishigh, setishigh] = useReactState(() => window.innerHeight > 670)
+  const [isextrahigh, setisextrahigh] = useReactState(() => window.innerHeight > 550)
   const [isExtraWide, setIsExtraWide] = useReactState(
-    () => window.innerWidth > 1250
+    () => window.innerWidth > 1020
   )
   const [isCentered, setIsCentered] = useState(false)
   const [wabjenjeOn, setWabjenjeOn] = useState(true)
@@ -96,8 +99,10 @@ const AppContentInner: React.FC<{
 
   useEffect(() => {
     const handleResize = () => {
-      setIsWide(window.innerWidth > 1100)
-      setIsExtraWide(window.innerWidth > 1250)
+      setIsWide(window.innerWidth > 950)
+      setishigh(window.innerHeight > 670)
+      setisextrahigh(window.innerHeight > 550)
+      setIsExtraWide(window.innerWidth > 1020)
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
@@ -129,7 +134,8 @@ const AppContentInner: React.FC<{
             setWabjenjeOn(isActive)
           }}
         />
-        {isMain && (isCentered || isExtraWide) && agataOn && (
+        {/*isMain && <Cookies /> */}
+        {isMain && (isCentered || isExtraWide) && isextrahigh && agataOn && (
           <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
             <TalkingPuppet
               audioFile={audioUrl}
@@ -138,7 +144,7 @@ const AppContentInner: React.FC<{
             />
           </WociMikanje>
         )}
-        {isMain && isWide && wabjenjeOn && <Wabjenje />}
+        {isMain && isWide && isextrahigh && wabjenjeOn && <Wabjenje />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
           <Route

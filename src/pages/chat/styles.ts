@@ -20,6 +20,7 @@ export const messagesWrapperStyle: React.CSSProperties = {
   justifyContent: 'flex-start',
   padding: '0 0 0 0',
   width: '100%',
+  textShadow: '5px 5px 10px rgba(0, 0, 0, 0.8)',
 
   scrollbarWidth: 'none', // Hide scrollbar in Firefox
   // To hide scrollbar in WebKit browsers, add this to your CSS:

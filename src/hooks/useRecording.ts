@@ -4,6 +4,7 @@ import { typedVoskResponse } from '../helper/vosk'
 import { handleSuccess } from '../components/audio-recorder/audio-recorder/handler/handle-success'
 import { initWebsocket } from '../components/audio-recorder/audio-recorder/handler/init-websocket'
 import SERVER_CONFIG from '../config/server'
+import { VoskSendConfigService } from '../lib/vosk-config-service'
 
 export const useRecording = (
   settings: Settings,
@@ -15,7 +16,7 @@ export const useRecording = (
     audioContext: {
       playAudioData: (data: ArrayBuffer) => Promise<void>
     }
-  }
+  },
 ) => {
   const [isRecording, setIsRecording] = useState(false)
   const [voskResponse, setVoskResponse] = useState(false)
@@ -42,7 +43,7 @@ export const useRecording = (
   }
 
   const onStopRecording = () => {
-    webSocketRef.current?.send('{"eof" : 1}')
+    VoskSendConfigService.sendEOF(webSocketRef.current)
     webSocketRef.current?.close()
 
     processor?.port.close()
@@ -89,7 +90,7 @@ export const useRecording = (
             (c: AudioContext) => {
               context = c
             },
-            onStopRecording
+            onStopRecording,
           )
         }
       })
@@ -100,7 +101,7 @@ export const useRecording = (
     try {
       webSocketRef.current = initWebsocket(
         SERVER_CONFIG.VOSK_URL,
-        (e: MessageEvent<any>) => onReceiveMessage(e)
+        (e: MessageEvent<any>) => onReceiveMessage(e),
       )
 
       if (!webSocketRef.current) {
@@ -111,8 +112,10 @@ export const useRecording = (
       webSocketRef.current.onopen = () => {
         try {
           console.log('WebSocket connection established')
-          webSocketRef.current?.send(
-            `sample_rate=${settings.sampleRate},buffer_size=${settings.bufferSize}`
+          VoskSendConfigService.sendConfig(
+            webSocketRef.current,
+            settings.sampleRate,
+            settings.bufferSize,
           )
           startRecordingWithNewStream()
         } catch (error) {

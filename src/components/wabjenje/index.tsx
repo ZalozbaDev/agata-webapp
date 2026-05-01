@@ -1,40 +1,66 @@
-
 import React, { useEffect, useState } from 'react';
 import {
   wabjenjeStyle,
   imageStyle,
+  textstyle,
 } from './styles';
+
+import {
+  updateInputValue
+} from '../chat-input/ChatInputController'; // ← Import hinzugefügt
 
 import Lucija from '../../assets/logos/01 Logo LUCIJA - 150px.png';
 import Digiserb from '../../assets/logos/02 Logo DIGISERB - 150px.png';
 import Bamborak from '../../assets/logos/03 Logo BAMBORAK - 150px.png';
 import SerbskiCaptioner from '../../assets/logos/04 Logo WEBCAPTIONER - 150px.png';
 import Ocr from '../../assets/logos/05 OCR - 150px.png';
-import Eather from'../../assets/logos/06 eatherpad.png';
+import Eather from '../../assets/logos/06 eatherpad.png';
 import ScanText from '../../assets/logos/07 Beta scan Text.png';
 import pucnik from '../../assets/logos/08 Pucnik digitalny swet.png';
 import workadventure from '../../assets/logos/09 Workadventure.png';
 import slp from '../../assets/logos/10 Gaussia.png';
+import hornjoserbsce from '../../assets/logos/Icon - Hornjoserbsce.png';
+import dolnoserbski from '../../assets/logos/Icon - Dolnoserbski.png';
+import nemsce from '../../assets/logos/Icon - nemsce.png';
+import dubbing from '../../assets/logos/11 Ki synchro.png'
 
-const page2images = [Eather, ScanText, pucnik, workadventure, slp];
-const page1images = [Lucija, Digiserb, Bamborak, SerbskiCaptioner, Ocr];
-const page2links = [
-  'https://etherpad.serbski-inkubator.de/',
-  'https://spoznawanje.serbski-inkubator.de/',
-  'https://www.yumpu.com/xx/document/read/69582698/pucnik-po-digitalnym-swece',
-  'https://play.workadventu.re/@/zalozba/berow/prenipospyt',
-  'https://gaussia.de/slp/',
-];
+const page1images = [Lucija, Digiserb, ScanText, Ocr, Bamborak];
+const page2images = [dubbing, workadventure, slp, pucnik, Eather];
+const page4images = [ScanText, hornjoserbsce, dolnoserbski, nemsce, SerbskiCaptioner];
+
 const page1links = [
   'https://www.lucija.de/',
   'https://digiserb.de/de/',
+  'https://spoznawanje.serbski-inkubator.de/',
+  'https://www.sorbib.de/ocr',
   'https://bamborak.mudrowak.de/',
+];
+const page2links = [
+  'https://spoznawanje.serbski-inkubator.de/dubbing',
+  'https://play.workadventu.re/@/zalozba/berow/prenipospyt',
+  'https://gaussia.de/slp/',
+  'https://www.yumpu.com/xx/document/read/69582698/pucnik-po-digitalnym-swece',
+  'https://etherpad.serbski-inkubator.de/',
+];
+const page4links = [
+  'https://spoznawanje.serbski-inkubator.de/',
+  'https://spoznawanje.serbski-inkubator.de/',
+  'https://spoznawanje.serbski-inkubator.de/',
+  'https://spoznawanje.serbski-inkubator.de/',
   'https://youtu.be/YdJh6-CdVNs',
-  'https://2ocr.com/online-ocr-czech/',
 ];
 
 export const Wabjenje: React.FC = () => {
-  const [showLucija, setShowLucija] = useState(false);
+  const textParts = [
+    'Zapodaj prašenja a komanda:',
+    'Kajke budźe jutře wjedro w Hórkach?',
+    'Podaj mi přehlad Božich mšow w Chrósćicach.',
+    'Kotre serbske zarjadowanja su kónc tydźenja?',
+    'Powědaj mi serbsku bajku.',
+  ];
+
+  const pageOrder = [0, 1, 2, 3];
+  const [pageIdx, setPageIdx] = useState(0);
   const [fade, setFade] = useState(false);
 
   useEffect(() => {
@@ -44,8 +70,8 @@ export const Wabjenje: React.FC = () => {
     const startCycle = () => {
       setFade(true);
       fadeTimeout = setTimeout(() => {
-        setShowLucija((prev) => !prev);
         setFade(false);
+        setPageIdx((prevIdx) => (prevIdx === pageOrder.length - 1 ? 0 : prevIdx + 1));
         swapTimeout = setTimeout(startCycle, 10000);
       }, 500);
     };
@@ -57,36 +83,65 @@ export const Wabjenje: React.FC = () => {
       clearTimeout(swapTimeout);
       clearTimeout(initialTimeout);
     };
-  }, [showLucija]);
+  }, []);
 
   const tops = ['7vh', '25.5vh', '44vh', '62.5vh', '81vh'];
+  const currentPage = pageOrder[pageIdx];
 
-  const images = showLucija ? page2images : page1images;
-  const links = showLucija ? page2links : page1links;
-  const alts = showLucija ? ['Lucija 1','Lucija 2','Lucija 3','Lucija 4','Lucija 5'] : ['Digiserb 1','Digiserb 2','Digiserb 3','Digiserb 4','Digiserb 5'];
+  let content;
+  if (currentPage === 2) {
+    content = (
+      <div style={wabjenjeStyle} className="wabjenje-stack">
+        {tops.map((top, idx) => (
+          <div
+            key={idx}
+            style={{ ...textstyle, top, opacity: fade ? 0 : 1, cursor: 'pointer' }}
+            onClick={() => updateInputValue(textParts[idx])} // ← Klick setzt Text
+          >
+            <span style={{ padding: '0.5rem', lineHeight: 1.2 }}>
+              {textParts[idx]}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  } else {
+    let images, links;
+    if (currentPage === 1) {
+      images = page2images;
+      links = page2links;
+    } else if (currentPage === 3) {
+      images = page4images;
+      links = page4links;
+    } else {
+      images = page1images;
+      links = page1links;
+    }
 
-  return (
-    <div style={wabjenjeStyle} className="wabjenje-stack">
-      {images.map((imgSrc, idx) => (
-        <a
-          key={idx}
-          href={links[idx]}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ display: 'block', position: 'absolute', left: 0, top: tops[idx] }}
-        >
-          <img
-            src={imgSrc}
-            alt={alts[idx]}
-            style={{
-              ...imageStyle,
-              top: 0,
-              transition: 'opacity 0.5s',
-              opacity: fade ? 0 : 1,
-            }}
-          />
-        </a>
-      ))}
-    </div>
-  );
+    content = (
+      <div style={wabjenjeStyle} className="wabjenje-stack">
+        {images.map((imgSrc, idx) => (
+          <a
+            key={idx}
+            href={links[idx]}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'block', position: 'absolute', left: 0, top: tops[idx] }}
+          >
+            <img
+              src={imgSrc}
+              style={{
+                ...imageStyle,
+                top: 0,
+                transition: 'opacity 0.5s',
+                opacity: fade ? 0 : 1,
+              }}
+            />
+          </a>
+        ))}
+      </div>
+    );
+  }
+
+  return content;
 };

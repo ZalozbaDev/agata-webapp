@@ -22,6 +22,7 @@ import nImg from './wobrazy/n.png'
 import kImg from './wobrazy/k.png'
 import gImg from './wobrazy/g.png'
 import neutralImg from './wobrazy/neutral.png'
+import muteIcon from '../../assets/mute.png'
 import Lottie from 'lottie-react'
 import puppetAnimation from './puppet-mouth.json'
 
@@ -435,6 +436,8 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   }, [audioFile])
 
   return (
+
+    
     <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
       <div
         style={{
@@ -443,6 +446,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
           position: 'relative',
           display: 'block',
         }}
+        onClick={() => setIsCentered(c => !c)}
       >
         {/* Display the current viseme image */}
         <img
@@ -461,6 +465,29 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
             console.warn(`Failed to load image for viseme: ${currentViseme}`)
             const target = e.target as HTMLImageElement
             target.src = mouthFramesImage.neutral
+          }}
+        />
+        <img
+          src={muteIcon}
+          style={{
+            width: '36px',
+            height: '36px',
+            objectFit: 'contain',
+            display: 'block',
+            position: 'absolute',
+            left: '82%',
+            bottom: '12px',
+            transform: 'translateX(-50%)',
+            zIndex: 10,
+          }}
+          alt="Mute icon"
+          onClick={e => {
+            e.stopPropagation()
+            // Stop all audio and video elements on the page
+            document.querySelectorAll('audio,video').forEach(el => {
+              ;(el as HTMLMediaElement).pause()
+              ;(el as HTMLMediaElement).currentTime = 0
+            })
           }}
         />
         <img
