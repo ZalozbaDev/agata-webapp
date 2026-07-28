@@ -14,5 +14,5 @@ RUN npm run build
 FROM nginx:stable-alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
-# internal port is 8080
+# internal port is 80
 CMD ["nginx", "-g", "daemon off;"]
