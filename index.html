@@ -5,23 +5,15 @@
     <link rel="icon" type="image/svg+xml" href="/vite.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AGATA</title>
+    <script>
+      window._env_ = {
+        VITE_API_URL: "__VITE_API_URL_PLACEHOLDER__",
+        VITE_VOSK_URL: "__VITE_VOSK_URL_PLACEHOLDER__"
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-ML45KVTN3S"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || []
-      function gtag() {
-        dataLayer.push(arguments)
-      }
-      gtag('js', new Date())
-
-      gtag('config', 'G-ML45KVTN3S')
-    </script>
   </body>
 </html>
