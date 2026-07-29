@@ -52,9 +52,11 @@ const AppContentInner: React.FC<{
 
   const [isWide, setIsWide] = useReactState(() => window.innerWidth > 950)
   const [ishigh, setishigh] = useReactState(() => window.innerHeight > 670)
-  const [isextrahigh, setisextrahigh] = useReactState(() => window.innerHeight > 550)
+  const [isextrahigh, setisextrahigh] = useReactState(
+    () => window.innerHeight > 550,
+  )
   const [isExtraWide, setIsExtraWide] = useReactState(
-    () => window.innerWidth > 1020
+    () => window.innerWidth > 1020,
   )
   const [isCentered, setIsCentered] = useState(false)
   const [wabjenjeOn, setWabjenjeOn] = useState(true)
@@ -110,7 +112,7 @@ const AppContentInner: React.FC<{
 
   const onGetAudio = (
     audioUrl: string,
-    bamborakResponse: BamborakAudioResponse
+    bamborakResponse: BamborakAudioResponse,
   ) => {
     setAudioUrl(audioUrl)
     setBamborakResponse(bamborakResponse)
