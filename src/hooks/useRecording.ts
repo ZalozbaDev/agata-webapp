@@ -15,7 +15,7 @@ export const useRecording = (
     audioContext: {
       playAudioData: (data: ArrayBuffer) => Promise<void>
     }
-  }
+  },
 ) => {
   const [isRecording, setIsRecording] = useState(false)
   const [voskResponse, setVoskResponse] = useState(false)
@@ -34,9 +34,9 @@ export const useRecording = (
       let parsed = typedVoskResponse(event.data)
       setVoskResponse(parsed.listen)
       if (parsed.text && !parsed.text.includes('whisper-Korla-whisper')) {
-        const trimmedText = parsed.text.slice(2, -2).trim()
-        if (trimmedText.length <= 0) return
-        options.setInputText(prev => [...prev, trimmedText])
+        if (parsed.text.length <= 0) return
+
+        options.setInputText(prev => [...prev, parsed.text ?? ''])
       }
     }
   }
@@ -89,7 +89,7 @@ export const useRecording = (
             (c: AudioContext) => {
               context = c
             },
-            onStopRecording
+            onStopRecording,
           )
         }
       })
@@ -100,7 +100,7 @@ export const useRecording = (
     try {
       webSocketRef.current = initWebsocket(
         SERVER_CONFIG.VOSK_URL,
-        (e: MessageEvent<any>) => onReceiveMessage(e)
+        (e: MessageEvent<any>) => onReceiveMessage(e),
       )
 
       if (!webSocketRef.current) {
@@ -112,7 +112,7 @@ export const useRecording = (
         try {
           console.log('WebSocket connection established')
           webSocketRef.current?.send(
-            `sample_rate=${settings.sampleRate},buffer_size=${settings.bufferSize}`
+            `sample_rate=${settings.sampleRate},buffer_size=${settings.bufferSize}`,
           )
           startRecordingWithNewStream()
         } catch (error) {
