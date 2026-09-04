@@ -9,6 +9,7 @@ import { BamborakAudioResponse } from './types/bamborak'
 import { useRecording } from './hooks/useRecording.ts'
 import { Settings } from './types/settings.ts'
 import { useAudioContext } from './hooks/useAudioContext.ts'
+import { stripSourceRefs } from './components/citations/sourceHelpers'
 
 const chatAppStyle: React.CSSProperties = {
   flex: 1,
@@ -93,7 +94,9 @@ export const ChatApp: React.FC<{
       // Send message to server
       const response = await chatService.sendMessage(userMessage, ipAddress)
 
-      getAudioFromText(response.message, 'katka_2025_07').then(
+      const answerText = response.answer ?? response.message
+      const sources = response.sources ?? []
+      getAudioFromText(stripSourceRefs(answerText), 'katka_2025_07').then(
         bamborakResponse => {
           // Convert base64 audio to ArrayBuffer
           const audioData = atob(bamborakResponse.audio)
@@ -110,12 +113,14 @@ export const ChatApp: React.FC<{
           onGetAudio(url, bamborakResponse)
         }
       )
-      // Add assistant response to chat
       setMessages(msgs => [
         ...msgs,
         {
           role: 'assistant',
-          content: response.message,
+          content: answerText,
+          sources,
+          title: response.title,
+          language: response.language,
         },
       ])
     } catch (error: any) {
@@ -155,7 +160,10 @@ export const ChatApp: React.FC<{
           // Add the successful response
           newMessages.push({
             role: 'assistant',
-            content: response.message,
+            content: response.answer ?? response.message,
+            sources: response.sources ?? [],
+            title: response.title,
+            language: response.language,
           })
           return newMessages
         })

@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import SERVER_CONFIG from '../config/server'
+import { getPersonaId } from '../config/persona'
 import { ApiError, getErrorMessage } from '../types/errors'
 
 // Create axios instance with base configuration
@@ -11,14 +12,53 @@ const api = axios.create({
   },
 })
 
+export type ChatSourceType = 'web' | 'rag'
+
+/** Server-owned source metadata (never from the LLM). */
+export interface ChatSource {
+  id: string
+  type: ChatSourceType
+  title: string
+  url?: string | null
+  domain?: string | null
+  publishedAt?: string | null
+  imageUrl?: string | null
+  documentId?: string | null
+  documentUrl?: string | null
+  page?: number | null
+  section?: string | null
+  snippet?: string | null
+}
+
 // Types for API responses
 export interface ChatResponse {
+  language: 'hsb' | 'de'
+  title: string
+  answer: string
+  /** Alias of `answer` for older clients */
   message: string
   timestamp: string
+  sources: ChatSource[]
+  personaId: string
 }
 
 export interface ChatRequest {
   message: string
+  ipAddress: string
+  persona: string
+}
+
+export interface PersonaSummary {
+  id: string
+  label: string
+  language: 'hsb' | 'de' | 'auto'
+  allowGeneralKnowledge: boolean
+  webEnabled: boolean
+}
+
+export interface PersonasResponse {
+  default: string
+  personas: PersonaSummary[]
 }
 
 export interface FetchedDataItem {
@@ -65,7 +105,7 @@ const RETRY_CONFIG = {
 // Retry logic
 const retryRequest = async <T>(
   requestFn: () => Promise<AxiosResponse<T>>,
-  retryCount = 0
+  retryCount = 0,
 ): Promise<T> => {
   try {
     const response = await requestFn()
@@ -77,7 +117,7 @@ const retryRequest = async <T>(
     const shouldRetry =
       retryCount < RETRY_CONFIG.maxRetries &&
       (RETRY_CONFIG.retryableStatuses.includes(
-        axiosError.response?.status || 0
+        axiosError.response?.status || 0,
       ) ||
         axiosError.code === 'ECONNABORTED' ||
         (typeof axiosError.message === 'string' &&
@@ -91,7 +131,7 @@ const retryRequest = async <T>(
       console.log(
         `Retrying request (attempt ${retryCount + 1}/${
           RETRY_CONFIG.maxRetries
-        })`
+        })`,
       )
       return retryRequest(requestFn, retryCount + 1)
     }
@@ -104,12 +144,14 @@ const retryRequest = async <T>(
 export const chatService = {
   // Send a message to the server and get assistant response
   async sendMessage(message: string, ipAddress: string): Promise<ChatResponse> {
+    console.log('Sending message to server as:', getPersonaId())
     try {
       return await retryRequest<ChatResponse>(() =>
         api.post<ChatResponse>(SERVER_CONFIG.ENDPOINTS.CHAT, {
           message,
           ipAddress,
-        } as ChatRequest)
+          persona: getPersonaId(),
+        } as ChatRequest),
       )
     } catch (error) {
       console.error('Error sending message:', error)
@@ -117,11 +159,18 @@ export const chatService = {
     }
   },
 
+  // Personas configured on the server, used for labels and language hints
+  async getPersonas(): Promise<PersonasResponse> {
+    return retryRequest<PersonasResponse>(() =>
+      api.get<PersonasResponse>(SERVER_CONFIG.ENDPOINTS.PERSONAS),
+    )
+  },
+
   // Get chat history (if needed)
   async getChatHistory(): Promise<ChatResponse[]> {
     try {
       return await retryRequest<ChatResponse[]>(() =>
-        api.get<ChatResponse[]>(SERVER_CONFIG.ENDPOINTS.CHAT_HISTORY)
+        api.get<ChatResponse[]>(SERVER_CONFIG.ENDPOINTS.CHAT_HISTORY),
       )
     } catch (error) {
       console.error('Error fetching chat history:', error)
@@ -170,28 +219,28 @@ export const chatService = {
 api.interceptors.request.use(
   config => {
     console.log(
-      `Making ${config.method?.toUpperCase()} request to ${config.url}`
+      `Making ${config.method?.toUpperCase()} request to ${config.url}`,
     )
     return config
   },
   error => {
     console.error('Request error:', error)
     return Promise.reject(error)
-  }
+  },
 )
 
 // Response interceptor for logging
 api.interceptors.response.use(
   response => {
     console.log(
-      `Received ${response.status} response from ${response.config.url}`
+      `Received ${response.status} response from ${response.config.url}`,
     )
     return response
   },
   error => {
     console.error('Response error:', error)
     return Promise.reject(error)
-  }
+  },
 )
 
 export default api

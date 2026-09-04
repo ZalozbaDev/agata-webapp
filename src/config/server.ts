@@ -22,6 +22,7 @@ export const SERVER_CONFIG = {
   ENDPOINTS: {
     CHAT: '/api/chat',
     CHAT_HISTORY: '/api/chat/history',
+    PERSONAS: '/api/personas',
     URLS: '/api/urls',
     DATA: '/api/data',
     VISITORS: '/api/visitors',

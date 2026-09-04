@@ -10,6 +10,7 @@ if [ -f "$HTML_FILE" ]; then
   # Platzhalter ersetzen
   sed -i "s|__VITE_API_URL_PLACEHOLDER__|${VITE_API_URL}|g" $HTML_FILE
   sed -i "s|__VITE_VOSK_URL_PLACEHOLDER__|${VITE_VOSK_URL}|g" $HTML_FILE
+  sed -i "s|__VITE_PERSONA_PLACEHOLDER__|${VITE_PERSONA:-agata}|g" $HTML_FILE
 else
   echo "Fehler: $HTML_FILE nicht gefunden. Prüfe deine Volumes!"
 fi

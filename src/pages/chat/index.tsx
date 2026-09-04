@@ -50,7 +50,13 @@ const ChatScreen: React.FC<{
           className='no-scrollbar messagesWrapper'
         >
           {messages.map((msg, i) => (
-            <Message key={i} role={msg.role} content={msg.content} />
+            <Message
+              key={i}
+              role={msg.role}
+              content={msg.content}
+              sources={msg.sources}
+              title={msg.title}
+            />
           ))}
           {lastError && (
             <ErrorMessage
