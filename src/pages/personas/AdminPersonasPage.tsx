@@ -9,7 +9,6 @@ import {
   deletePersona,
   deletePersonaImage,
   fetchAdminPersonas,
-  generatePersonaToken,
   getAdminToken,
   personaAccessPath,
   personaErrorMessage,
@@ -31,7 +30,6 @@ import {
   headerRowStyle,
   hintStyle,
   inputStyle,
-  noticeStyle,
   overlayStyle,
   pageStyle,
   primaryButtonStyle,
@@ -47,7 +45,6 @@ import {
 type SortKey =
   | 'name'
   | 'slug'
-  | 'token'
   | 'topK'
   | 'webResultCount'
   | 'tag'
@@ -59,7 +56,6 @@ const emptyForm = (): PersonaFormValues => ({
   name: '',
   slug: '',
   prompt: '',
-  token: '',
   topK: 5,
   webResultCount: 0,
   tag: '',
@@ -74,7 +70,6 @@ const columns: Array<{
 }> = [
   { key: 'name', label: 'Name' },
   { key: 'slug', label: 'Kurzname' },
-  { key: 'token', label: 'Token' },
   { key: 'topK', label: 'RAG', align: 'center' },
   { key: 'webResultCount', label: 'Web', align: 'center' },
   { key: 'tag', label: 'Gruppen-Tag' },
@@ -82,12 +77,6 @@ const columns: Array<{
   { key: 'documentCount', label: 'Dokumente', align: 'center' },
   { key: 'allowExternalDelete', label: 'Extern löschen', align: 'center' },
 ]
-
-function preview(value: string, max = 80): string {
-  const trimmed = value.trim()
-  if (trimmed.length <= max) return trimmed || '—'
-  return `${trimmed.slice(0, max)}…`
-}
 
 const AdminPersonasPage: React.FC = () => {
   const [authed, setAuthed] = useState(() => Boolean(getAdminToken()))
@@ -144,7 +133,6 @@ const AdminPersonasPage: React.FC = () => {
         persona.name,
         persona.slug,
         persona.prompt,
-        persona.token,
         persona.tag,
         persona.visibility,
       ]
@@ -202,7 +190,6 @@ const AdminPersonasPage: React.FC = () => {
       name: persona.name,
       slug: persona.slug,
       prompt: persona.prompt,
-      token: persona.token,
       topK: persona.topK,
       webResultCount: persona.webResultCount ?? 0,
       tag: persona.tag,
@@ -225,10 +212,6 @@ const AdminPersonasPage: React.FC = () => {
     const validation = validatePersonaForm(editor)
     if (validation) {
       setError(validation)
-      return
-    }
-    if (editingId && !editor.token.trim()) {
-      setError('Der Token darf nicht leer sein.')
       return
     }
     try {
@@ -308,15 +291,6 @@ const AdminPersonasPage: React.FC = () => {
     }
   }
 
-  const fillToken = async () => {
-    try {
-      const token = await generatePersonaToken()
-      setEditor(current => (current ? { ...current, token } : current))
-    } catch (err) {
-      setError(personaErrorMessage(err, 'Token konnte nicht erzeugt werden.'))
-    }
-  }
-
   if (!authed) {
     return (
       <div style={pageStyle}>
@@ -373,7 +347,7 @@ const AdminPersonasPage: React.FC = () => {
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <input
           type='search'
-          placeholder='Suchen nach Name, Kurzname, Token oder Gruppen-Tag'
+          placeholder='Suchen nach Name, Kurzname oder Gruppen-Tag'
           value={query}
           onChange={event => setQuery(event.target.value)}
           style={inputStyle}
@@ -431,16 +405,6 @@ const AdminPersonasPage: React.FC = () => {
                       }}
                     >
                       {persona.slug || '—'}
-                    </td>
-                    <td
-                      style={{
-                        ...tdStyle,
-                        fontFamily: 'monospace',
-                        color: '#c8c8d0',
-                      }}
-                      title={persona.token}
-                    >
-                      {preview(persona.token, 10)}
                     </td>
                     <td style={{ ...tdStyle, textAlign: 'center' }}>
                       {persona.topK}
@@ -560,11 +524,6 @@ const AdminPersonasPage: React.FC = () => {
             <h2 style={{ margin: '0 0 18px', fontSize: 22, fontWeight: 650 }}>
               {editingId ? 'Persona bearbeiten' : 'Neue Persona'}
             </h2>
-            {editingId && (
-              <p style={{ ...noticeStyle, marginTop: 0 }}>
-                Ein geänderter Token macht den bisherigen Zugriffslink ungültig.
-              </p>
-            )}
             <label style={{ ...fieldStyle, marginTop: 0 }}>
               <span style={fieldLabelStyle}>Name</span>
               <input
@@ -614,31 +573,6 @@ const AdminPersonasPage: React.FC = () => {
                 }}
               />
             </label>
-            <div style={fieldStyle}>
-              <span style={fieldLabelStyle}>Token</span>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <input
-                  value={editor.token}
-                  onChange={event =>
-                    setEditor({ ...editor, token: event.target.value })
-                  }
-                  placeholder='Leer lassen zum automatischen Erzeugen'
-                  style={{
-                    ...inputStyle,
-                    fontFamily:
-                      'ui-monospace, SFMono-Regular, Menlo, monospace',
-                    fontSize: 13,
-                  }}
-                />
-                <button
-                  type='button'
-                  style={{ ...secondaryButtonStyle, flexShrink: 0, height: 40 }}
-                  onClick={() => void fillToken()}
-                >
-                  Erzeugen
-                </button>
-              </div>
-            </div>
             <div
               style={{
                 display: 'flex',

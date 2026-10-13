@@ -44,7 +44,6 @@ export type PersonaFormValues = {
   name: string
   slug: string
   prompt: string
-  token: string
   topK: number
   webResultCount: number
   tag: string
@@ -99,10 +98,6 @@ export function validatePersonaForm(input: PersonaFormValues): string | null {
   ) {
     return 'Web-Ergebnisse müssen eine ganze Zahl zwischen 0 und 20 sein.'
   }
-  const token = input.token.trim()
-  if (token && !/^[A-Za-z0-9_-]{16,128}$/.test(token)) {
-    return 'Der Token muss 16 bis 128 Zeichen haben und darf nur Buchstaben, Ziffern, _ und - enthalten.'
-  }
   if (input.tag.trim().length > 80) return 'Tag darf höchstens 80 Zeichen haben.'
   if (input.visibility !== 'public' && input.visibility !== 'private') {
     return 'Sichtbarkeit muss öffentlich oder privat sein.'
@@ -154,7 +149,6 @@ export async function createPersona(
       name: values.name.trim(),
       slug: values.slug.trim().toLowerCase(),
       prompt: values.prompt,
-      token: values.token.trim() || undefined,
       topK: values.topK,
       webResultCount: values.webResultCount,
       tag: values.tag.trim(),
@@ -175,7 +169,6 @@ export async function updatePersona(
       name: values.name.trim(),
       slug: values.slug.trim().toLowerCase(),
       prompt: values.prompt,
-      token: values.token.trim(),
       topK: values.topK,
       webResultCount: values.webResultCount,
       tag: values.tag.trim(),
@@ -208,13 +201,6 @@ export async function deletePersonaImage(id: string): Promise<AdminPersona> {
     `/api/admin/personas/${encodeURIComponent(id)}/image`,
   )
   return response.data.persona
-}
-
-export async function generatePersonaToken(): Promise<string> {
-  const response = await adminApi().post<{ token: string }>(
-    '/api/admin/personas/token',
-  )
-  return response.data.token
 }
 
 export async function fetchAdminPersona(id: string): Promise<AdminPersona> {
