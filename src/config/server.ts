@@ -23,6 +23,7 @@ export const SERVER_CONFIG = {
     CHAT: '/api/chat',
     CHAT_HISTORY: '/api/chat/history',
     PERSONAS: '/api/personas',
+    ADMIN_PERSONAS: '/api/admin/personas',
     URLS: '/api/urls',
     DATA: '/api/data',
     VISITORS: '/api/visitors',

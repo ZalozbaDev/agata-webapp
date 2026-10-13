@@ -2,17 +2,38 @@ import type { ChatSource } from '../../services/api'
 
 const SOURCE_REF_RE = /\[\[(S\d+)\]\]|\[(S\d+)\]/g
 
+function isHttpUrl(value: string): boolean {
+  return /^https?:\/\//i.test(value.trim())
+}
+
+function fileNameFromPath(value: string): string | null {
+  const fileName = value.split(/[/\\]/).filter(Boolean).pop()
+  return fileName || null
+}
+
 export function stripSourceRefs(text: string): string {
   return text.replace(SOURCE_REF_RE, '').replace(/\s{2,}/g, ' ').trim()
 }
 
 export function sourceHref(source: ChatSource): string | null {
-  if (source.type === 'web' && source.url) return source.url
-  if (source.type === 'rag' && source.documentUrl) return source.documentUrl
-  return source.url ?? source.documentUrl ?? null
+  if (source.type === 'web' && source.url && isHttpUrl(source.url)) return source.url
+
+  const raw = source.documentUrl || source.url || ''
+  if (raw && isHttpUrl(raw)) return raw
+
+  if (source.type === 'rag' && source.documentId) {
+    const params = new URLSearchParams({ source: source.documentId })
+    return `/datei?${params.toString()}`
+  }
+
+  return null
 }
 
 export function sourceDomainLabel(source: ChatSource): string {
+  const raw = source.documentUrl || ''
+  if (raw && !isHttpUrl(raw)) {
+    return fileNameFromPath(raw) || source.title.trim() || 'Dokument'
+  }
   if (source.domain) {
     return source.domain.replace(/^www\./, '')
   }

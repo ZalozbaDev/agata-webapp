@@ -167,6 +167,9 @@ const Header: React.FC<{
             <Link to='/data' style={urlsButtonStyle}>
               Data
             </Link>
+            <Link to='/admin/personas' style={urlsButtonStyle}>
+              Personas
+            </Link>
             <div style={profileCircleStyle}>
               <svg
                 xmlns='http://www.w3.org/2000/svg'

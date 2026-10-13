@@ -10,6 +10,9 @@ import UrlsPage from './pages/urls'
 import DataPage from './pages/data'
 import ImpresumPage from './pages/impresum'
 import FaqPage from './pages/faq'
+import AdminPersonasPage from './pages/personas/AdminPersonasPage'
+import PersonaDocumentsPage from './pages/personas/PersonaDocumentsPage'
+import FileViewPage from './pages/datei'
 import { WociMikanje } from './components/woci-mikanje'
 import { WociCenteredContext } from './components/woci-mikanje/WociCenteredContext'
 import { Wabjenje } from './components/wabjenje/index.tsx'
@@ -157,6 +160,16 @@ const AppContentInner: React.FC<{
           <Route path='/data' element={<DataPage />} />
           <Route path='/impresum' element={<ImpresumPage />} />
           <Route path='/faq' element={<FaqPage />} />
+          <Route path='/datei' element={<FileViewPage />} />
+          <Route path='/admin/personas' element={<AdminPersonasPage />} />
+          <Route
+            path='/admin/personas/:id/documents'
+            element={<PersonaDocumentsPage mode='admin' />}
+          />
+          <Route
+            path='/persona/:token'
+            element={<PersonaDocumentsPage mode='token' />}
+          />
         </Routes>
       </div>
     </WociCenteredContext.Provider>
