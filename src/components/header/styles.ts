@@ -1,7 +1,7 @@
 export const headerStyle: React.CSSProperties = {
   width: '100vw',
   maxWidth: '100%',
-  height: '48px',
+  height: '64px',
   background: '#212121',
   display: 'flex',
   alignItems: 'center',

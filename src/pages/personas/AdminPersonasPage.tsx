@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import {
@@ -7,14 +7,17 @@ import {
   clearAdminToken,
   createPersona,
   deletePersona,
+  deletePersonaImage,
   fetchAdminPersonas,
   generatePersonaToken,
   getAdminToken,
   personaAccessPath,
   personaErrorMessage,
+  personaImageUrl,
   personaWebviewPath,
   setAdminToken,
   updatePersona,
+  uploadPersonaImage,
   validatePersonaForm,
 } from '../../services/personaService'
 import {
@@ -23,7 +26,10 @@ import {
   dangerButtonStyle,
   dialogStyle,
   errorStyle,
+  fieldLabelStyle,
+  fieldStyle,
   headerRowStyle,
+  hintStyle,
   inputStyle,
   noticeStyle,
   overlayStyle,
@@ -61,13 +67,17 @@ const emptyForm = (): PersonaFormValues => ({
   allowExternalDelete: false,
 })
 
-const columns: Array<{ key: SortKey; label: string; align?: 'left' | 'center' }> = [
+const columns: Array<{
+  key: SortKey
+  label: string
+  align?: 'left' | 'center'
+}> = [
   { key: 'name', label: 'Name' },
   { key: 'slug', label: 'Kurzname' },
   { key: 'token', label: 'Token' },
   { key: 'topK', label: 'RAG', align: 'center' },
   { key: 'webResultCount', label: 'Web', align: 'center' },
-  { key: 'tag', label: 'Tag' },
+  { key: 'tag', label: 'Gruppen-Tag' },
   { key: 'visibility', label: 'Sichtbarkeit' },
   { key: 'documentCount', label: 'Dokumente', align: 'center' },
   { key: 'allowExternalDelete', label: 'Extern löschen', align: 'center' },
@@ -93,6 +103,11 @@ const AdminPersonasPage: React.FC = () => {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [pendingDelete, setPendingDelete] = useState<AdminPersona | null>(null)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [removeImage, setRemoveImage] = useState(false)
+  const [storedImage, setStoredImage] = useState(false)
+  const imageInputRef = useRef<HTMLInputElement>(null)
 
   const load = useCallback(async () => {
     try {
@@ -102,7 +117,10 @@ const AdminPersonasPage: React.FC = () => {
       setPersonas(data)
       setAuthed(true)
     } catch (err) {
-      const message = personaErrorMessage(err, 'Personas konnten nicht geladen werden.')
+      const message = personaErrorMessage(
+        err,
+        'Personas konnten nicht geladen werden.',
+      )
       if (message === 'Nicht autorisiert.') {
         clearAdminToken()
         setAuthed(false)
@@ -169,6 +187,10 @@ const AdminPersonasPage: React.FC = () => {
   const openCreate = () => {
     setEditingId(null)
     setEditor(emptyForm())
+    setImageFile(null)
+    setImagePreview(null)
+    setRemoveImage(false)
+    setStoredImage(false)
     setError(null)
   }
 
@@ -185,6 +207,12 @@ const AdminPersonasPage: React.FC = () => {
       visibility: persona.visibility,
       allowExternalDelete: persona.allowExternalDelete,
     })
+    setImageFile(null)
+    setRemoveImage(false)
+    setStoredImage(Boolean(persona.hasImage))
+    setImagePreview(
+      persona.hasImage ? personaImageUrl(persona.slug || persona.id) : null,
+    )
     setError(null)
   }
 
@@ -203,18 +231,46 @@ const AdminPersonasPage: React.FC = () => {
     try {
       setSaving(true)
       setError(null)
-      const saved = editingId
-        ? await updatePersona(editingId, editor)
+      const wasEdit = Boolean(editingId)
+      const savedPersona = wasEdit
+        ? await updatePersona(editingId as string, editor)
         : await createPersona(editor)
+      let saved = savedPersona
+      try {
+        if (imageFile) {
+          saved = await uploadPersonaImage(savedPersona.id, imageFile)
+        } else if (removeImage && wasEdit) {
+          saved = await deletePersonaImage(savedPersona.id)
+        }
+      } catch (imageError) {
+        setPersonas(current => {
+          const rest = current.filter(persona => persona.id !== savedPersona.id)
+          return [savedPersona, ...rest]
+        })
+        setEditingId(savedPersona.id)
+        setError(
+          personaErrorMessage(
+            imageError,
+            'Das Bild konnte nicht gespeichert werden.',
+          ),
+        )
+        return
+      }
       setPersonas(current => {
         const rest = current.filter(persona => persona.id !== saved.id)
         return [saved, ...rest]
       })
       setEditor(null)
       setEditingId(null)
-      setSuccess(editingId ? 'Persona gespeichert.' : 'Persona erstellt.')
+      setImageFile(null)
+      setImagePreview(null)
+      setRemoveImage(false)
+      setStoredImage(false)
+      setSuccess(wasEdit ? 'Persona gespeichert.' : 'Persona erstellt.')
     } catch (err) {
-      setError(personaErrorMessage(err, 'Persona konnte nicht gespeichert werden.'))
+      setError(
+        personaErrorMessage(err, 'Persona konnte nicht gespeichert werden.'),
+      )
     } finally {
       setSaving(false)
     }
@@ -226,11 +282,15 @@ const AdminPersonasPage: React.FC = () => {
       setSaving(true)
       setError(null)
       await deletePersona(pendingDelete.id)
-      setPersonas(current => current.filter(persona => persona.id !== pendingDelete.id))
+      setPersonas(current =>
+        current.filter(persona => persona.id !== pendingDelete.id),
+      )
       setSuccess('Persona und zugehörige Dokumente wurden gelöscht.')
       setPendingDelete(null)
     } catch (err) {
-      setError(personaErrorMessage(err, 'Persona konnte nicht gelöscht werden.'))
+      setError(
+        personaErrorMessage(err, 'Persona konnte nicht gelöscht werden.'),
+      )
     } finally {
       setSaving(false)
     }
@@ -310,7 +370,7 @@ const AdminPersonasPage: React.FC = () => {
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <input
           type='search'
-          placeholder='Suchen nach Name, Kurzname, Token oder Tag'
+          placeholder='Suchen nach Name, Kurzname, Token oder Gruppen-Tag'
           value={query}
           onChange={event => setQuery(event.target.value)}
           style={inputStyle}
@@ -357,17 +417,31 @@ const AdminPersonasPage: React.FC = () => {
               ) : (
                 visible.map(persona => (
                   <tr key={persona.id}>
-                    <td style={{ ...tdStyle, fontWeight: 600 }}>{persona.name}</td>
-                    <td style={{ ...tdStyle, fontFamily: 'monospace', color: '#c8c8d0' }}>
+                    <td style={{ ...tdStyle, fontWeight: 600 }}>
+                      {persona.name}
+                    </td>
+                    <td
+                      style={{
+                        ...tdStyle,
+                        fontFamily: 'monospace',
+                        color: '#c8c8d0',
+                      }}
+                    >
                       {persona.slug || '—'}
                     </td>
                     <td
-                      style={{ ...tdStyle, fontFamily: 'monospace', color: '#c8c8d0' }}
+                      style={{
+                        ...tdStyle,
+                        fontFamily: 'monospace',
+                        color: '#c8c8d0',
+                      }}
                       title={persona.token}
                     >
                       {preview(persona.token, 10)}
                     </td>
-                    <td style={{ ...tdStyle, textAlign: 'center' }}>{persona.topK}</td>
+                    <td style={{ ...tdStyle, textAlign: 'center' }}>
+                      {persona.topK}
+                    </td>
                     <td style={{ ...tdStyle, textAlign: 'center' }}>
                       {persona.webResultCount ?? 0}
                     </td>
@@ -380,18 +454,26 @@ const AdminPersonasPage: React.FC = () => {
                           borderRadius: 999,
                           fontSize: 12,
                           background:
-                            persona.visibility === 'public' ? '#145c45' : '#3a3a3a',
+                            persona.visibility === 'public'
+                              ? '#145c45'
+                              : '#3a3a3a',
                         }}
                       >
-                        {persona.visibility === 'public' ? 'Öffentlich' : 'Privat'}
+                        {persona.visibility === 'public'
+                          ? 'Öffentlich'
+                          : 'Privat'}
                       </span>
                     </td>
-                    <td style={{ ...tdStyle, textAlign: 'center' }}>{persona.documentCount}</td>
+                    <td style={{ ...tdStyle, textAlign: 'center' }}>
+                      {persona.documentCount}
+                    </td>
                     <td style={{ ...tdStyle, textAlign: 'center' }}>
                       {persona.allowExternalDelete ? 'Ja' : 'Nein'}
                     </td>
                     <td style={tdStyle}>
-                      <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap' }}>
+                      <div
+                        style={{ display: 'flex', gap: 6, flexWrap: 'nowrap' }}
+                      >
                         <button
                           type='button'
                           style={actionButtonStyle}
@@ -401,14 +483,22 @@ const AdminPersonasPage: React.FC = () => {
                         </button>
                         <button
                           type='button'
-                          style={{ ...actionButtonStyle, ...dangerButtonStyle, padding: '6px 10px', fontSize: 12 }}
+                          style={{
+                            ...actionButtonStyle,
+                            ...dangerButtonStyle,
+                            padding: '6px 10px',
+                            fontSize: 12,
+                          }}
                           onClick={() => setPendingDelete(persona)}
                         >
                           Löschen
                         </button>
                         <Link
                           to={`/admin/personas/${persona.id}/documents`}
-                          style={{ ...actionButtonStyle, textDecoration: 'none' }}
+                          style={{
+                            ...actionButtonStyle,
+                            textDecoration: 'none',
+                          }}
                         >
                           Dokumente
                         </Link>
@@ -454,27 +544,27 @@ const AdminPersonasPage: React.FC = () => {
       {editor && (
         <div style={overlayStyle} role='presentation'>
           <form style={dialogStyle} onSubmit={onSave}>
-            <h2 style={{ marginTop: 0 }}>
+            <h2 style={{ margin: '0 0 18px', fontSize: 22, fontWeight: 650 }}>
               {editingId ? 'Persona bearbeiten' : 'Neue Persona'}
             </h2>
             {editingId && (
-              <p style={noticeStyle}>
+              <p style={{ ...noticeStyle, marginTop: 0 }}>
                 Ein geänderter Token macht den bisherigen Zugriffslink ungültig.
               </p>
             )}
-            <label>
-              Name
+            <label style={{ ...fieldStyle, marginTop: 0 }}>
+              <span style={fieldLabelStyle}>Name</span>
               <input
                 required
                 value={editor.name}
                 onChange={event =>
                   setEditor({ ...editor, name: event.target.value })
                 }
-                style={{ ...inputStyle, marginTop: 6 }}
+                style={inputStyle}
               />
             </label>
-            <label style={{ display: 'block', marginTop: 12 }}>
-              Kurzname für die Webview
+            <label style={fieldStyle}>
+              <span style={fieldLabelStyle}>Kurzname für die Webview</span>
               <input
                 required
                 value={editor.slug}
@@ -482,43 +572,64 @@ const AdminPersonasPage: React.FC = () => {
                   setEditor({ ...editor, slug: event.target.value })
                 }
                 placeholder='schule'
-                style={{ ...inputStyle, marginTop: 6 }}
+                style={inputStyle}
               />
-              <span style={{ display: 'block', marginTop: 6, color: '#bdbdbd', fontSize: 13 }}>
+              <span style={hintStyle}>
                 {editor.slug.trim()
                   ? personaWebviewPath(editor.slug.trim().toLowerCase())
                   : `${window.location.origin}/?persona=schule`}
               </span>
             </label>
-            <label style={{ display: 'block', marginTop: 12 }}>
-              Prompt
+            <label style={fieldStyle}>
+              <span style={fieldLabelStyle}>Prompt</span>
               <textarea
                 value={editor.prompt}
                 onChange={event =>
                   setEditor({ ...editor, prompt: event.target.value })
                 }
-                style={{ ...inputStyle, marginTop: 6, minHeight: 140 }}
+                style={{
+                  ...inputStyle,
+                  minHeight: 120,
+                  resize: 'vertical',
+                  lineHeight: 1.45,
+                }}
               />
             </label>
-            <label style={{ display: 'block', marginTop: 12 }}>
-              Token
-              <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+            <div style={fieldStyle}>
+              <span style={fieldLabelStyle}>Token</span>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 <input
                   value={editor.token}
                   onChange={event =>
                     setEditor({ ...editor, token: event.target.value })
                   }
                   placeholder='Leer lassen zum automatischen Erzeugen'
-                  style={inputStyle}
+                  style={{
+                    ...inputStyle,
+                    fontFamily:
+                      'ui-monospace, SFMono-Regular, Menlo, monospace',
+                    fontSize: 13,
+                  }}
                 />
-                <button type='button' style={secondaryButtonStyle} onClick={() => void fillToken()}>
+                <button
+                  type='button'
+                  style={{ ...secondaryButtonStyle, flexShrink: 0, height: 40 }}
+                  onClick={() => void fillToken()}
+                >
                   Erzeugen
                 </button>
               </div>
-            </label>
-            <div style={{ display: 'flex', gap: 12, marginTop: 12, flexWrap: 'wrap' }}>
-              <label style={{ flex: 1, minWidth: 160 }}>
-                RAG-Ergebnisse (Top-K)
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                gap: 12,
+                marginTop: 16,
+                alignItems: 'flex-start',
+              }}
+            >
+              <label style={{ flex: 1, minWidth: 0 }}>
+                <span style={fieldLabelStyle}>RAG-Ergebnisse</span>
                 <input
                   type='number'
                   min={1}
@@ -528,11 +639,11 @@ const AdminPersonasPage: React.FC = () => {
                   onChange={event =>
                     setEditor({ ...editor, topK: Number(event.target.value) })
                   }
-                  style={{ ...inputStyle, marginTop: 6 }}
+                  style={inputStyle}
                 />
               </label>
-              <label style={{ flex: 1, minWidth: 160 }}>
-                Web-Ergebnisse
+              <label style={{ flex: 1, minWidth: 0 }}>
+                <span style={fieldLabelStyle}>Web-Ergebnisse</span>
                 <input
                   type='number'
                   min={0}
@@ -540,42 +651,56 @@ const AdminPersonasPage: React.FC = () => {
                   step={1}
                   value={editor.webResultCount}
                   onChange={event =>
-                    setEditor({ ...editor, webResultCount: Number(event.target.value) })
+                    setEditor({
+                      ...editor,
+                      webResultCount: Number(event.target.value),
+                    })
                   }
-                  style={{ ...inputStyle, marginTop: 6 }}
+                  style={inputStyle}
                 />
-                <span style={{ display: 'block', marginTop: 4, color: '#a0a0a8', fontSize: 13 }}>
-                  0 sucht nicht im Web. Sonst so viele DuckDuckGo-Treffer pro Antwort.
-                </span>
               </label>
-              <label style={{ flex: 1, minWidth: 160 }}>
-                Tag
+              <label style={{ flex: 1, minWidth: 0 }}>
+                <span style={fieldLabelStyle}>Gruppen-Tag</span>
                 <input
                   value={editor.tag}
                   onChange={event =>
                     setEditor({ ...editor, tag: event.target.value })
                   }
-                  style={{ ...inputStyle, marginTop: 6 }}
+                  style={inputStyle}
                 />
               </label>
             </div>
-            <label style={{ display: 'block', marginTop: 12 }}>
-              Sichtbarkeit
+            <span style={hintStyle}>
+              Web-Ergebnisse: 0 sucht nicht im Web. Sonst so viele
+              DuckDuckGo-Treffer pro Antwort.
+            </span>
+            <label style={fieldStyle}>
+              <span style={fieldLabelStyle}>Sichtbarkeit</span>
               <select
                 value={editor.visibility}
                 onChange={event =>
                   setEditor({
                     ...editor,
-                    visibility: event.target.value === 'public' ? 'public' : 'private',
+                    visibility:
+                      event.target.value === 'public' ? 'public' : 'private',
                   })
                 }
-                style={{ ...inputStyle, marginTop: 6 }}
+                style={inputStyle}
               >
                 <option value='private'>Privat</option>
                 <option value='public'>Öffentlich</option>
               </select>
             </label>
-            <label style={{ display: 'flex', gap: 8, marginTop: 14, alignItems: 'center' }}>
+            <label
+              style={{
+                display: 'flex',
+                gap: 10,
+                marginTop: 16,
+                alignItems: 'center',
+                color: '#e6e6ec',
+                fontSize: 14,
+              }}
+            >
               <input
                 type='checkbox'
                 checked={editor.allowExternalDelete}
@@ -588,7 +713,117 @@ const AdminPersonasPage: React.FC = () => {
               />
               Externe Nutzer dürfen Dokumente löschen
             </label>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 18 }}>
+            <div style={{ ...fieldStyle, paddingTop: 4 }}>
+              <span style={fieldLabelStyle}>Bild</span>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 16,
+                  alignItems: 'center',
+                  padding: 12,
+                  borderRadius: 12,
+                  border: '1px solid #3a3a3a',
+                  background: '#232323',
+                }}
+              >
+                <div
+                  style={{
+                    width: 96,
+                    height: 96,
+                    flexShrink: 0,
+                    borderRadius: 12,
+                    border: '1px solid #3a3a3a',
+                    background: '#1a1a1a',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {!removeImage && imagePreview ? (
+                    <img
+                      src={imagePreview}
+                      alt='Persona-Bild'
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                      }}
+                    />
+                  ) : (
+                    <span style={{ color: '#8d8d96', fontSize: 12 }}>
+                      Kein Bild
+                    </span>
+                  )}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <input
+                    ref={imageInputRef}
+                    type='file'
+                    accept='image/png,image/jpeg,image/webp,image/gif'
+                    onChange={event => {
+                      const file = event.target.files?.[0] ?? null
+                      setImageFile(file)
+                      setRemoveImage(false)
+                      if (file) {
+                        setImagePreview(URL.createObjectURL(file))
+                        return
+                      }
+                      setImagePreview(
+                        storedImage && editor.slug.trim()
+                          ? personaImageUrl(editor.slug.trim().toLowerCase())
+                          : storedImage && editingId
+                            ? personaImageUrl(editingId)
+                            : null,
+                      )
+                    }}
+                    style={{ display: 'none' }}
+                  />
+                  <button
+                    type='button'
+                    style={secondaryButtonStyle}
+                    onClick={() => imageInputRef.current?.click()}
+                  >
+                    Bild auswählen
+                  </button>
+                  <span style={{ ...hintStyle, marginTop: 8 }}>
+                    {removeImage
+                      ? 'Das Bild wird beim Speichern entfernt.'
+                      : imageFile
+                        ? imageFile.name
+                        : 'PNG, JPEG, WebP oder GIF, höchstens 5 MB. Ersetzt die Frau rechts unten.'}
+                  </span>
+                  {storedImage ? (
+                    <label
+                      style={{
+                        display: 'flex',
+                        gap: 8,
+                        marginTop: 8,
+                        alignItems: 'center',
+                        fontSize: 13,
+                      }}
+                    >
+                      <input
+                        type='checkbox'
+                        checked={removeImage}
+                        onChange={event => setRemoveImage(event.target.checked)}
+                      />
+                      Bild entfernen
+                    </label>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 8,
+                marginTop: 22,
+                paddingTop: 16,
+                borderTop: '1px solid #3a3a3a',
+              }}
+            >
               <button
                 type='button'
                 style={secondaryButtonStyle}
@@ -596,7 +831,11 @@ const AdminPersonasPage: React.FC = () => {
               >
                 Abbrechen
               </button>
-              <button type='submit' style={primaryButtonStyle} disabled={saving}>
+              <button
+                type='submit'
+                style={primaryButtonStyle}
+                disabled={saving}
+              >
                 {saving ? 'Speichert…' : 'Speichern'}
               </button>
             </div>
@@ -612,7 +851,9 @@ const AdminPersonasPage: React.FC = () => {
               „{pendingDelete.name}“ und alle zugehörigen Dokumente sowie
               RAG-Einträge werden unwiderruflich gelöscht.
             </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+            <div
+              style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}
+            >
               <button
                 type='button'
                 style={secondaryButtonStyle}

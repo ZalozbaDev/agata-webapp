@@ -36,7 +36,7 @@ const AppContent: React.FC = () => {
   }
 
   const spacerStyle: React.CSSProperties = {
-    height: '48px',
+    height: '64px',
   }
 
   return (

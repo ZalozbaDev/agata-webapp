@@ -13,6 +13,7 @@ export type AdminPersona = {
   token: string
   topK: number
   webResultCount: number
+  hasImage: boolean
   tag: string
   visibility: PersonaVisibility
   allowExternalDelete: boolean
@@ -70,6 +71,11 @@ export function personaWebviewPath(slug: string): string {
   const url = new URL('/', window.location.origin)
   url.searchParams.set('persona', slug)
   return url.toString()
+}
+
+export function personaImageUrl(key: string): string {
+  const base = String(SERVER_CONFIG.BASE_URL ?? '').replace(/\/$/, '')
+  return `${base}/api/personas/${encodeURIComponent(key)}/image`
 }
 
 export function validatePersonaForm(input: PersonaFormValues): string | null {
@@ -181,6 +187,26 @@ export async function updatePersona(
 
 export async function deletePersona(id: string): Promise<void> {
   await adminApi().delete(`/api/admin/personas/${id}`)
+}
+
+export async function uploadPersonaImage(
+  id: string,
+  file: File,
+): Promise<AdminPersona> {
+  const body = new FormData()
+  body.append('file', file)
+  const response = await adminApi().post<{ persona: AdminPersona }>(
+    `/api/admin/personas/${encodeURIComponent(id)}/image`,
+    body,
+  )
+  return response.data.persona
+}
+
+export async function deletePersonaImage(id: string): Promise<AdminPersona> {
+  const response = await adminApi().delete<{ persona: AdminPersona }>(
+    `/api/admin/personas/${encodeURIComponent(id)}/image`,
+  )
+  return response.data.persona
 }
 
 export async function generatePersonaToken(): Promise<string> {

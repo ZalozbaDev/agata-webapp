@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import {
   headerStyle,
   headerLeftStyle,
@@ -22,6 +22,7 @@ import {
 import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
 import { WociMikanje } from '../woci-mikanje'
+import SERVER_CONFIG from '../../config/server'
 
 const Header: React.FC<{
   wopyty: number
@@ -64,6 +65,35 @@ const Header: React.FC<{
   const [settingsShiftClicks, setSettingsShiftClicks] = useState(0)
   const [pendingShowHiddenImage, setPendingShowHiddenImage] = useState(false)
   const hideTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  const [params] = useSearchParams()
+  const personaKey = params.get('persona')?.trim() ?? ''
+  const [personaName, setPersonaName] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!personaKey) {
+      setPersonaName(null)
+      return
+    }
+    let cancelled = false
+    const base = String(SERVER_CONFIG.BASE_URL ?? '').replace(/\/$/, '')
+    const url = `${base}/api/personas/${encodeURIComponent(personaKey)}/name`
+    setPersonaName(null)
+    fetch(url)
+      .then(async response => {
+        if (!response.ok) return null
+        const data = (await response.json()) as { name?: unknown }
+        return typeof data.name === 'string' && data.name.trim() ? data.name.trim() : null
+      })
+      .then(name => {
+        if (!cancelled) setPersonaName(name)
+      })
+      .catch(() => {
+        if (!cancelled) setPersonaName(null)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [personaKey])
 
   const handleCreateUrl = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -107,7 +137,7 @@ const Header: React.FC<{
   return (
     <>
       <header style={headerStyle}>
-        <div style={headerLeftStyle}>
+        <div style={{ ...headerLeftStyle, display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: 1.05, minWidth: 0 }}>
           <Link
             to='/'
             style={{ textDecoration: 'none', color: 'inherit' }}
@@ -115,6 +145,24 @@ const Header: React.FC<{
           >
             AGATA
           </Link>
+          {personaName ? (
+            <span
+              title={personaName}
+              style={{
+                marginTop: 2,
+                fontSize: '0.72rem',
+                fontWeight: 500,
+                letterSpacing: 0,
+                color: '#b7c4bf',
+                maxWidth: 280,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {personaName}
+            </span>
+          ) : null}
 
           {showTopMiddle && (
             <div style={topmiddlestyle}>
@@ -124,7 +172,7 @@ const Header: React.FC<{
           )}
         </div>
         {!ismenuOpen && (
-          <div style={{ position: 'fixed', top: '60px', right: '1rem' }}>
+          <div style={{ position: 'fixed', top: '72px', right: '1rem' }}>
             <div style={userstyle}>wopyty: {wopyty}</div>
             <div style={userstyle}>naprašowanja: {propmts}</div>
           </div>

@@ -56,11 +56,34 @@ export const dangerButtonStyle: CSSProperties = {
 export const inputStyle: CSSProperties = {
   width: '100%',
   padding: '10px 12px',
-  border: '1px solid #404040',
-  borderRadius: '4px',
+  border: '1px solid #3a3a3a',
+  borderRadius: '8px',
   backgroundColor: '#1a1a1a',
   color: '#ececf1',
   fontSize: '14px',
+  boxSizing: 'border-box',
+  colorScheme: 'dark',
+}
+
+export const fieldStyle: CSSProperties = {
+  display: 'block',
+  marginTop: 16,
+}
+
+export const fieldLabelStyle: CSSProperties = {
+  display: 'block',
+  marginBottom: 6,
+  fontSize: 13,
+  fontWeight: 600,
+  color: '#e6e6ec',
+}
+
+export const hintStyle: CSSProperties = {
+  display: 'block',
+  marginTop: 6,
+  color: '#9b9ba4',
+  fontSize: 12,
+  lineHeight: 1.45,
 }
 
 export const cardStyle: CSSProperties = {
@@ -124,13 +147,15 @@ export const overlayStyle: CSSProperties = {
 }
 
 export const dialogStyle: CSSProperties = {
-  width: 'min(720px, 100%)',
+  width: 'min(680px, 100%)',
   maxHeight: '90vh',
   overflowY: 'auto',
-  background: '#2d2d2d',
-  border: '1px solid #404040',
-  borderRadius: '10px',
-  padding: '20px',
+  background: '#2a2a2a',
+  border: '1px solid #3c3c3c',
+  borderRadius: '16px',
+  padding: '24px 28px 20px',
+  boxSizing: 'border-box',
+  boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45)',
 }
 
 export const noticeStyle: CSSProperties = {

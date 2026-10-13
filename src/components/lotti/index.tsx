@@ -27,6 +27,8 @@ import Lottie from 'lottie-react'
 import puppetAnimation from './puppet-mouth.json'
 
 import { WociMikanje } from '../woci-mikanje'
+import { getPersonaId } from '../../config/persona'
+import { personaImageUrl } from '../../services/personaService'
 
 const mouthFramesImage = {
   closed: closedImg,
@@ -80,6 +82,28 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   const isPlayingRef = useRef<boolean>(false)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const lottieRef = useRef<any>(null)
+  const personaImage = personaImageUrl(getPersonaId())
+  const [customImageReady, setCustomImageReady] = useState(false)
+
+  useEffect(() => {
+    const personaId = getPersonaId()
+    if (!personaId || personaId === 'agata') {
+      setCustomImageReady(false)
+      return
+    }
+    let cancelled = false
+    const probe = new Image()
+    probe.onload = () => {
+      if (!cancelled) setCustomImageReady(true)
+    }
+    probe.onerror = () => {
+      if (!cancelled) setCustomImageReady(false)
+    }
+    probe.src = personaImageUrl(personaId)
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   // Eyebrow animation state
   const [eyebrowFrame, setEyebrowFrame] = useState<'brjowcki' | 'brjowcki2'>(
@@ -448,6 +472,19 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
         }}
         onClick={() => setIsCentered(c => !c)}
       >
+        {customImageReady ? (
+          <img
+            src={personaImage}
+            alt=''
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              display: 'block',
+            }}
+          />
+        ) : (
+          <>
         {/* Display the current viseme image */}
         <img
           src={mjezwoce}
@@ -545,6 +582,8 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
             target.src = mouthFramesImage.neutral
           }}
         />
+          </>
+        )}
         {audioFile && (
           <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
         )}
