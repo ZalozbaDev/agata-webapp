@@ -13,6 +13,7 @@ import {
   fetchPublicDocuments,
   fetchPublicPersona,
   personaErrorMessage,
+  personaLanguageLabel,
   uploadAdminDocument,
   uploadPublicDocument,
 } from '../../services/personaService'
@@ -71,6 +72,7 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
   const fileInput = useRef<HTMLInputElement | null>(null)
   const [name, setName] = useState('')
   const [tag, setTag] = useState('')
+  const [languageLabel, setLanguageLabel] = useState('')
   const [canDelete, setCanDelete] = useState(mode === 'admin')
   const [documents, setDocuments] = useState<PersonaDocument[]>([])
   const [loading, setLoading] = useState(true)
@@ -103,6 +105,7 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
         ])
         setName(persona.name)
         setTag(persona.tag)
+        setLanguageLabel(personaLanguageLabel(persona.language))
         setCanDelete(true)
         setDocuments(docs)
       } else {
@@ -112,6 +115,7 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
         ])
         setName(persona.name)
         setTag(persona.tag)
+        setLanguageLabel(personaLanguageLabel(persona.language))
         setCanDelete(persona.canDelete)
         setDocuments(docs)
       }
@@ -260,6 +264,11 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
         onDrop={onDrop}
       >
         <p>Dateien hierher ziehen oder auswählen. Erlaubt sind PDF und HTML, maximal 20 MB.</p>
+        <p style={{ margin: '8px 0 0', color: '#f0d48a' }}>
+          {languageLabel && languageLabel !== '—'
+            ? `Bitte nur Dokumente auf ${languageLabel} hochladen.`
+            : 'Für diese Persona ist noch keine Sprache festgelegt.'}
+        </p>
         <button type='button' style={primaryButtonStyle} onClick={() => fileInput.current?.click()}>
           Dateien auswählen
         </button>

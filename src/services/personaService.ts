@@ -4,12 +4,29 @@ import SERVER_CONFIG from '../config/server'
 const ADMIN_TOKEN_KEY = 'agata.adminToken'
 
 export type PersonaVisibility = 'public' | 'private'
+export type PersonaDocumentLanguage = 'de' | 'hsb' | 'dsb'
+
+export const PERSONA_LANGUAGES: Array<{
+  value: PersonaDocumentLanguage
+  label: string
+}> = [
+  { value: 'de', label: 'Deutsch' },
+  { value: 'hsb', label: 'Obersorbisch' },
+  { value: 'dsb', label: 'Niedersorbisch' },
+]
+
+export function personaLanguageLabel(
+  language: PersonaDocumentLanguage | null | undefined,
+): string {
+  return PERSONA_LANGUAGES.find(item => item.value === language)?.label ?? '—'
+}
 
 export type AdminPersona = {
   id: string
   name: string
   slug: string
   prompt: string
+  language: PersonaDocumentLanguage | null
   token: string
   topK: number
   webResultCount: number
@@ -26,6 +43,7 @@ export type AdminPersona = {
 export type PublicPersona = {
   name: string
   tag: string
+  language: PersonaDocumentLanguage | null
   visibility: 'public'
   canUpload: boolean
   canDelete: boolean
@@ -44,6 +62,7 @@ export type PersonaFormValues = {
   name: string
   slug: string
   prompt: string
+  language: PersonaDocumentLanguage | ''
   topK: number
   webResultCount: number
   tag: string
@@ -88,6 +107,9 @@ export function validatePersonaForm(input: PersonaFormValues): string | null {
     return 'Der Kurzname muss 2 bis 32 Zeichen haben und darf nur Buchstaben, Ziffern und Bindestriche enthalten.'
   }
   if (input.prompt.length > 20000) return 'Prompt darf höchstens 20000 Zeichen haben.'
+  if (input.language !== 'de' && input.language !== 'hsb' && input.language !== 'dsb') {
+    return 'Sprache ist ein Pflichtfeld.'
+  }
   if (!Number.isInteger(input.topK) || input.topK < 1 || input.topK > 50) {
     return 'RAG-Ergebnisse müssen eine ganze Zahl zwischen 1 und 50 sein.'
   }
@@ -149,6 +171,7 @@ export async function createPersona(
       name: values.name.trim(),
       slug: values.slug.trim().toLowerCase(),
       prompt: values.prompt,
+      language: values.language,
       topK: values.topK,
       webResultCount: values.webResultCount,
       tag: values.tag.trim(),
@@ -169,6 +192,7 @@ export async function updatePersona(
       name: values.name.trim(),
       slug: values.slug.trim().toLowerCase(),
       prompt: values.prompt,
+      language: values.language,
       topK: values.topK,
       webResultCount: values.webResultCount,
       tag: values.tag.trim(),

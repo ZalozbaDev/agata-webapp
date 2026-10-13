@@ -10,9 +10,11 @@ import {
   deletePersonaImage,
   fetchAdminPersonas,
   getAdminToken,
+  PERSONA_LANGUAGES,
   personaAccessPath,
   personaErrorMessage,
   personaImageUrl,
+  personaLanguageLabel,
   personaWebviewPath,
   setAdminToken,
   updatePersona,
@@ -45,6 +47,7 @@ import {
 type SortKey =
   | 'name'
   | 'slug'
+  | 'language'
   | 'topK'
   | 'webResultCount'
   | 'tag'
@@ -56,6 +59,7 @@ const emptyForm = (): PersonaFormValues => ({
   name: '',
   slug: '',
   prompt: '',
+  language: '',
   topK: 5,
   webResultCount: 0,
   tag: '',
@@ -70,6 +74,7 @@ const columns: Array<{
 }> = [
   { key: 'name', label: 'Name' },
   { key: 'slug', label: 'Kurzname' },
+  { key: 'language', label: 'Sprache' },
   { key: 'topK', label: 'RAG', align: 'center' },
   { key: 'webResultCount', label: 'Web', align: 'center' },
   { key: 'tag', label: 'Gruppen-Tag' },
@@ -97,6 +102,7 @@ const AdminPersonasPage: React.FC = () => {
   const [removeImage, setRemoveImage] = useState(false)
   const [storedImage, setStoredImage] = useState(false)
   const [slugLocked, setSlugLocked] = useState(false)
+  const [languageLocked, setLanguageLocked] = useState(false)
   const imageInputRef = useRef<HTMLInputElement>(null)
 
   const load = useCallback(async () => {
@@ -132,6 +138,7 @@ const AdminPersonasPage: React.FC = () => {
       return [
         persona.name,
         persona.slug,
+        personaLanguageLabel(persona.language),
         persona.prompt,
         persona.tag,
         persona.visibility,
@@ -181,6 +188,7 @@ const AdminPersonasPage: React.FC = () => {
     setRemoveImage(false)
     setStoredImage(false)
     setSlugLocked(false)
+    setLanguageLocked(false)
     setError(null)
   }
 
@@ -190,6 +198,7 @@ const AdminPersonasPage: React.FC = () => {
       name: persona.name,
       slug: persona.slug,
       prompt: persona.prompt,
+      language: persona.language ?? '',
       topK: persona.topK,
       webResultCount: persona.webResultCount ?? 0,
       tag: persona.tag,
@@ -200,6 +209,7 @@ const AdminPersonasPage: React.FC = () => {
     setRemoveImage(false)
     setStoredImage(Boolean(persona.hasImage))
     setSlugLocked(persona.protected)
+    setLanguageLocked(Boolean(persona.language))
     setImagePreview(
       persona.hasImage ? personaImageUrl(persona.slug || persona.id) : null,
     )
@@ -406,6 +416,7 @@ const AdminPersonasPage: React.FC = () => {
                     >
                       {persona.slug || '—'}
                     </td>
+                    <td style={tdStyle}>{personaLanguageLabel(persona.language)}</td>
                     <td style={{ ...tdStyle, textAlign: 'center' }}>
                       {persona.topK}
                     </td>
@@ -556,6 +567,36 @@ const AdminPersonasPage: React.FC = () => {
                   : editor.slug.trim()
                     ? personaWebviewPath(editor.slug.trim().toLowerCase())
                     : `${window.location.origin}/?persona=schule`}
+              </span>
+            </label>
+            <label style={fieldStyle}>
+              <span style={fieldLabelStyle}>Sprache</span>
+              <select
+                required
+                value={editor.language}
+                disabled={languageLocked}
+                onChange={event =>
+                  setEditor({
+                    ...editor,
+                    language: event.target.value as PersonaFormValues['language'],
+                  })
+                }
+                style={{
+                  ...inputStyle,
+                  ...(languageLocked ? { opacity: 0.7, cursor: 'not-allowed' } : {}),
+                }}
+              >
+                <option value="">Sprache wählen</option>
+                {PERSONA_LANGUAGES.map(language => (
+                  <option key={language.value} value={language.value}>
+                    {language.label}
+                  </option>
+                ))}
+              </select>
+              <span style={hintStyle}>
+                {languageLocked
+                  ? 'Die Sprache kann nach dem Anlegen nicht geändert werden.'
+                  : 'Dokumente werden in dieser Sprache gespeichert und durchsucht.'}
               </span>
             </label>
             <label style={fieldStyle}>
