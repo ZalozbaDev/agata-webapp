@@ -87,7 +87,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
 
   useEffect(() => {
     const personaId = getPersonaId()
-    if (!personaId || personaId === 'agata') {
+    if (!personaId) {
       setCustomImageReady(false)
       return
     }

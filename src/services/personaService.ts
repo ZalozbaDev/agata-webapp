@@ -17,6 +17,7 @@ export type AdminPersona = {
   tag: string
   visibility: PersonaVisibility
   allowExternalDelete: boolean
+  protected: boolean
   documentCount: number
   createdAt: string
   updatedAt: string

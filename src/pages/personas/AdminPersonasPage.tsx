@@ -107,6 +107,7 @@ const AdminPersonasPage: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [removeImage, setRemoveImage] = useState(false)
   const [storedImage, setStoredImage] = useState(false)
+  const [slugLocked, setSlugLocked] = useState(false)
   const imageInputRef = useRef<HTMLInputElement>(null)
 
   const load = useCallback(async () => {
@@ -191,6 +192,7 @@ const AdminPersonasPage: React.FC = () => {
     setImagePreview(null)
     setRemoveImage(false)
     setStoredImage(false)
+    setSlugLocked(false)
     setError(null)
   }
 
@@ -210,6 +212,7 @@ const AdminPersonasPage: React.FC = () => {
     setImageFile(null)
     setRemoveImage(false)
     setStoredImage(Boolean(persona.hasImage))
+    setSlugLocked(persona.protected)
     setImagePreview(
       persona.hasImage ? personaImageUrl(persona.slug || persona.id) : null,
     )
@@ -483,13 +486,23 @@ const AdminPersonasPage: React.FC = () => {
                         </button>
                         <button
                           type='button'
+                          disabled={persona.protected}
+                          title={
+                            persona.protected
+                              ? 'Main und Sip können nicht gelöscht werden.'
+                              : undefined
+                          }
                           style={{
                             ...actionButtonStyle,
                             ...dangerButtonStyle,
                             padding: '6px 10px',
                             fontSize: 12,
+                            opacity: persona.protected ? 0.4 : 1,
+                            cursor: persona.protected ? 'not-allowed' : 'pointer',
                           }}
-                          onClick={() => setPendingDelete(persona)}
+                          onClick={() => {
+                            if (!persona.protected) setPendingDelete(persona)
+                          }}
                         >
                           Löschen
                         </button>
@@ -568,16 +581,22 @@ const AdminPersonasPage: React.FC = () => {
               <input
                 required
                 value={editor.slug}
+                disabled={slugLocked}
                 onChange={event =>
                   setEditor({ ...editor, slug: event.target.value })
                 }
                 placeholder='schule'
-                style={inputStyle}
+                style={{
+                  ...inputStyle,
+                  ...(slugLocked ? { opacity: 0.7, cursor: 'not-allowed' } : {}),
+                }}
               />
               <span style={hintStyle}>
-                {editor.slug.trim()
-                  ? personaWebviewPath(editor.slug.trim().toLowerCase())
-                  : `${window.location.origin}/?persona=schule`}
+                {slugLocked
+                  ? 'Main und Sip behalten ihren Kurznamen. Der Prompt kann geändert werden.'
+                  : editor.slug.trim()
+                    ? personaWebviewPath(editor.slug.trim().toLowerCase())
+                    : `${window.location.origin}/?persona=schule`}
               </span>
             </label>
             <label style={fieldStyle}>

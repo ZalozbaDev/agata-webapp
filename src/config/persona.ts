@@ -1,6 +1,6 @@
 import { getConfig } from './server'
 
-export const DEFAULT_PERSONA_ID = 'agata'
+export const DEFAULT_PERSONA_ID = 'main'
 
 /**
  * The persona is a deployment setting (VITE_PERSONA / window._env_).
