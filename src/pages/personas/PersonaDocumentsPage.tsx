@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import LoadingSpinner from '../../components/LoadingSpinner'
+import { fileApiUrl } from '../../components/citations/sourceHelpers'
 import {
   type PersonaDocument,
   askAdminPersona,
@@ -315,7 +316,11 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
                 <tr key={document.id}>
                   <td style={tdStyle}>
                     <a
-                      href={`/datei?document=${encodeURIComponent(document.id)}`}
+                      href={
+                        fileKind(document) === 'PDF'
+                          ? fileApiUrl(document.id, 'document')
+                          : `/datei?document=${encodeURIComponent(document.id)}`
+                      }
                       target='_blank'
                       rel='noopener noreferrer'
                       style={{ color: '#8fd8c0', textDecoration: 'none' }}

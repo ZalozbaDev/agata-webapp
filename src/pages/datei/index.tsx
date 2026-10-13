@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { fileApiUrl, pdfLocationHash } from '../../components/citations/sourceHelpers'
 import SERVER_CONFIG from '../../config/server'
 
 function fileRequestUrl(source: string, documentId: string): string {
-  const base = String(SERVER_CONFIG.BASE_URL ?? '').replace(/\/$/, '')
-  if (!base) return ''
-  if (source) return `${base}/api/files?source=${encodeURIComponent(source)}`
-  if (documentId) return `${base}/api/files?document=${encodeURIComponent(documentId)}`
+  if (!String(SERVER_CONFIG.BASE_URL ?? '').replace(/\/$/, '')) return ''
+  if (source) return fileApiUrl(source, 'source')
+  if (documentId) return fileApiUrl(documentId, 'document')
   return ''
 }
 
@@ -28,6 +28,8 @@ const FileViewPage: React.FC = () => {
   const source = params.get('source')?.trim() ?? ''
   const documentId = params.get('document')?.trim() ?? ''
   const src = fileRequestUrl(source, documentId)
+  const pdfHash = pdfLocationHash(params.get('page'), params.get('q'))
+  const directHref = src ? `${src}${pdfHash}` : ''
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
   const [contentType, setContentType] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -46,6 +48,11 @@ const FileViewPage: React.FC = () => {
       return
     }
 
+    if (source.toLowerCase().startsWith('pdf:')) {
+      window.location.replace(`${src}${pdfHash}`)
+      return
+    }
+
     const controller = new AbortController()
     setBlobUrl(null)
     setContentType('')
@@ -55,8 +62,14 @@ const FileViewPage: React.FC = () => {
       try {
         const response = await fetch(src, { signal: controller.signal })
         const type = response.headers.get('content-type')?.split(';')[0]?.trim() || ''
+        const disposition = response.headers.get('content-disposition') || ''
         if (!response.ok) {
           throw new Error(plainMessage(await response.text()))
+        }
+        if (type.includes('pdf') || /\.pdf/i.test(disposition)) {
+          void response.body?.cancel()
+          window.location.replace(`${src}${pdfHash}`)
+          return
         }
         const bytes = await response.arrayBuffer()
         const url = URL.createObjectURL(new Blob([bytes], { type: type || 'application/octet-stream' }))
@@ -84,10 +97,9 @@ const FileViewPage: React.FC = () => {
       controller.abort()
       revoke()
     }
-  }, [src])
+  }, [src, pdfHash, source])
 
   const isHtml = contentType.includes('html')
-  const isPdf = contentType.includes('pdf')
 
   return (
     <div
@@ -103,17 +115,15 @@ const FileViewPage: React.FC = () => {
         overflow: 'hidden',
       }}
     >
-      {src ? (
+      {directHref ? (
         <p style={{ margin: 0, padding: '10px 16px', borderBottom: '1px solid #e4e4e7' }}>
-          <a href={src} target='_blank' rel='noopener noreferrer' style={{ color: '#0f6b4c' }}>
+          <a href={directHref} target='_blank' rel='noopener noreferrer' style={{ color: '#0f6b4c' }}>
             Datei direkt öffnen
           </a>
         </p>
       ) : null}
       {error ? (
         <p style={{ margin: 0, padding: 24 }}>{error}</p>
-      ) : blobUrl && isPdf ? (
-        <embed title='Dokument' type='application/pdf' src={blobUrl} style={{ flex: 1, width: '100%', minHeight: 0 }} />
       ) : blobUrl ? (
         <iframe
           title='Dokument'

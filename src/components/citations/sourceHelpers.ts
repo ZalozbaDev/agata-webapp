@@ -1,4 +1,5 @@
 import type { ChatSource } from '../../services/api'
+import SERVER_CONFIG from '../../config/server'
 
 const SOURCE_REF_RE = /\[\[(S\d+)\]\]|\[(S\d+)\]/g
 
@@ -11,17 +12,108 @@ function fileNameFromPath(value: string): string | null {
   return fileName || null
 }
 
+function looksLikeHtml(value: string): boolean {
+  return /\.html?($|[?#])/i.test(value)
+}
+
+function looksLikePdf(value: string): boolean {
+  return /\.pdf($|[?#])/i.test(value)
+}
+
+function isAppFileUrl(href: string): boolean {
+  try {
+    return new URL(href, 'http://local').pathname.endsWith('/api/files')
+  } catch {
+    return false
+  }
+}
+
+/** Browser-native file URL. `source` is a chat citation id, `document` an uploaded file id. */
+export function fileApiUrl(id: string, key: 'source' | 'document' = 'source'): string {
+  const path = `/api/files?${key}=${encodeURIComponent(id)}`
+  const base = String(SERVER_CONFIG.BASE_URL ?? '').replace(/\/$/, '')
+  return base ? `${base}${path}` : path
+}
+
+function pageNumber(value: number | string | null | undefined): number | null {
+  const page = typeof value === 'string' ? Number(value) : value
+  if (page == null || !Number.isFinite(page) || page < 1) return null
+  return Math.trunc(page)
+}
+
+/** RAG contexts are wrapped as "Titel: …\\nInhalt: …". Only the body is in the PDF. */
+function citationBody(snippet: string): string {
+  const wrapped = snippet.match(/^Titel:\s*[\s\S]*?\nInhalt:\s*([\s\S]+)/i)
+  return (wrapped?.[1] ?? snippet).replace(/\s+/g, ' ').trim()
+}
+
+/** Short passage from the RAG snippet, stable enough for a PDF text search. */
+function pdfSearchPhrase(snippet?: string | null): string | null {
+  if (!snippet) return null
+  const cleaned = citationBody(snippet).replace(/^[\s"'„“”«»-]+|[\s"'„“”«»-]+$/g, '')
+  if (cleaned.length < 12) return null
+  const cut = cleaned.slice(0, 80)
+  const boundary = cut.lastIndexOf(' ')
+  const phrase = (boundary > 24 ? cut.slice(0, boundary) : cut).replace(/[.,;:!?]+$/g, '').trim()
+  return phrase.length >= 12 ? phrase : null
+}
+
+/**
+ * Opens the PDF on the RAG page. `search` is the Firefox viewer query;
+ * `:~:text=` highlights the same passage in Chrome.
+ */
+export function pdfLocationHash(
+  page?: number | string | null,
+  snippet?: string | null,
+): string {
+  const parts: string[] = []
+  const resolvedPage = pageNumber(page)
+  if (resolvedPage != null) parts.push(`page=${resolvedPage}`)
+
+  const phrase = pdfSearchPhrase(snippet)
+  if (!phrase) return parts.length ? `#${parts.join('&')}` : ''
+
+  const encoded = encodeURIComponent(phrase)
+  parts.push(`search=${encoded}`)
+  return `#${parts.join('&')}:~:text=${encoded}`
+}
+
+function withPdfLocation(url: string, source: ChatSource): string {
+  const hash = pdfLocationHash(source.page, source.snippet)
+  if (!hash) return url
+  return `${url.split('#')[0]}${hash}`
+}
+
+function isPdfSource(source: ChatSource, raw: string): boolean {
+  const id = (source.documentId || '').toLowerCase()
+  if (id.startsWith('html:')) return false
+  if (id.startsWith('pdf:')) return true
+
+  const label = `${raw} ${source.title || ''}`
+  if (looksLikeHtml(label)) return false
+  if (looksLikePdf(label)) return true
+  return source.type === 'rag' && pageNumber(source.page) != null
+}
+
 export function stripSourceRefs(text: string): string {
   return text.replace(SOURCE_REF_RE, '').replace(/\s{2,}/g, ' ').trim()
 }
 
 export function sourceHref(source: ChatSource): string | null {
-  if (source.type === 'web' && source.url && isHttpUrl(source.url)) return source.url
-
   const raw = source.documentUrl || source.url || ''
-  if (raw && isHttpUrl(raw)) return raw
+
+  if (source.type === 'web' && source.url && isHttpUrl(source.url)) {
+    return isPdfSource(source, source.url) ? withPdfLocation(source.url, source) : source.url
+  }
+
+  if (raw && isHttpUrl(raw)) {
+    return isPdfSource(source, raw) ? withPdfLocation(raw, source) : raw
+  }
 
   if (source.type === 'rag' && source.documentId) {
+    if (isPdfSource(source, raw)) {
+      return withPdfLocation(fileApiUrl(source.documentId, 'source'), source)
+    }
     const params = new URLSearchParams({ source: source.documentId })
     return `/datei?${params.toString()}`
   }
@@ -39,7 +131,7 @@ export function sourceDomainLabel(source: ChatSource): string {
   }
 
   const href = sourceHref(source)
-  if (href) {
+  if (href && !isAppFileUrl(href)) {
     try {
       const parsed = new URL(href)
       if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
@@ -105,7 +197,7 @@ function formatDisplayDate(value: string): string {
 export function faviconUrl(source: ChatSource): string | null {
   const domain = source.domain || (() => {
     const href = sourceHref(source)
-    if (!href) return null
+    if (!href || isAppFileUrl(href)) return null
     try {
       return new URL(href).hostname
     } catch {
