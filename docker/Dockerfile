@@ -13,6 +13,8 @@ RUN npm run build
 # deployment container
 FROM nginx:stable-alpine
 
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=webappbuild /app/dist /usr/share/nginx/html
 # internal port is 80
 CMD ["nginx", "-g", "daemon off;"]
