@@ -10,6 +10,7 @@ import { useWociCentered } from '../../components/woci-mikanje/WociCenteredConte
 const starttilearray: { title: string }[] = [
   { title: 'Budź chwaleny Jězus Chrystus.' },
   { title: 'Pomhaj Bóh.' },
+  { title: 'HEY mam wot nětka mótkow. Wuspytaj jich...' },
   { title: 'Witaj, rjenje zo mje wopytaš ☺️' },
   { title: 'Klikń mi na mjezwočo, potom so powjetšu.' },
   { title: 'Zapodaj swoje prašenje prošu w porjadnej serbšćinje!' },
@@ -37,7 +38,9 @@ const StartScreen: React.FC<{
   isRecording = false,
   showMicrophone = true,
 }) => {
-  const [titleIdx, setTitleIdx] = useState(() => Math.floor(Math.random() * starttilearray.length))
+  const [titleIdx, setTitleIdx] = useState(() =>
+    Math.floor(Math.random() * starttilearray.length),
+  )
   const [fade, setFade] = useState(true)
 
   useEffect(() => {
