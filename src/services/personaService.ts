@@ -92,6 +92,31 @@ export function personaWebviewPath(slug: string): string {
   return url.toString()
 }
 
+export type PersonaAppearance = {
+  language: PersonaDocumentLanguage | null
+  hasImage: boolean
+}
+
+export async function fetchPersonaAppearance(
+  key: string,
+): Promise<PersonaAppearance | null> {
+  try {
+    const response = await publicApi().get<PersonaAppearance>(
+      `/api/personas/${encodeURIComponent(key)}/appearance`,
+    )
+    const language = response.data.language
+    return {
+      language:
+        language === 'de' || language === 'hsb' || language === 'dsb'
+          ? language
+          : null,
+      hasImage: Boolean(response.data.hasImage),
+    }
+  } catch {
+    return null
+  }
+}
+
 export function personaImageUrl(key: string): string {
   const base = String(SERVER_CONFIG.BASE_URL ?? '').replace(/\/$/, '')
   return `${base}/api/personas/${encodeURIComponent(key)}/image`

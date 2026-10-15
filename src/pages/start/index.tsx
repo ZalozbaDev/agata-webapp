@@ -26,6 +26,7 @@ const StartScreen: React.FC<{
   isLoading?: boolean
   onRecordingToggle?: () => void
   isRecording?: boolean
+  showMicrophone?: boolean
 }> = ({
   input,
   onInputChange,
@@ -34,6 +35,7 @@ const StartScreen: React.FC<{
   isLoading = false,
   onRecordingToggle,
   isRecording = false,
+  showMicrophone = true,
 }) => {
   const [titleIdx, setTitleIdx] = useState(() => Math.floor(Math.random() * starttilearray.length))
   const [fade, setFade] = useState(true)
@@ -81,6 +83,7 @@ const StartScreen: React.FC<{
             isLoading={isLoading}
             onRecordingToggle={onRecordingToggle}
             isRecording={isRecording}
+            showMicrophone={showMicrophone}
           />
         </div>
       ) : null}
@@ -103,6 +106,7 @@ const StartScreen: React.FC<{
             isLoading={isLoading}
             onRecordingToggle={onRecordingToggle}
             isRecording={isRecording}
+            showMicrophone={showMicrophone}
           />
         </div>
       ) : null}

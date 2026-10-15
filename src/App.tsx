@@ -20,6 +20,7 @@ import TalkingPuppet from './components/lotti/index.tsx'
 import { BamborakAudioResponse } from './types/bamborak'
 import { ChatApp } from './ChatApp.tsx'
 import visitorService from './services/visitorService.ts'
+import { usePersonaChrome } from './hooks/usePersonaChrome'
 // import { Cookies }  from './components/cookies/index.tsx'
 
 const AppContent: React.FC = () => {
@@ -52,6 +53,7 @@ const AppContentInner: React.FC<{
 }> = ({ appStyle, spacerStyle }) => {
   const location = useLocation()
   const isMain = location.pathname === '/'
+  const personaChrome = usePersonaChrome()
 
   const [isWide, setIsWide] = useReactState(() => window.innerWidth > 950)
   const [ishigh, setishigh] = useReactState(() => window.innerHeight > 670)
@@ -129,6 +131,8 @@ const AppContentInner: React.FC<{
           centagataOn={centagataOn}
           agataOn={agataOn}
           wabjenjeOn={wabjenjeOn}
+          showAgataSettings={personaChrome.showPuppet}
+          showSidebarSettings={personaChrome.showSidebar}
           onChangecentagata={isActive => {
             setcentagataOn(isActive)
           }}
@@ -140,21 +144,36 @@ const AppContentInner: React.FC<{
           }}
         />
         {/*isMain && <Cookies /> */}
-        {isMain && (isCentered || isExtraWide) && isextrahigh && agataOn && (
+        {isMain &&
+          personaChrome.showPuppet &&
+          (isCentered || isExtraWide) &&
+          isextrahigh &&
+          agataOn && (
           <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
             <TalkingPuppet
-              audioFile={audioUrl}
-              visemes={bamborakResponse?.visemes}
-              duration={bamborakResponse?.duration}
+              audioFile={personaChrome.speak ? audioUrl : null}
+              visemes={personaChrome.speak ? bamborakResponse?.visemes : undefined}
+              duration={personaChrome.speak ? bamborakResponse?.duration : undefined}
+              lipsync={personaChrome.speak}
             />
           </WociMikanje>
         )}
-        {isMain && isWide && isextrahigh && wabjenjeOn && <Wabjenje />}
+        {isMain &&
+          personaChrome.showSidebar &&
+          isWide &&
+          isextrahigh &&
+          wabjenjeOn && <Wabjenje />}
         <div style={spacerStyle} /> {/* Spacer for fixed header */}
         <Routes>
           <Route
             path='/'
-            element={<ChatApp onGetAudio={onGetAudio} ipAddress={ipAddress} />}
+            element={
+              <ChatApp
+                onGetAudio={onGetAudio}
+                ipAddress={ipAddress}
+                speak={personaChrome.speak}
+              />
+            }
           />
           <Route path='/urls' element={<UrlsPage />} />
           <Route path='/data' element={<DataPage />} />

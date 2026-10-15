@@ -21,6 +21,7 @@ const ChatScreen: React.FC<{
   onRetry?: () => void
   onRecordingToggle?: () => void
   isRecording?: boolean
+  showMicrophone?: boolean
 }> = ({
   messages,
   input,
@@ -32,6 +33,7 @@ const ChatScreen: React.FC<{
   onRetry,
   onRecordingToggle,
   isRecording = false,
+  showMicrophone = true,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -78,6 +80,7 @@ const ChatScreen: React.FC<{
             isLoading={isLoading}
             onRecordingToggle={onRecordingToggle}
             isRecording={isRecording}
+            showMicrophone={showMicrophone}
           />
         </div>
       ) : (
@@ -90,6 +93,7 @@ const ChatScreen: React.FC<{
             isLoading={isLoading}
             onRecordingToggle={onRecordingToggle}
             isRecording={isRecording}
+            showMicrophone={showMicrophone}
           />
         </div>
       )}

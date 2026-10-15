@@ -24,7 +24,9 @@ export const ChatApp: React.FC<{
     bamborakResponse: BamborakAudioResponse
   ) => void
   ipAddress: string
-}> = ({ onGetAudio, ipAddress }) => {
+  /** Spoken answers and the microphone are limited to Upper Sorbian personas. */
+  speak?: boolean
+}> = ({ onGetAudio, ipAddress, speak = true }) => {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [input, setInput] = useState('')
   const [started, setStarted] = useState(false)
@@ -96,23 +98,25 @@ export const ChatApp: React.FC<{
 
       const answerText = response.answer ?? response.message
       const sources = response.sources ?? []
-      getAudioFromText(stripSourceRefs(answerText), 'katka_2025_07').then(
-        bamborakResponse => {
-          // Convert base64 audio to ArrayBuffer
-          const audioData = atob(bamborakResponse.audio)
-          const audioArray = new Uint8Array(audioData.length)
-          for (let i = 0; i < audioData.length; i++) {
-            audioArray[i] = audioData.charCodeAt(i)
-          }
-          const audioBuffer = audioArray.buffer
+      if (speak) {
+        getAudioFromText(stripSourceRefs(answerText), 'katka_2025_07').then(
+          bamborakResponse => {
+            // Convert base64 audio to ArrayBuffer
+            const audioData = atob(bamborakResponse.audio)
+            const audioArray = new Uint8Array(audioData.length)
+            for (let i = 0; i < audioData.length; i++) {
+              audioArray[i] = audioData.charCodeAt(i)
+            }
+            const audioBuffer = audioArray.buffer
 
-          // Create blob URL for the audio
-          const blob = new Blob([audioBuffer], { type: 'audio/wav' })
-          const url = URL.createObjectURL(blob)
-          setAudioUrl(url)
-          onGetAudio(url, bamborakResponse)
-        }
-      )
+            // Create blob URL for the audio
+            const blob = new Blob([audioBuffer], { type: 'audio/wav' })
+            const url = URL.createObjectURL(blob)
+            setAudioUrl(url)
+            onGetAudio(url, bamborakResponse)
+          }
+        )
+      }
       setMessages(msgs => [
         ...msgs,
         {
@@ -134,7 +138,7 @@ export const ChatApp: React.FC<{
     } finally {
       setIsLoading(false)
     }
-  }, [input, isLoading, started])
+  }, [input, isLoading, started, speak, ipAddress, onGetAudio])
 
   const handleRetry = useCallback(
     async (message: string) => {
@@ -207,6 +211,7 @@ export const ChatApp: React.FC<{
           isLoading={isLoading}
           onRecordingToggle={handleRecordingToggle}
           isRecording={recording.isRecording}
+          showMicrophone={speak}
         />
       ) : (
         <ChatScreen
@@ -224,6 +229,7 @@ export const ChatApp: React.FC<{
           }
           onRecordingToggle={handleRecordingToggle}
           isRecording={recording.isRecording}
+          showMicrophone={speak}
         />
       )}
     </div>

@@ -20,6 +20,7 @@ const ChatInput: React.FC<{
   isLoading?: boolean
   onRecordingToggle?: () => void
   isRecording?: boolean
+  showMicrophone?: boolean
 }> = ({
   value,
   onChange,
@@ -28,6 +29,7 @@ const ChatInput: React.FC<{
   isLoading = false,
   onRecordingToggle,
   isRecording = false,
+  showMicrophone = true,
 }) => {
   useEffect(() => {
     registerInputSetter((newValue) => {
@@ -103,30 +105,32 @@ const ChatInput: React.FC<{
           disabled={isLoading}
           autoFocus
         />
-        <button
-          style={recordingButtonStyle}
-          disabled={isLoading}
-          onClick={() => {
-            onRecordingToggle && onRecordingToggle()
-          }}
-          title={isRecording ? 'Stop Recording' : 'Start Recording'}
-        >
-          <MicIcon />
-          {isRecording && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '2px',
-                right: '2px',
-                width: '8px',
-                height: '8px',
-                backgroundColor: '#fff',
-                borderRadius: '50%',
-                animation: 'pulse 1.5s ease-in-out infinite',
-              }}
-            />
-          )}
-        </button>
+        {showMicrophone && (
+          <button
+            style={recordingButtonStyle}
+            disabled={isLoading}
+            onClick={() => {
+              onRecordingToggle && onRecordingToggle()
+            }}
+            title={isRecording ? 'Stop Recording' : 'Start Recording'}
+          >
+            <MicIcon />
+            {isRecording && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '2px',
+                  right: '2px',
+                  width: '8px',
+                  height: '8px',
+                  backgroundColor: '#fff',
+                  borderRadius: '50%',
+                  animation: 'pulse 1.5s ease-in-out infinite',
+                }}
+              />
+            )}
+          </button>
+        )}
         <button
           style={disabledSendButtonStyle}
           onClick={handleSendClick}

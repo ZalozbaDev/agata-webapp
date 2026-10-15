@@ -30,6 +30,8 @@ const Header: React.FC<{
   centagataOn: boolean
   agataOn: boolean
   wabjenjeOn: boolean
+  showAgataSettings?: boolean
+  showSidebarSettings?: boolean
   onChangecentagata: (isActive: boolean) => void
   onChangeagata: (isActive: boolean) => void
   onChangeWabjenje: (isActive: boolean) => void
@@ -42,6 +44,8 @@ const Header: React.FC<{
   onChangeagata,
   wabjenjeOn,
   onChangeWabjenje,
+  showAgataSettings = true,
+  showSidebarSettings = true,
 }) => {
   // Show top middle text for 20 seconds, then hide
   const [showTopMiddle, setShowTopMiddle] = useState(false) // TODO: Apply when needed
@@ -308,43 +312,51 @@ const Header: React.FC<{
               marginRight: '5rem',
             }}
           >
-            <input
-              type='checkbox'
-              name='Wabjenje'
-              id='wabjenje'
-              checked={wabjenjeOn}
-              onChange={e => {
-                onChangeWabjenje(e.target.checked)
-              }}
-              style={checkboxstyle}
-            />{' '}
-            wotkazy
-            <p>
-              <input
-                type='checkbox'
-                name='Agata'
-                id='agata'
-                checked={agataOn}
-                onChange={e => {
-                  onChangeagata(e.target.checked)
-                }}
-                style={checkboxstyle}
-              />{' '}
-              Agata
-            </p>
-            <p>
-              <input
-                type='checkbox'
-                name='Centrěrowana Agata'
-                id='centagata'
-                checked={centagataOn}
-                onChange={e => {
-                  onChangecentagata(e.target.checked)
-                }}
-                style={checkboxstyle}
-              />
-              AGATA na šmóratku
-            </p>
+            {showSidebarSettings && (
+              <>
+                <input
+                  type='checkbox'
+                  name='Wabjenje'
+                  id='wabjenje'
+                  checked={wabjenjeOn}
+                  onChange={e => {
+                    onChangeWabjenje(e.target.checked)
+                  }}
+                  style={checkboxstyle}
+                />{' '}
+                wotkazy
+              </>
+            )}
+            {showAgataSettings && (
+              <>
+                <p>
+                  <input
+                    type='checkbox'
+                    name='Agata'
+                    id='agata'
+                    checked={agataOn}
+                    onChange={e => {
+                      onChangeagata(e.target.checked)
+                    }}
+                    style={checkboxstyle}
+                  />{' '}
+                  Agata
+                </p>
+                <p>
+                  <input
+                    type='checkbox'
+                    name='Centrěrowana Agata'
+                    id='centagata'
+                    checked={centagataOn}
+                    onChange={e => {
+                      onChangecentagata(e.target.checked)
+                    }}
+                    style={checkboxstyle}
+                  />
+                  AGATA na šmóratku
+                </p>
+              </>
+            )}
           </div>
         </div>
       )}

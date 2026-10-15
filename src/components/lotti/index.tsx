@@ -54,12 +54,15 @@ interface TalkingPuppetProps {
     | Viseme[]
     | { visemes: Viseme[]; duration?: number; sampleRate?: number }
   duration?: number
+  /** Mouth animation and spoken audio. Custom images stay visible without it. */
+  lipsync?: boolean
 }
 
 const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
   audioFile,
   visemes,
   duration = 0,
+  lipsync = true,
 }) => {
   const [isCentered, setIsCentered] = useState(false)
   // Handle viseme data structure - it might be an object with visemes property or direct array
@@ -483,7 +486,7 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
               display: 'block',
             }}
           />
-        ) : (
+        ) : lipsync ? (
           <>
         {/* Display the current viseme image */}
         <img
@@ -583,8 +586,8 @@ const TalkingPuppet: React.FC<TalkingPuppetProps> = ({
           }}
         />
           </>
-        )}
-        {audioFile && (
+        ) : null}
+        {lipsync && audioFile && (
           <audio ref={audioRef} src={audioFile} style={{ display: 'none' }} />
         )}
       </div>
