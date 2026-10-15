@@ -1,6 +1,8 @@
 import { getConfig } from './server'
 
 export const DEFAULT_PERSONA_ID = 'main'
+/** Bamborak voice used when a persona has none of its own. */
+export const DEFAULT_SPEAKER_ID = 'katka_2025_07'
 
 /**
  * The persona is a deployment setting (VITE_PERSONA / window._env_).

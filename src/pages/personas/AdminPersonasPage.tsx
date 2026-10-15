@@ -21,6 +21,9 @@ import {
   uploadPersonaImage,
   validatePersonaForm,
 } from '../../services/personaService'
+import { DEFAULT_SPEAKER_ID } from '../../config/persona'
+import { getAvailableSpeakers } from '../../services/bamborak'
+import type { BamborakSpeaker } from '../../types/bamborak'
 import {
   actionButtonStyle,
   cardStyle,
@@ -48,6 +51,7 @@ type SortKey =
   | 'name'
   | 'slug'
   | 'language'
+  | 'speakerId'
   | 'topK'
   | 'webResultCount'
   | 'tag'
@@ -63,9 +67,32 @@ const emptyForm = (): PersonaFormValues => ({
   topK: 5,
   webResultCount: 0,
   tag: '',
+  speakerId: DEFAULT_SPEAKER_ID,
   visibility: 'private',
   allowExternalDelete: false,
 })
+
+const SPEAKER_LANGUAGE_LABELS: Record<string, string> = {
+  hsb: 'Obersorbisch',
+  de: 'Deutsch',
+  dsb: 'Niedersorbisch',
+}
+
+function speakerLanguageLabel(language: string): string {
+  return SPEAKER_LANGUAGE_LABELS[language] ?? language
+}
+
+function speakerOptionLabel(speaker: BamborakSpeaker): string {
+  const language = speakerLanguageLabel(speaker.language)
+  return language ? `${speaker.name} · ${language}` : speaker.name
+}
+
+function speakerName(id: string, speakers: BamborakSpeaker[]): string {
+  return (
+    speakers.find(speaker => speaker.id === id)?.name ??
+    (id === DEFAULT_SPEAKER_ID ? 'Katka (2025)' : id || '—')
+  )
+}
 
 const columns: Array<{
   key: SortKey
@@ -75,6 +102,7 @@ const columns: Array<{
   { key: 'name', label: 'Name' },
   { key: 'slug', label: 'Kurzname' },
   { key: 'language', label: 'Sprache' },
+  { key: 'speakerId', label: 'Stimme' },
   { key: 'topK', label: 'RAG', align: 'center' },
   { key: 'webResultCount', label: 'Web', align: 'center' },
   { key: 'tag', label: 'Gruppen-Tag' },
@@ -103,7 +131,21 @@ const AdminPersonasPage: React.FC = () => {
   const [storedImage, setStoredImage] = useState(false)
   const [slugLocked, setSlugLocked] = useState(false)
   const [languageLocked, setLanguageLocked] = useState(false)
+  const [speakers, setSpeakers] = useState<BamborakSpeaker[]>([])
+  const [speakersError, setSpeakersError] = useState<string | null>(null)
   const imageInputRef = useRef<HTMLInputElement>(null)
+
+  const loadSpeakers = useCallback(async () => {
+    try {
+      setSpeakersError(null)
+      const available = await getAvailableSpeakers()
+      setSpeakers(available)
+    } catch {
+      setSpeakersError(
+        'Die Stimmen konnten nicht geladen werden. Es bleibt die bisherige Stimme.',
+      )
+    }
+  }, [])
 
   const load = useCallback(async () => {
     try {
@@ -141,6 +183,8 @@ const AdminPersonasPage: React.FC = () => {
         personaLanguageLabel(persona.language),
         persona.prompt,
         persona.tag,
+        persona.speakerId,
+        speakerName(persona.speakerId, speakers),
         persona.visibility,
       ]
         .join(' ')
@@ -159,7 +203,29 @@ const AdminPersonasPage: React.FC = () => {
       return sortAsc ? result : -result
     })
     return sorted
-  }, [personas, query, sortAsc, sortKey])
+  }, [personas, query, sortAsc, sortKey, speakers])
+
+  const speakerChoices = useMemo(() => {
+    const byId = new Map(speakers.map(speaker => [speaker.id, speaker]))
+    const selected = editor?.speakerId?.trim() || DEFAULT_SPEAKER_ID
+    if (!byId.has(DEFAULT_SPEAKER_ID)) {
+      byId.set(DEFAULT_SPEAKER_ID, {
+        id: DEFAULT_SPEAKER_ID,
+        name: 'Katka (2025)',
+        language: 'hsb',
+      })
+    }
+    if (!byId.has(selected)) {
+      byId.set(selected, { id: selected, name: selected, language: '' })
+    }
+    const preferred = editor?.language
+    return [...byId.values()].sort((left, right) => {
+      const leftMatch = preferred && left.language === preferred ? 0 : 1
+      const rightMatch = preferred && right.language === preferred ? 0 : 1
+      if (leftMatch !== rightMatch) return leftMatch - rightMatch
+      return left.name.localeCompare(right.name, 'de')
+    })
+  }, [editor, speakers])
 
   const onSort = (key: SortKey) => {
     if (sortKey === key) setSortAsc(current => !current)
@@ -190,6 +256,7 @@ const AdminPersonasPage: React.FC = () => {
     setSlugLocked(false)
     setLanguageLocked(false)
     setError(null)
+    void loadSpeakers()
   }
 
   const openEdit = (persona: AdminPersona) => {
@@ -202,6 +269,7 @@ const AdminPersonasPage: React.FC = () => {
       topK: persona.topK,
       webResultCount: persona.webResultCount ?? 0,
       tag: persona.tag,
+      speakerId: persona.speakerId || DEFAULT_SPEAKER_ID,
       visibility: persona.visibility,
       allowExternalDelete: persona.allowExternalDelete,
     })
@@ -214,6 +282,7 @@ const AdminPersonasPage: React.FC = () => {
       persona.hasImage ? personaImageUrl(persona.slug || persona.id) : null,
     )
     setError(null)
+    void loadSpeakers()
   }
 
   const onSave = async (event: React.FormEvent) => {
@@ -417,6 +486,7 @@ const AdminPersonasPage: React.FC = () => {
                       {persona.slug || '—'}
                     </td>
                     <td style={tdStyle}>{personaLanguageLabel(persona.language)}</td>
+                    <td style={tdStyle}>{speakerName(persona.speakerId, speakers)}</td>
                     <td style={{ ...tdStyle, textAlign: 'center' }}>
                       {persona.topK}
                     </td>
@@ -597,6 +667,27 @@ const AdminPersonasPage: React.FC = () => {
                 {languageLocked
                   ? 'Die Sprache kann nach dem Anlegen nicht geändert werden.'
                   : 'Dokumente werden in dieser Sprache gespeichert und durchsucht.'}
+              </span>
+            </label>
+            <label style={fieldStyle}>
+              <span style={fieldLabelStyle}>Stimme</span>
+              <select
+                value={editor.speakerId}
+                onChange={event =>
+                  setEditor({ ...editor, speakerId: event.target.value })
+                }
+                style={inputStyle}
+              >
+                {speakerChoices.map(speaker => (
+                  <option key={speaker.id} value={speaker.id}>
+                    {speakerOptionLabel(speaker)}
+                  </option>
+                ))}
+              </select>
+              <span style={hintStyle}>
+                {speakersError
+                  ? speakersError
+                  : 'Die Antworten im Chat werden mit dieser Stimme vorgelesen. Standard ist Katka (2025).'}
               </span>
             </label>
             <label style={fieldStyle}>

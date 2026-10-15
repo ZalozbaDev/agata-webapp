@@ -1,5 +1,6 @@
 import axios from 'axios'
 import SERVER_CONFIG from '../config/server'
+import { DEFAULT_SPEAKER_ID } from '../config/persona'
 
 const ADMIN_TOKEN_KEY = 'agata.adminToken'
 
@@ -32,6 +33,7 @@ export type AdminPersona = {
   webResultCount: number
   hasImage: boolean
   tag: string
+  speakerId: string
   visibility: PersonaVisibility
   allowExternalDelete: boolean
   protected: boolean
@@ -66,6 +68,7 @@ export type PersonaFormValues = {
   topK: number
   webResultCount: number
   tag: string
+  speakerId: string
   visibility: PersonaVisibility
   allowExternalDelete: boolean
 }
@@ -95,6 +98,7 @@ export function personaWebviewPath(slug: string): string {
 export type PersonaAppearance = {
   language: PersonaDocumentLanguage | null
   hasImage: boolean
+  speakerId: string
 }
 
 export async function fetchPersonaAppearance(
@@ -111,6 +115,7 @@ export async function fetchPersonaAppearance(
           ? language
           : null,
       hasImage: Boolean(response.data.hasImage),
+      speakerId: response.data.speakerId?.trim() || DEFAULT_SPEAKER_ID,
     }
   } catch {
     return null
@@ -146,6 +151,11 @@ export function validatePersonaForm(input: PersonaFormValues): string | null {
     return 'Web-Ergebnisse müssen eine ganze Zahl zwischen 0 und 20 sein.'
   }
   if (input.tag.trim().length > 80) return 'Tag darf höchstens 80 Zeichen haben.'
+  const speakerId = input.speakerId.trim()
+  if (!speakerId) return 'Stimme ist ein Pflichtfeld.'
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,63}$/.test(speakerId)) {
+    return 'Die Stimme ist ungültig.'
+  }
   if (input.visibility !== 'public' && input.visibility !== 'private') {
     return 'Sichtbarkeit muss öffentlich oder privat sein.'
   }
@@ -200,6 +210,7 @@ export async function createPersona(
       topK: values.topK,
       webResultCount: values.webResultCount,
       tag: values.tag.trim(),
+      speakerId: values.speakerId.trim(),
       visibility: values.visibility,
       allowExternalDelete: values.allowExternalDelete,
     },
@@ -221,6 +232,7 @@ export async function updatePersona(
       topK: values.topK,
       webResultCount: values.webResultCount,
       tag: values.tag.trim(),
+      speakerId: values.speakerId.trim(),
       visibility: values.visibility,
       allowExternalDelete: values.allowExternalDelete,
     },

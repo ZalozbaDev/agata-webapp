@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
-import { DEFAULT_PERSONA_ID, getPersonaId } from '../config/persona'
+import { DEFAULT_PERSONA_ID, DEFAULT_SPEAKER_ID, getPersonaId } from '../config/persona'
 import {
   fetchPersonaAppearance,
   type PersonaDocumentLanguage,
 } from '../services/personaService'
 
 /**
- * Upper Sorbian personas keep Agata, speech, and the microphone.
- * Any other language hides those, unless a custom image should stand in
- * for Agata. The left image sidebar belongs only to the main persona.
+ * Upper Sorbian personas keep Agata's mouth and the microphone.
+ * Every persona reads its answers aloud with its own Bamborak speaker.
+ * The left image sidebar belongs only to the main persona.
  */
 export function usePersonaChrome() {
   const personaId = getPersonaId()
@@ -17,6 +17,7 @@ export function usePersonaChrome() {
     isMainPersona ? 'hsb' : null,
   )
   const [hasImage, setHasImage] = useState(false)
+  const [speakerId, setSpeakerId] = useState(DEFAULT_SPEAKER_ID)
 
   useEffect(() => {
     let cancelled = false
@@ -24,6 +25,7 @@ export function usePersonaChrome() {
       if (cancelled || !appearance) return
       setLanguage(appearance.language)
       setHasImage(appearance.hasImage)
+      setSpeakerId(appearance.speakerId?.trim() || DEFAULT_SPEAKER_ID)
     })
     return () => {
       cancelled = true
@@ -34,7 +36,9 @@ export function usePersonaChrome() {
   return {
     isMainPersona,
     hasImage,
-    speak: upperSorbian,
+    speakerId,
+    readAnswers: true,
+    lipsync: upperSorbian,
     showMicrophone: upperSorbian,
     showPuppet: upperSorbian || hasImage,
     showSidebar: isMainPersona,

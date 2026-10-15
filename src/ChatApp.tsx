@@ -10,6 +10,7 @@ import { useRecording } from './hooks/useRecording.ts'
 import { Settings } from './types/settings.ts'
 import { useAudioContext } from './hooks/useAudioContext.ts'
 import { stripSourceRefs } from './components/citations/sourceHelpers'
+import { DEFAULT_SPEAKER_ID } from './config/persona'
 
 const chatAppStyle: React.CSSProperties = {
   flex: 1,
@@ -24,9 +25,19 @@ export const ChatApp: React.FC<{
     bamborakResponse: BamborakAudioResponse
   ) => void
   ipAddress: string
-  /** Spoken answers and the microphone are limited to Upper Sorbian personas. */
+  /** Read answers aloud with the persona speaker. */
   speak?: boolean
-}> = ({ onGetAudio, ipAddress, speak = true }) => {
+  /** Voice used until the chat response names the persona speaker. */
+  speakerId?: string
+  /** The microphone stays limited to Upper Sorbian personas. */
+  showMicrophone?: boolean
+}> = ({
+  onGetAudio,
+  ipAddress,
+  speak = true,
+  speakerId = DEFAULT_SPEAKER_ID,
+  showMicrophone = false,
+}) => {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [input, setInput] = useState('')
   const [started, setStarted] = useState(false)
@@ -50,6 +61,7 @@ export const ChatApp: React.FC<{
 
   // Add missing timeOffsetRef
   const timeOffsetRef = useRef<number>(0)
+  const speechRequestRef = useRef(0)
 
   const audioContext = useAudioContext()
   const recording = useRecording(mediaStreamSettings, selectedMicrophone, {
@@ -66,6 +78,31 @@ export const ChatApp: React.FC<{
       setInput(transcribedText)
     }
   }, [inputText])
+
+  const readAnswer = useCallback(
+    (answerText: string, voice?: string) => {
+      if (!speak) return
+      const requestId = ++speechRequestRef.current
+      const speaker = voice?.trim() || speakerId.trim() || DEFAULT_SPEAKER_ID
+      getAudioFromText(stripSourceRefs(answerText), speaker)
+        .then(bamborakResponse => {
+          if (speechRequestRef.current !== requestId) return
+          const audioData = atob(bamborakResponse.audio)
+          const audioArray = new Uint8Array(audioData.length)
+          for (let i = 0; i < audioData.length; i++) {
+            audioArray[i] = audioData.charCodeAt(i)
+          }
+          const blob = new Blob([audioArray.buffer], { type: 'audio/wav' })
+          const url = URL.createObjectURL(blob)
+          setAudioUrl(url)
+          onGetAudio(url, bamborakResponse)
+        })
+        .catch(error => {
+          console.error('Error reading answer:', error)
+        })
+    },
+    [onGetAudio, speak, speakerId],
+  )
 
   // Cleanup audio URL when component unmounts or audio changes
   useEffect(() => {
@@ -98,25 +135,7 @@ export const ChatApp: React.FC<{
 
       const answerText = response.answer ?? response.message
       const sources = response.sources ?? []
-      if (speak) {
-        getAudioFromText(stripSourceRefs(answerText), 'katka_2025_07').then(
-          bamborakResponse => {
-            // Convert base64 audio to ArrayBuffer
-            const audioData = atob(bamborakResponse.audio)
-            const audioArray = new Uint8Array(audioData.length)
-            for (let i = 0; i < audioData.length; i++) {
-              audioArray[i] = audioData.charCodeAt(i)
-            }
-            const audioBuffer = audioArray.buffer
-
-            // Create blob URL for the audio
-            const blob = new Blob([audioBuffer], { type: 'audio/wav' })
-            const url = URL.createObjectURL(blob)
-            setAudioUrl(url)
-            onGetAudio(url, bamborakResponse)
-          }
-        )
-      }
+      readAnswer(answerText, response.speakerId)
       setMessages(msgs => [
         ...msgs,
         {
@@ -138,7 +157,7 @@ export const ChatApp: React.FC<{
     } finally {
       setIsLoading(false)
     }
-  }, [input, isLoading, started, speak, ipAddress, onGetAudio])
+  }, [input, isLoading, started, ipAddress, readAnswer])
 
   const handleRetry = useCallback(
     async (message: string) => {
@@ -149,6 +168,8 @@ export const ChatApp: React.FC<{
 
       try {
         const response = await chatService.sendMessage(message, ipAddress)
+        const answerText = response.answer ?? response.message
+        readAnswer(answerText, response.speakerId)
 
         // Replace the last error message with the successful response
         setMessages(msgs => {
@@ -164,7 +185,7 @@ export const ChatApp: React.FC<{
           // Add the successful response
           newMessages.push({
             role: 'assistant',
-            content: response.answer ?? response.message,
+            content: answerText,
             sources: response.sources ?? [],
             title: response.title,
             language: response.language,
@@ -180,7 +201,7 @@ export const ChatApp: React.FC<{
         setIsLoading(false)
       }
     },
-    [isLoading]
+    [isLoading, ipAddress, readAnswer]
   )
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -211,7 +232,7 @@ export const ChatApp: React.FC<{
           isLoading={isLoading}
           onRecordingToggle={handleRecordingToggle}
           isRecording={recording.isRecording}
-          showMicrophone={speak}
+          showMicrophone={showMicrophone}
         />
       ) : (
         <ChatScreen
@@ -229,7 +250,7 @@ export const ChatApp: React.FC<{
           }
           onRecordingToggle={handleRecordingToggle}
           isRecording={recording.isRecording}
-          showMicrophone={speak}
+          showMicrophone={showMicrophone}
         />
       )}
     </div>

@@ -40,6 +40,8 @@ export interface ChatResponse {
   timestamp: string
   sources: ChatSource[]
   personaId: string
+  /** Bamborak speaker that should read this answer aloud. */
+  speakerId?: string
 }
 
 export interface ChatRequest {

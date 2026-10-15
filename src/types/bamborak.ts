@@ -20,8 +20,14 @@ export interface BamborakVisemesResponse {
   count: number
 }
 
+export interface BamborakSpeaker {
+  id: string
+  name: string
+  language: string
+}
+
 export interface BamborakSpeakersResponse {
-  speakers: string[]
+  speakers: BamborakSpeaker[]
   count: number
 }
 

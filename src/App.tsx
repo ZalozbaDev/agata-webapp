@@ -103,6 +103,33 @@ const AppContentInner: React.FC<{
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [bamborakResponse, setBamborakResponse] =
     useState<BamborakAudioResponse | null>(null)
+  const spokenAudioRef = useRef<HTMLAudioElement>(null)
+
+  const puppetVisible =
+    isMain &&
+    personaChrome.showPuppet &&
+    (isCentered || isExtraWide) &&
+    isextrahigh &&
+    agataOn
+  const puppetPlaysAudio = puppetVisible && personaChrome.lipsync
+
+  useEffect(() => {
+    if (puppetPlaysAudio || !audioUrl) return
+    const audio = spokenAudioRef.current
+    if (!audio) return
+    audio.currentTime = 0
+    const play = () => {
+      audio.play().catch(error => {
+        console.warn('Auto-play failed:', error)
+      })
+    }
+    if (audio.readyState >= 2) {
+      play()
+      return
+    }
+    audio.addEventListener('canplay', play, { once: true })
+    return () => audio.removeEventListener('canplay', play)
+  }, [audioUrl, puppetPlaysAudio])
 
   useEffect(() => {
     const handleResize = () => {
@@ -151,12 +178,15 @@ const AppContentInner: React.FC<{
           agataOn && (
           <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
             <TalkingPuppet
-              audioFile={personaChrome.speak ? audioUrl : null}
-              visemes={personaChrome.speak ? bamborakResponse?.visemes : undefined}
-              duration={personaChrome.speak ? bamborakResponse?.duration : undefined}
-              lipsync={personaChrome.speak}
+              audioFile={puppetPlaysAudio ? audioUrl : null}
+              visemes={puppetPlaysAudio ? bamborakResponse?.visemes : undefined}
+              duration={puppetPlaysAudio ? bamborakResponse?.duration : undefined}
+              lipsync={puppetPlaysAudio}
             />
           </WociMikanje>
+        )}
+        {personaChrome.readAnswers && audioUrl && !puppetPlaysAudio && (
+          <audio ref={spokenAudioRef} src={audioUrl} style={{ display: 'none' }} />
         )}
         {isMain &&
           personaChrome.showSidebar &&
@@ -171,7 +201,9 @@ const AppContentInner: React.FC<{
               <ChatApp
                 onGetAudio={onGetAudio}
                 ipAddress={ipAddress}
-                speak={personaChrome.speak}
+                speak={personaChrome.readAnswers}
+                speakerId={personaChrome.speakerId}
+                showMicrophone={personaChrome.showMicrophone}
               />
             }
           />
