@@ -47,20 +47,71 @@ function citationBody(snippet: string): string {
   return (wrapped?.[1] ?? snippet).replace(/\s+/g, ' ').trim()
 }
 
-/** Short passage from the RAG snippet, stable enough for a PDF text search. */
-function pdfSearchPhrase(snippet?: string | null): string | null {
+/** Longest passage the PDF viewer can still highlight as one phrase. */
+const MAX_SECTION_CHARS = 2000
+const ANCHOR_CHARS = 90
+
+/**
+ * The RAG chunk that grounded the answer, as one passage.
+ * Whitespace is collapsed so a line break in the PDF still matches.
+ */
+function pdfSection(snippet?: string | null): string | null {
   if (!snippet) return null
-  const cleaned = citationBody(snippet).replace(/^[\s"'„“”«»-]+|[\s"'„“”«»-]+$/g, '')
+  const cleaned = citationBody(snippet)
+    .replace(/\u00ad/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/^[\s"'„“”«»-]+|[\s"'„“”«»-]+$/g, '')
+    .trim()
   if (cleaned.length < 12) return null
-  const cut = cleaned.slice(0, 80)
+  if (cleaned.length <= MAX_SECTION_CHARS) return cleaned
+
+  const cut = cleaned.slice(0, MAX_SECTION_CHARS)
+  const sentence = Math.max(
+    cut.lastIndexOf('. '),
+    cut.lastIndexOf('! '),
+    cut.lastIndexOf('? '),
+  )
+  if (sentence >= 80) return cut.slice(0, sentence + 1).trim()
   const boundary = cut.lastIndexOf(' ')
-  const phrase = (boundary > 24 ? cut.slice(0, boundary) : cut).replace(/[.,;:!?]+$/g, '').trim()
-  return phrase.length >= 12 ? phrase : null
+  return (boundary > 80 ? cut.slice(0, boundary) : cut).trim()
+}
+
+function sectionAnchor(text: string, fromEnd: boolean): string {
+  if (text.length <= ANCHOR_CHARS) return text
+  if (!fromEnd) {
+    const cut = text.slice(0, ANCHOR_CHARS)
+    const boundary = cut.lastIndexOf(' ')
+    return (boundary >= 24 ? cut.slice(0, boundary) : cut)
+      .replace(/[.,;:!?-]+$/g, '')
+      .trim()
+  }
+  const cut = text.slice(-ANCHOR_CHARS)
+  const boundary = cut.indexOf(' ')
+  return (boundary >= 0 && cut.length - boundary > 24 ? cut.slice(boundary + 1) : cut)
+    .replace(/^[\s.,;:!?-]+/, '')
+    .trim()
+}
+
+/** Chrome highlights everything from the section start through its end. */
+function sectionTextFragment(section: string): string {
+  if (section.length <= ANCHOR_CHARS * 2) {
+    return `:~:text=${encodeURIComponent(section)}`
+  }
+  const start = sectionAnchor(section, false)
+  const end = sectionAnchor(section, true)
+  const endAt = end ? section.lastIndexOf(end) : -1
+  if (!start || !end || endAt <= start.length) {
+    return `:~:text=${encodeURIComponent(start || section)}`
+  }
+  return `:~:text=${encodeURIComponent(start)},${encodeURIComponent(end)}`
 }
 
 /**
- * Opens the PDF on the RAG page. `search` is the Firefox viewer query;
- * `:~:text=` highlights the same passage in Chrome.
+ * Opens the PDF on the RAG page and highlights the whole relevant section.
+ * `phrase=true` keeps Firefox from marking every single word.
+ * `:~:text=start,end` marks the same span in Chrome.
+ * `hl=1` sits last so a viewer that keeps the text fragment in the hash
+ * does not glue it onto `phrase`.
  */
 export function pdfLocationHash(
   page?: number | string | null,
@@ -70,12 +121,13 @@ export function pdfLocationHash(
   const resolvedPage = pageNumber(page)
   if (resolvedPage != null) parts.push(`page=${resolvedPage}`)
 
-  const phrase = pdfSearchPhrase(snippet)
-  if (!phrase) return parts.length ? `#${parts.join('&')}` : ''
+  const section = pdfSection(snippet)
+  if (!section) return parts.length ? `#${parts.join('&')}` : ''
 
-  const encoded = encodeURIComponent(phrase)
-  parts.push(`search=${encoded}`)
-  return `#${parts.join('&')}:~:text=${encoded}`
+  parts.push(`search=${encodeURIComponent(section)}`)
+  parts.push('phrase=true')
+  parts.push('hl=1')
+  return `#${parts.join('&')}${sectionTextFragment(section)}`
 }
 
 function withPdfLocation(url: string, source: ChatSource): string {
