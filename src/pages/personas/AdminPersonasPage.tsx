@@ -58,6 +58,7 @@ type SortKey =
   | 'documentCount'
   | 'allowExternalUpload'
   | 'allowExternalDelete'
+  | 'showOnMain'
 
 const emptyForm = (): PersonaFormValues => ({
   name: '',
@@ -70,6 +71,7 @@ const emptyForm = (): PersonaFormValues => ({
   visibility: 'private',
   allowExternalUpload: false,
   allowExternalDelete: false,
+  showOnMain: false,
 })
 
 const SPEAKER_LANGUAGE_LABELS: Record<string, string> = {
@@ -109,6 +111,7 @@ const columns: Array<{
   { key: 'documentCount', label: 'Dokumente', align: 'center' },
   { key: 'allowExternalUpload', label: 'Extern hochladen', align: 'center' },
   { key: 'allowExternalDelete', label: 'Extern löschen', align: 'center' },
+  { key: 'showOnMain', label: 'Startseite', align: 'center' },
 ]
 
 const AdminPersonasPage: React.FC = () => {
@@ -271,6 +274,7 @@ const AdminPersonasPage: React.FC = () => {
       visibility: persona.visibility,
       allowExternalUpload: persona.allowExternalUpload,
       allowExternalDelete: persona.allowExternalDelete,
+      showOnMain: persona.showOnMain === true,
     })
     setImageFile(null)
     setRemoveImage(false)
@@ -518,6 +522,9 @@ const AdminPersonasPage: React.FC = () => {
                     </td>
                     <td style={{ ...tdStyle, textAlign: 'center' }}>
                       {persona.allowExternalDelete ? 'Ja' : 'Nein'}
+                    </td>
+                    <td style={{ ...tdStyle, textAlign: 'center' }}>
+                      {persona.showOnMain ? 'Ja' : 'Nein'}
                     </td>
                     <td style={tdStyle}>
                       <div
@@ -770,6 +777,28 @@ const AdminPersonasPage: React.FC = () => {
                 Privat: Chat-Antworten ohne Links auf die Dokumente. Öffentlich:
                 Verweise auf die PDFs werden angezeigt.
               </span>
+            </label>
+            <label
+              style={{
+                display: 'flex',
+                gap: 10,
+                marginTop: 16,
+                alignItems: 'center',
+                color: '#e6e6ec',
+                fontSize: 14,
+              }}
+            >
+              <input
+                type='checkbox'
+                checked={editor.showOnMain}
+                onChange={event =>
+                  setEditor({
+                    ...editor,
+                    showOnMain: event.target.checked,
+                  })
+                }
+              />
+              Auf der Startseite anzeigen
             </label>
             <label
               style={{

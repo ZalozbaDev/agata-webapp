@@ -1,0 +1,78 @@
+.wnucki-page {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 12px 20px 72px;
+}
+
+.wnucki-page h1 {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.75);
+}
+
+.wnucki-lead {
+  margin: 8px 0 28px;
+  color: #f4f4f4;
+  font-size: 1.15rem;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.wnucki-status {
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.wnucki-pile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 18px 22px;
+}
+
+.wnucki-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--rise, 0px);
+  padding: 10px 12px 12px;
+  border: none;
+  border-radius: 18px;
+  background: rgba(20, 20, 20, 0.28);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transform: translateY(var(--rise, 0px)) rotate(var(--tilt, 0deg));
+  scroll-margin-top: 96px;
+}
+
+.wnucki-card:hover,
+.wnucki-card:focus-visible {
+  transform: translateY(0) rotate(0deg) scale(1.05);
+  background: rgba(20, 20, 20, 0.55);
+  border-color: transparent;
+  z-index: 2;
+}
+
+.wnucki-card.is-active {
+  box-shadow: 0 0 0 3px #f2c14e;
+}
+
+.wnucki-card-name {
+  max-width: 9rem;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wnucki-card,
+  .wnucki-card:hover,
+  .wnucki-card:focus-visible {
+    transform: none;
+  }
+}

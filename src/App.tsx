@@ -13,6 +13,7 @@ import FaqPage from './pages/faq'
 import AdminPersonasPage from './pages/personas/AdminPersonasPage'
 import PersonaDocumentsPage from './pages/personas/PersonaDocumentsPage'
 import FileViewPage from './pages/datei'
+import WnuckiPage from './pages/wnucki'
 import { WociMikanje } from './components/woci-mikanje'
 import { WociCenteredContext } from './components/woci-mikanje/WociCenteredContext'
 import { Wabjenje } from './components/wabjenje/index.tsx'
@@ -21,6 +22,7 @@ import { BamborakAudioResponse } from './types/bamborak'
 import { ChatApp } from './ChatApp.tsx'
 import visitorService from './services/visitorService.ts'
 import { usePersonaChrome } from './hooks/usePersonaChrome'
+import { getPersonaId } from './config/persona'
 // import { Cookies }  from './components/cookies/index.tsx'
 
 const AppContent: React.FC = () => {
@@ -54,9 +56,9 @@ const AppContentInner: React.FC<{
   const location = useLocation()
   const isMain = location.pathname === '/'
   const personaChrome = usePersonaChrome()
+  const personaId = getPersonaId(location.search)
 
   const [isWide, setIsWide] = useReactState(() => window.innerWidth > 950)
-  const [ishigh, setishigh] = useReactState(() => window.innerHeight > 670)
   const [isextrahigh, setisextrahigh] = useReactState(
     () => window.innerHeight > 550,
   )
@@ -134,13 +136,17 @@ const AppContentInner: React.FC<{
   useEffect(() => {
     const handleResize = () => {
       setIsWide(window.innerWidth > 950)
-      setishigh(window.innerHeight > 670)
       setisextrahigh(window.innerHeight > 550)
       setIsExtraWide(window.innerWidth > 1020)
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  useEffect(() => {
+    setAudioUrl(null)
+    setBamborakResponse(null)
+  }, [personaId])
 
   const onGetAudio = (
     audioUrl: string,
@@ -176,17 +182,25 @@ const AppContentInner: React.FC<{
           (isCentered || isExtraWide) &&
           isextrahigh &&
           agataOn && (
-          <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
-            <TalkingPuppet
-              audioFile={puppetPlaysAudio ? audioUrl : null}
-              visemes={puppetPlaysAudio ? bamborakResponse?.visemes : undefined}
-              duration={puppetPlaysAudio ? bamborakResponse?.duration : undefined}
-              lipsync={puppetPlaysAudio}
-            />
-          </WociMikanje>
-        )}
+            <WociMikanje isCentered={isCentered} setIsCentered={setIsCentered}>
+              <TalkingPuppet
+                audioFile={puppetPlaysAudio ? audioUrl : null}
+                visemes={
+                  puppetPlaysAudio ? bamborakResponse?.visemes : undefined
+                }
+                duration={
+                  puppetPlaysAudio ? bamborakResponse?.duration : undefined
+                }
+                lipsync={puppetPlaysAudio}
+              />
+            </WociMikanje>
+          )}
         {personaChrome.readAnswers && audioUrl && !puppetPlaysAudio && (
-          <audio ref={spokenAudioRef} src={audioUrl} style={{ display: 'none' }} />
+          <audio
+            ref={spokenAudioRef}
+            src={audioUrl}
+            style={{ display: 'none' }}
+          />
         )}
         {isMain &&
           personaChrome.showSidebar &&
@@ -199,6 +213,7 @@ const AppContentInner: React.FC<{
             path='/'
             element={
               <ChatApp
+                key={personaId}
                 onGetAudio={onGetAudio}
                 ipAddress={ipAddress}
                 speak={personaChrome.readAnswers}
@@ -211,6 +226,7 @@ const AppContentInner: React.FC<{
           <Route path='/data' element={<DataPage />} />
           <Route path='/impresum' element={<ImpresumPage />} />
           <Route path='/faq' element={<FaqPage />} />
+          <Route path='/wnucki' element={<WnuckiPage />} />
           <Route path='/datei' element={<FileViewPage />} />
           <Route path='/admin/personas' element={<AdminPersonasPage />} />
           <Route

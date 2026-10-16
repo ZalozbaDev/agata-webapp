@@ -36,6 +36,7 @@ export type AdminPersona = {
   visibility: PersonaVisibility
   allowExternalUpload: boolean
   allowExternalDelete: boolean
+  showOnMain: boolean
   protected: boolean
   documentCount: number
   createdAt: string
@@ -70,6 +71,7 @@ export type PersonaFormValues = {
   visibility: PersonaVisibility
   allowExternalUpload: boolean
   allowExternalDelete: boolean
+  showOnMain: boolean
 }
 
 export function getAdminToken(): string {
@@ -126,6 +128,34 @@ export function personaImageUrl(key: string): string {
   return `${base}/api/personas/${encodeURIComponent(key)}/image`
 }
 
+export type WnuckiPersona = {
+  name: string
+  slug: string
+  hasImage: boolean
+  showOnMain: boolean
+}
+
+export async function fetchWnucki(): Promise<WnuckiPersona[]> {
+  const response = await publicApi().get<{ personas?: WnuckiPersona[] }>(
+    '/api/personas/wnucki',
+  )
+  const personas = response.data.personas
+  if (!Array.isArray(personas)) return []
+  return personas.filter(
+    persona =>
+      Boolean(persona) &&
+      typeof persona.name === 'string' &&
+      persona.name.trim().length > 0 &&
+      typeof persona.slug === 'string' &&
+      /^[a-z0-9][a-z0-9-]{0,30}[a-z0-9]$/.test(persona.slug),
+  ).map(persona => ({
+    name: persona.name.trim(),
+    slug: persona.slug,
+    hasImage: persona.hasImage === true,
+    showOnMain: persona.showOnMain === true,
+  }))
+}
+
 export function validatePersonaForm(input: PersonaFormValues): string | null {
   const name = input.name.trim()
   if (!name) return 'Name ist ein Pflichtfeld.'
@@ -156,6 +186,9 @@ export function validatePersonaForm(input: PersonaFormValues): string | null {
   }
   if (input.visibility !== 'public' && input.visibility !== 'private') {
     return 'Sichtbarkeit muss öffentlich oder privat sein.'
+  }
+  if (typeof input.showOnMain !== 'boolean') {
+    return 'Startseite muss ja oder nein sein.'
   }
   return null
 }
@@ -211,6 +244,7 @@ export async function createPersona(
       visibility: values.visibility,
       allowExternalUpload: values.allowExternalUpload,
       allowExternalDelete: values.allowExternalDelete,
+      showOnMain: values.showOnMain,
     },
   )
   return response.data.persona
@@ -233,6 +267,7 @@ export async function updatePersona(
       visibility: values.visibility,
       allowExternalUpload: values.allowExternalUpload,
       allowExternalDelete: values.allowExternalDelete,
+      showOnMain: values.showOnMain,
     },
   )
   return response.data.persona

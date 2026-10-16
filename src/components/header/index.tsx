@@ -22,6 +22,7 @@ import {
 import { CreateUrlRequest, urlService } from '../../services/urlService'
 import { Settingsicon } from '../../assets/icons'
 import { WociMikanje } from '../woci-mikanje'
+import { WnuckiParade } from '../wnucki/parade'
 import SERVER_CONFIG from '../../config/server'
 
 const Header: React.FC<{
@@ -141,7 +142,8 @@ const Header: React.FC<{
   return (
     <>
       <header style={headerStyle}>
-        <div style={{ ...headerLeftStyle, display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: 1.05, minWidth: 0 }}>
+        <WnuckiParade />
+        <div style={{ ...headerLeftStyle, display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: 1.05, minWidth: 0, position: 'relative', zIndex: 4 }}>
           <Link
             to='/'
             style={{ textDecoration: 'none', color: 'inherit' }}

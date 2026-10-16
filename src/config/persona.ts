@@ -9,10 +9,8 @@ export const DEFAULT_SPEAKER_ID = 'katka_2025_07'
  * `?persona=` stays available so a single deployment can be used for testing.
  * Unknown ids are accepted here and resolved server-side.
  */
-export function getPersonaId(): string {
-  const fromQuery = new URLSearchParams(window.location.search)
-    .get('persona')
-    ?.trim()
+export function getPersonaId(search = window.location.search): string {
+  const fromQuery = new URLSearchParams(search).get('persona')?.trim()
 
   if (fromQuery) return fromQuery
 

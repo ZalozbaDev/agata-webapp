@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { DEFAULT_PERSONA_ID, DEFAULT_SPEAKER_ID, getPersonaId } from '../config/persona'
 import {
   fetchPersonaAppearance,
@@ -11,7 +12,8 @@ import {
  * The left image sidebar belongs only to the main persona.
  */
 export function usePersonaChrome() {
-  const personaId = getPersonaId()
+  const { search } = useLocation()
+  const personaId = getPersonaId(search)
   const isMainPersona = personaId.trim().toLowerCase() === DEFAULT_PERSONA_ID
   const [language, setLanguage] = useState<PersonaDocumentLanguage | null>(
     isMainPersona ? 'hsb' : null,
@@ -21,6 +23,9 @@ export function usePersonaChrome() {
 
   useEffect(() => {
     let cancelled = false
+    setLanguage(isMainPersona ? 'hsb' : null)
+    setHasImage(false)
+    setSpeakerId(DEFAULT_SPEAKER_ID)
     fetchPersonaAppearance(personaId).then(appearance => {
       if (cancelled || !appearance) return
       setLanguage(appearance.language)
@@ -30,7 +35,7 @@ export function usePersonaChrome() {
     return () => {
       cancelled = true
     }
-  }, [personaId])
+  }, [personaId, isMainPersona])
 
   const upperSorbian = language === 'hsb'
   return {
