@@ -57,6 +57,7 @@ type SortKey =
   | 'tag'
   | 'visibility'
   | 'documentCount'
+  | 'allowExternalUpload'
   | 'allowExternalDelete'
 
 const emptyForm = (): PersonaFormValues => ({
@@ -69,6 +70,7 @@ const emptyForm = (): PersonaFormValues => ({
   tag: '',
   speakerId: DEFAULT_SPEAKER_ID,
   visibility: 'private',
+  allowExternalUpload: false,
   allowExternalDelete: false,
 })
 
@@ -108,6 +110,7 @@ const columns: Array<{
   { key: 'tag', label: 'Gruppen-Tag' },
   { key: 'visibility', label: 'Sichtbarkeit' },
   { key: 'documentCount', label: 'Dokumente', align: 'center' },
+  { key: 'allowExternalUpload', label: 'Extern hochladen', align: 'center' },
   { key: 'allowExternalDelete', label: 'Extern löschen', align: 'center' },
 ]
 
@@ -271,6 +274,7 @@ const AdminPersonasPage: React.FC = () => {
       tag: persona.tag,
       speakerId: persona.speakerId || DEFAULT_SPEAKER_ID,
       visibility: persona.visibility,
+      allowExternalUpload: persona.allowExternalUpload,
       allowExternalDelete: persona.allowExternalDelete,
     })
     setImageFile(null)
@@ -516,6 +520,9 @@ const AdminPersonasPage: React.FC = () => {
                       {persona.documentCount}
                     </td>
                     <td style={{ ...tdStyle, textAlign: 'center' }}>
+                      {persona.allowExternalUpload ? 'Ja' : 'Nein'}
+                    </td>
+                    <td style={{ ...tdStyle, textAlign: 'center' }}>
                       {persona.allowExternalDelete ? 'Ja' : 'Nein'}
                     </td>
                     <td style={tdStyle}>
@@ -687,7 +694,7 @@ const AdminPersonasPage: React.FC = () => {
               <span style={hintStyle}>
                 {speakersError
                   ? speakersError
-                  : 'Die Antworten im Chat werden mit dieser Stimme vorgelesen. Standard ist Katka (2025).'}
+                  : 'Nur obersorbische Personas werden mit dieser Stimme vorgelesen. Deutsch bleibt stumm. Standard ist Katka (2025).'}
               </span>
             </label>
             <label style={fieldStyle}>
@@ -775,6 +782,32 @@ const AdminPersonasPage: React.FC = () => {
                 <option value='private'>Privat</option>
                 <option value='public'>Öffentlich</option>
               </select>
+              <span style={hintStyle}>
+                Privat: Chat-Antworten ohne Links auf die Dokumente. Öffentlich:
+                Verweise auf die PDFs werden angezeigt.
+              </span>
+            </label>
+            <label
+              style={{
+                display: 'flex',
+                gap: 10,
+                marginTop: 16,
+                alignItems: 'center',
+                color: '#e6e6ec',
+                fontSize: 14,
+              }}
+            >
+              <input
+                type='checkbox'
+                checked={editor.allowExternalUpload}
+                onChange={event =>
+                  setEditor({
+                    ...editor,
+                    allowExternalUpload: event.target.checked,
+                  })
+                }
+              />
+              Alle Nutzer dürfen Dokumente hochladen
             </label>
             <label
               style={{

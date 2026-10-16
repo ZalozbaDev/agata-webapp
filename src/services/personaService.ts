@@ -35,6 +35,7 @@ export type AdminPersona = {
   tag: string
   speakerId: string
   visibility: PersonaVisibility
+  allowExternalUpload: boolean
   allowExternalDelete: boolean
   protected: boolean
   documentCount: number
@@ -70,6 +71,7 @@ export type PersonaFormValues = {
   tag: string
   speakerId: string
   visibility: PersonaVisibility
+  allowExternalUpload: boolean
   allowExternalDelete: boolean
 }
 
@@ -212,6 +214,7 @@ export async function createPersona(
       tag: values.tag.trim(),
       speakerId: values.speakerId.trim(),
       visibility: values.visibility,
+      allowExternalUpload: values.allowExternalUpload,
       allowExternalDelete: values.allowExternalDelete,
     },
   )
@@ -234,6 +237,7 @@ export async function updatePersona(
       tag: values.tag.trim(),
       speakerId: values.speakerId.trim(),
       visibility: values.visibility,
+      allowExternalUpload: values.allowExternalUpload,
       allowExternalDelete: values.allowExternalDelete,
     },
   )

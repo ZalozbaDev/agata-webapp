@@ -6,8 +6,8 @@ import {
 } from '../services/personaService'
 
 /**
- * Upper Sorbian personas keep Agata's mouth and the microphone.
- * Every persona reads its answers aloud with its own Bamborak speaker.
+ * Upper Sorbian personas keep Agata's mouth, the microphone, and spoken answers.
+ * German and Lower Sorbian personas stay silent.
  * The left image sidebar belongs only to the main persona.
  */
 export function usePersonaChrome() {
@@ -37,7 +37,7 @@ export function usePersonaChrome() {
     isMainPersona,
     hasImage,
     speakerId,
-    readAnswers: true,
+    readAnswers: upperSorbian,
     lipsync: upperSorbian,
     showMicrophone: upperSorbian,
     showPuppet: upperSorbian || hasImage,

@@ -73,6 +73,7 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
   const [name, setName] = useState('')
   const [tag, setTag] = useState('')
   const [languageLabel, setLanguageLabel] = useState('')
+  const [canUpload, setCanUpload] = useState(mode === 'admin')
   const [canDelete, setCanDelete] = useState(mode === 'admin')
   const [documents, setDocuments] = useState<PersonaDocument[]>([])
   const [loading, setLoading] = useState(true)
@@ -106,6 +107,7 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
         setName(persona.name)
         setTag(persona.tag)
         setLanguageLabel(personaLanguageLabel(persona.language))
+        setCanUpload(true)
         setCanDelete(true)
         setDocuments(docs)
       } else {
@@ -116,6 +118,7 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
         setName(persona.name)
         setTag(persona.tag)
         setLanguageLabel(personaLanguageLabel(persona.language))
+        setCanUpload(persona.canUpload)
         setCanDelete(persona.canDelete)
         setDocuments(docs)
       }
@@ -248,59 +251,61 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
       {error && <div style={errorStyle}>{error}</div>}
       {success && <div style={successStyle}>{success}</div>}
 
-      <div
-        style={{
-          ...cardStyle,
-          marginBottom: 16,
-          borderStyle: 'dashed',
-          borderColor: dragging ? '#10a37f' : '#404040',
-          textAlign: 'center',
-        }}
-        onDragOver={event => {
-          event.preventDefault()
-          setDragging(true)
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={onDrop}
-      >
-        <p>Dateien hierher ziehen oder auswählen. Erlaubt sind PDF und HTML, maximal 20 MB.</p>
-        <p style={{ margin: '8px 0 0', color: '#f0d48a' }}>
-          {languageLabel && languageLabel !== '—'
-            ? `Bitte nur Dokumente auf ${languageLabel} hochladen.`
-            : 'Für diese Persona ist noch keine Sprache festgelegt.'}
-        </p>
-        <button type='button' style={primaryButtonStyle} onClick={() => fileInput.current?.click()}>
-          Dateien auswählen
-        </button>
-        <input
-          ref={fileInput}
-          type='file'
-          accept={ACCEPTED}
-          multiple
-          hidden
-          onChange={event => {
-            void uploadFiles(Array.from(event.target.files ?? []))
-            event.target.value = ''
+      {canUpload && (
+        <div
+          style={{
+            ...cardStyle,
+            marginBottom: 16,
+            borderStyle: 'dashed',
+            borderColor: dragging ? '#10a37f' : '#404040',
+            textAlign: 'center',
           }}
-        />
-        {progress && (
-          <div style={{ marginTop: 16, textAlign: 'left' }}>
-            <div style={{ marginBottom: 6 }}>
-              {progress.filename}: {progress.percent}%
+          onDragOver={event => {
+            event.preventDefault()
+            setDragging(true)
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={onDrop}
+        >
+          <p>Dateien hierher ziehen oder auswählen. Erlaubt sind PDF und HTML, maximal 20 MB.</p>
+          <p style={{ margin: '8px 0 0', color: '#f0d48a' }}>
+            {languageLabel && languageLabel !== '—'
+              ? `Bitte nur Dokumente auf ${languageLabel} hochladen.`
+              : 'Für diese Persona ist noch keine Sprache festgelegt.'}
+          </p>
+          <button type='button' style={primaryButtonStyle} onClick={() => fileInput.current?.click()}>
+            Dateien auswählen
+          </button>
+          <input
+            ref={fileInput}
+            type='file'
+            accept={ACCEPTED}
+            multiple
+            hidden
+            onChange={event => {
+              void uploadFiles(Array.from(event.target.files ?? []))
+              event.target.value = ''
+            }}
+          />
+          {progress && (
+            <div style={{ marginTop: 16, textAlign: 'left' }}>
+              <div style={{ marginBottom: 6 }}>
+                {progress.filename}: {progress.percent}%
+              </div>
+              <div style={{ height: 8, background: '#1a1a1a', borderRadius: 4 }}>
+                <div
+                  style={{
+                    width: `${progress.percent}%`,
+                    height: '100%',
+                    background: '#10a37f',
+                    borderRadius: 4,
+                  }}
+                />
+              </div>
             </div>
-            <div style={{ height: 8, background: '#1a1a1a', borderRadius: 4 }}>
-              <div
-                style={{
-                  width: `${progress.percent}%`,
-                  height: '100%',
-                  background: '#10a37f',
-                  borderRadius: 4,
-                }}
-              />
-            </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       <div style={tableWrapStyle}>
         <table style={{ ...tableStyle, minWidth: 640 }}>
