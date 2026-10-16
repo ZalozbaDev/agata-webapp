@@ -54,7 +54,6 @@ type SortKey =
   | 'speakerId'
   | 'topK'
   | 'webResultCount'
-  | 'tag'
   | 'visibility'
   | 'documentCount'
   | 'allowExternalUpload'
@@ -67,7 +66,6 @@ const emptyForm = (): PersonaFormValues => ({
   language: '',
   topK: 5,
   webResultCount: 0,
-  tag: '',
   speakerId: DEFAULT_SPEAKER_ID,
   visibility: 'private',
   allowExternalUpload: false,
@@ -107,7 +105,6 @@ const columns: Array<{
   { key: 'speakerId', label: 'Stimme' },
   { key: 'topK', label: 'RAG', align: 'center' },
   { key: 'webResultCount', label: 'Web', align: 'center' },
-  { key: 'tag', label: 'Gruppen-Tag' },
   { key: 'visibility', label: 'Sichtbarkeit' },
   { key: 'documentCount', label: 'Dokumente', align: 'center' },
   { key: 'allowExternalUpload', label: 'Extern hochladen', align: 'center' },
@@ -185,7 +182,6 @@ const AdminPersonasPage: React.FC = () => {
         persona.slug,
         personaLanguageLabel(persona.language),
         persona.prompt,
-        persona.tag,
         persona.speakerId,
         speakerName(persona.speakerId, speakers),
         persona.visibility,
@@ -271,7 +267,6 @@ const AdminPersonasPage: React.FC = () => {
       language: persona.language ?? '',
       topK: persona.topK,
       webResultCount: persona.webResultCount ?? 0,
-      tag: persona.tag,
       speakerId: persona.speakerId || DEFAULT_SPEAKER_ID,
       visibility: persona.visibility,
       allowExternalUpload: persona.allowExternalUpload,
@@ -430,7 +425,7 @@ const AdminPersonasPage: React.FC = () => {
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <input
           type='search'
-          placeholder='Suchen nach Name, Kurzname oder Gruppen-Tag'
+          placeholder='Suchen nach Name oder Kurzname'
           value={query}
           onChange={event => setQuery(event.target.value)}
           style={inputStyle}
@@ -497,7 +492,6 @@ const AdminPersonasPage: React.FC = () => {
                     <td style={{ ...tdStyle, textAlign: 'center' }}>
                       {persona.webResultCount ?? 0}
                     </td>
-                    <td style={tdStyle}>{persona.tag || '—'}</td>
                     <td style={tdStyle}>
                       <span
                         style={{
@@ -747,16 +741,6 @@ const AdminPersonasPage: React.FC = () => {
                       ...editor,
                       webResultCount: Number(event.target.value),
                     })
-                  }
-                  style={inputStyle}
-                />
-              </label>
-              <label style={{ flex: 1, minWidth: 0 }}>
-                <span style={fieldLabelStyle}>Gruppen-Tag</span>
-                <input
-                  value={editor.tag}
-                  onChange={event =>
-                    setEditor({ ...editor, tag: event.target.value })
                   }
                   style={inputStyle}
                 />

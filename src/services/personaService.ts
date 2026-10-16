@@ -32,7 +32,6 @@ export type AdminPersona = {
   topK: number
   webResultCount: number
   hasImage: boolean
-  tag: string
   speakerId: string
   visibility: PersonaVisibility
   allowExternalUpload: boolean
@@ -45,7 +44,6 @@ export type AdminPersona = {
 
 export type PublicPersona = {
   name: string
-  tag: string
   language: PersonaDocumentLanguage | null
   visibility: 'public'
   canUpload: boolean
@@ -68,7 +66,6 @@ export type PersonaFormValues = {
   language: PersonaDocumentLanguage | ''
   topK: number
   webResultCount: number
-  tag: string
   speakerId: string
   visibility: PersonaVisibility
   allowExternalUpload: boolean
@@ -152,7 +149,6 @@ export function validatePersonaForm(input: PersonaFormValues): string | null {
   ) {
     return 'Web-Ergebnisse müssen eine ganze Zahl zwischen 0 und 20 sein.'
   }
-  if (input.tag.trim().length > 80) return 'Tag darf höchstens 80 Zeichen haben.'
   const speakerId = input.speakerId.trim()
   if (!speakerId) return 'Stimme ist ein Pflichtfeld.'
   if (!/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,63}$/.test(speakerId)) {
@@ -211,7 +207,6 @@ export async function createPersona(
       language: values.language,
       topK: values.topK,
       webResultCount: values.webResultCount,
-      tag: values.tag.trim(),
       speakerId: values.speakerId.trim(),
       visibility: values.visibility,
       allowExternalUpload: values.allowExternalUpload,
@@ -234,7 +229,6 @@ export async function updatePersona(
       language: values.language,
       topK: values.topK,
       webResultCount: values.webResultCount,
-      tag: values.tag.trim(),
       speakerId: values.speakerId.trim(),
       visibility: values.visibility,
       allowExternalUpload: values.allowExternalUpload,

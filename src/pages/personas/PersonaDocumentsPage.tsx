@@ -71,7 +71,6 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
   const personaKey = mode === 'admin' ? params['id'] ?? '' : params['token'] ?? ''
   const fileInput = useRef<HTMLInputElement | null>(null)
   const [name, setName] = useState('')
-  const [tag, setTag] = useState('')
   const [languageLabel, setLanguageLabel] = useState('')
   const [canUpload, setCanUpload] = useState(mode === 'admin')
   const [canDelete, setCanDelete] = useState(mode === 'admin')
@@ -105,7 +104,6 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
           fetchAdminDocuments(personaKey),
         ])
         setName(persona.name)
-        setTag(persona.tag)
         setLanguageLabel(personaLanguageLabel(persona.language))
         setCanUpload(true)
         setCanDelete(true)
@@ -116,7 +114,6 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
           fetchPublicDocuments(personaKey),
         ])
         setName(persona.name)
-        setTag(persona.tag)
         setLanguageLabel(personaLanguageLabel(persona.language))
         setCanUpload(persona.canUpload)
         setCanDelete(persona.canDelete)
@@ -244,7 +241,6 @@ const PersonaDocumentsPage: React.FC<Props> = ({ mode }) => {
             </Link>
           )}
           <h1 style={titleStyle}>{name}</h1>
-          {tag && <div style={{ color: '#bdbdbd' }}>{tag}</div>}
         </div>
       </div>
 
